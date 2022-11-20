@@ -1,0 +1,13 @@
+name: "@global-symbols-module"
+namespace: "\\Module\\"
+require:
+  - "\\GlobalClass"
+  - "\\Common\\CommonGlobalClass"
+  - "\\GlobalClass::staticMethod()"
+  - "\\Common\\CommonGlobalClass::staticMethod()"
+  - "\\global_function()"
+  - "\\Common\\common_global_function()"
+  - "\\GLOBAL_CONST"
+  - "\\COMMON_GLOBAL_DEFINE"
+  - "\\Common\\COMMON_GLOBAL_CONST"
+  - "$GlobalVariable"

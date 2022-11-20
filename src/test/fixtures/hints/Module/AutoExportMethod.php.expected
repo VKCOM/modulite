@@ -1,0 +1,7 @@
+<?php
+
+namespace Module\AutoExportMethod;
+
+<# [exported from   @module   []] #>class Some {
+  <# [exported from   @module   []] #>public static function foo() {}
+}

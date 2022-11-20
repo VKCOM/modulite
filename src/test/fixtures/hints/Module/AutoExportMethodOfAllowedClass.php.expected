@@ -1,0 +1,8 @@
+<?php
+
+namespace Module\AutoExportMethodOfAllowedClass;
+
+<# [internal in   @module   [(visible for   @module2  )]] #>class TestClass {
+  <# [internal in   @module   [(visible for   @module2  )]] #>public static function interfaceMethod() {
+  }
+}

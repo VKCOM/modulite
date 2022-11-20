@@ -1,0 +1,3 @@
+name: "@global-symbols-module"
+namespace: "Module\\"
+require:

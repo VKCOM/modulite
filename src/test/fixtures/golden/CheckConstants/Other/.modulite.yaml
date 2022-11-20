@@ -1,0 +1,10 @@
+name: "@other"
+description:
+namespace: "\\"
+
+export:
+  - "other()"
+
+force-internal:
+
+require:

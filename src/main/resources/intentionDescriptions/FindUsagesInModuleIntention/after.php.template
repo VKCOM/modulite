@@ -1,0 +1,3 @@
+class Foo { ... }
+
+// <spot>Find usages of Foo...</spot>

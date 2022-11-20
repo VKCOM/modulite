@@ -1,0 +1,34 @@
+name: "@base-module1"
+description: ""
+namespace: "BaseModule1\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "TestClassWithMethod"
+  - "test_function()"
+  - "\\TEST_DEFINE"
+  - "TEST_CONSTANT"
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:
+  "@base-module1/base-sub-module":
+    - "TestClass"
+  "@module2":
+    - "TestClass"
+  "@module2/sub-module":
+    - "TestClass"
+  "\\Foo::__construct()":
+    - "TestClass"
+  "\\Foo::boo()":
+    - "TestClass"
+  "\\GlobalNamespace\\foo()":
+    - "TestClass"
+  "\\foo()":
+    - "TestClass"

@@ -1,0 +1,14 @@
+name: "@feed/infra"
+description:
+namespace: "Feed\\Infra\\"
+
+export:
+  - "Strings"
+  - "\\DEF_STRINGS_1"
+  - "\\DEF_STRINGS_2"
+
+force-internal:
+  - "Strings::STR_HIDDEN"
+
+require:
+  - "@feed"

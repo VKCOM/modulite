@@ -1,0 +1,232 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+  <id>com.vk.modulite</id>
+  <name>Modulite</name>
+  <vendor email="unserialize.alias@gmail.com" url="https://vk.com/kphp">vk.com/kphp</vendor>
+
+  <description><![CDATA[
+<p><b>About</b></p>
+<p>Modulite is a conception the plugin modules into the PHP language. PHP does not have native modules (internal classes, private namespaces, explicit exports), and Modulite tries to eliminate this drawback.</p>
+<br>
+<p>Modulite plugin for PHPStorm deeply integrates into an IDE, allowing you to create modules from folders, declare private classes, and see errors right in the editor. Actually, all "modularity" is represented as .modulite.yaml files, and that plugin is a great UI that visualizes yaml config and provides actions to modify it.</p>
+<br>
+<p><b>Homepage</b></p>
+<p><a href="https://vkcom.github.io/modulite/">Landing page</a> (in Russian)</p>
+<p><a href="https://github.com/VKCOM/modulite">GitHub</a></p>
+]]></description>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.jetbrains.php</depends>
+  <depends>org.jetbrains.plugins.yaml</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <postStartupActivity implementation="com.vk.modulite.ModuliteStartupActivity"/>
+
+    <projectViewNodeDecorator implementation="com.vk.modulite.projectview.ProjectViewDecorator"/>
+
+    <annotator language="yaml" implementationClass="com.vk.modulite.highlighting.ModuliteYamlAnnotator"/>
+    <annotator language="PHP" implementationClass="com.vk.modulite.highlighting.ModulitePhpAnnotator"/>
+    <navbar implementation="com.vk.modulite.navbar.ModuliteNavbar"/>
+
+    <lang.parserDefinition language="yaml" order="first"
+                           implementationClass="com.vk.modulite.psi.ModuliteYamlParserDefinition"/>
+
+    <renameInputValidator implementation="com.vk.modulite.modulite.ModuliteRenameValidator"/>
+
+    <notificationGroup id="Modulite" displayType="BALLOON"/>
+
+    <!-- YAML config inspections -->
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="RequireSymbolFromModule"
+                     displayName="Require symbol from module"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.config.RequireSymbolFromModuliteInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownSymbol"
+                     displayName="Unknown symbol"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.config.UnknownSymbolInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownModule"
+                     displayName="Unknown modulite"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.config.UnknownModuliteInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownComposerPackage"
+                     displayName="Unknown composer package"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.config.UnknownComposerPackageInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="EmptyValue"
+                     displayName="Empty value"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.config.EmptyValueInListInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="ModuleRedeclaration"
+                     displayName="Redeclaration of module"
+                     enabledByDefault="true" level="ERROR"
+                     implementationClass="com.vk.modulite.inspections.config.ModuliteRedeclarationInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnnecessaryConfigFullyQualifiedName"
+                     displayName="Unnecessary fully qualified name"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.config.UnnecessaryFullyQualifiedNameInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="InvalidModuleNameInspection"
+                     displayName="Incorrect module name"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.config.InvalidModuliteNameInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnescapedBackSlashInNameInspection"
+                     displayName="Unescaped backslashes in names"
+                     enabledByDefault="true" level="ERROR"
+                     implementationClass="com.vk.modulite.inspections.config.UnescapedBackSlashInNameInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="InvalidNamespaceInspection"
+                     displayName="Invalid namespace"
+                     enabledByDefault="true" level="ERROR"
+                     implementationClass="com.vk.modulite.inspections.config.InvalidNamespaceInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="WrongRequireInspection"
+                     displayName="Wrong modulite require"
+                     enabledByDefault="true" level="ERROR"
+                     implementationClass="com.vk.modulite.inspections.config.WrongRequireInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="InconsistentNestingInspection"
+                     displayName="Inconsistent nesting"
+                     enabledByDefault="true" level="ERROR"
+                     implementationClass="com.vk.modulite.inspections.config.InconsistentNestingInspection"/>
+
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="WrongForceInternalInspection"
+                     displayName="Wrong force internal"
+                     enabledByDefault="true" level="ERROR"
+                     implementationClass="com.vk.modulite.inspections.config.WrongForceInternalInspection"/>
+
+    <!-- PHP inspections -->
+    <localInspection language="PHP" groupName="Modulite plugin" shortName="InternalSymbolUsageInspection"
+                     displayName="Usage of internal symbol"
+                     enabledByDefault="true" level="ERROR"
+                     implementationClass="com.vk.modulite.inspections.InternalSymbolUsageInspection"/>
+
+    <localInspection language="PHP" groupName="Modulite plugin" shortName="ComposerPackageAnnotationUsageInspection"
+                     displayName="Composer package annotation usage"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.ComposerPackageAnnotationUsageInspection"/>
+
+    <localInspection language="PHP" groupName="Modulite plugin" shortName="WrongNamespaceInspection"
+                     displayName="Wrong namespace"
+                     enabledByDefault="true" level="WARNING"
+                     implementationClass="com.vk.modulite.inspections.WrongNamespaceInspection"/>
+
+    <!--  Like intentions (only quick fixes) -->
+    <localInspection language="PHP" groupName="Modulite plugin" shortName="ChangeVisibilityIntention"
+                     displayName="Change visibility intention"
+                     enabledByDefault="true" level="INFORMATION"
+                     implementationClass="com.vk.modulite.inspections.intentions.ChangeVisibilityEmptyInspection"/>
+
+    <localInspection language="PHP" groupName="Modulite plugin" shortName="AllowInternalAccessIntention"
+                     displayName="Allow internal access intention for specific module"
+                     enabledByDefault="true" level="INFORMATION"
+                     implementationClass="com.vk.modulite.inspections.intentions.AllowInternalAccessEmptyInspection"/>
+
+    <!-- Intentions -->
+    <intentionAction>
+      <className>com.vk.modulite.inspections.intentions.GoToModuliteDefinitionIntention</className>
+      <category>PHP</category>
+      <descriptionDirectoryName>GoToModuliteDefinitionIntention</descriptionDirectoryName>
+    </intentionAction>
+
+    <intentionAction>
+      <className>com.vk.modulite.inspections.intentions.FindUsagesInModuleIntention</className>
+      <category>PHP</category>
+      <descriptionDirectoryName>FindUsagesInModuleIntention</descriptionDirectoryName>
+    </intentionAction>
+
+    <projectService serviceImplementation="com.vk.modulite.services.ModuliteIndex"/>
+    <projectService serviceImplementation="com.vk.modulite.services.ComposerPackagesIndex"/>
+    <projectService serviceImplementation="com.vk.modulite.services.ModuliteDependenciesCollector"/>
+    <projectService serviceImplementation="com.vk.modulite.services.ModuliteSymbolsCollector"/>
+    <projectService serviceImplementation="com.vk.modulite.services.FindUsagesService"/>
+
+    <fileBasedIndex implementation="com.vk.modulite.index.ModuliteFilesIndex"/>
+    <fileBasedIndex implementation="com.vk.modulite.index.ComposerFilesIndex"/>
+
+    <iconProvider implementation="com.vk.modulite.view.ModuliteIconProvider"/>
+
+    <codeInsight.inlayProvider language="PHP"
+                               implementationClass="com.vk.modulite.highlighting.hints.PhpInlayTypeHintsProvider"/>
+
+    <codeInsight.inlayProvider language="yaml"
+                               implementationClass="com.vk.modulite.highlighting.hints.YamlInlayTypeHintsProvider"/>
+
+    <lang.documentationProvider language="yaml" order="first"
+                                implementationClass="com.vk.modulite.highlighting.ModuliteDocumentProvider"/>
+    <psi.referenceContributor
+      order="first"
+      language="yaml"
+      implementation="com.vk.modulite.completion.ModuliteYamlReferenceContributor"/>
+  </extensions>
+
+  <applicationListeners>
+
+  </applicationListeners>
+
+  <actions>
+    <!--<action id="NewModuliteAction" class="com.vk.modulite.actions.NewModuliteAction">-->
+    <!--  <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewDir"/>-->
+    <!--</action>-->
+
+    <action id="NewModuliteFromFolderAction" class="com.vk.modulite.actions.NewModuliteFromFolderAction">
+      <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewDir"/>
+    </action>
+
+    <action id="com.vk.modulite.generate.module" class="com.vk.modulite.actions.RegenerateModuleRequiresAction"
+            text="Regenerate Module Requires" icon="AllIcons.Actions.BuildLoadChanges">
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+    </action>
+
+    <action id="com.vk.modulite.find.symbol.usage.in.current.module.yaml"
+            class="com.vk.modulite.actions.usages.yaml.FindModuleUsagesInCurrentModuleAction"
+            text="Find Module Symbols Usages In Module">
+      <keyboard-shortcut first-keystroke="alt F8" keymap="$default"/>
+      <add-to-group group-id="EditorPopupMenu1.FindRefactor" anchor="after" relative-to-action="FindUsages"/>
+    </action>
+
+    <action id="com.vk.modulite.find.module.usage.in.current.module.yaml"
+            class="com.vk.modulite.actions.usages.yaml.FindSymbolUsagesInCurrentModuleAction"
+            text="Find Usages In Module">
+      <keyboard-shortcut first-keystroke="alt F8" keymap="$default"/>
+      <add-to-group group-id="EditorPopupMenu1.FindRefactor" anchor="after" relative-to-action="FindUsages"/>
+    </action>
+
+    <action id="com.vk.modulite.find.symbol.usage.in.specific.module.yaml"
+            class="com.vk.modulite.actions.usages.yaml.FindSymbolUsagesInSelectedModuleAction"
+            text="Find Usages In Specific Module">
+      <keyboard-shortcut first-keystroke="alt F9" keymap="$default"/>
+      <add-to-group group-id="EditorPopupMenu1.FindRefactor" anchor="after"
+                    relative-to-action="com.vk.modulite.find.symbol.usage.in.current.module.yaml"/>
+    </action>
+
+    <action id="com.vk.modulite.find.allowed.symbol.usage.in.allowed.module.yaml"
+            class="com.vk.modulite.actions.usages.yaml.FindAllowedSymbolUsagesInModuleAction"
+            text="Find Usages In Allowed Module">
+      <keyboard-shortcut first-keystroke="alt F8" keymap="$default"/>
+      <add-to-group group-id="EditorPopupMenu1.FindRefactor" anchor="after"
+                    relative-to-action="FindUsages"/>
+    </action>
+
+    <action id="com.vk.modulite.find.symbol.usage.in.current.module.php"
+            class="com.vk.modulite.actions.usages.php.FindSymbolUsagesInCurrentModuleAction"
+            text="Find Usages In Module">
+      <keyboard-shortcut first-keystroke="alt F8" keymap="$default"/>
+      <add-to-group group-id="EditorPopupMenu1.FindRefactor" anchor="after" relative-to-action="FindUsages"/>
+    </action>
+
+    <action id="com.vk.modulite.find.symbol.usage.in.specific.module.php"
+            class="com.vk.modulite.actions.usages.php.FindSymbolUsagesInSelectedModuleAction"
+            text="Find Usages In Specific Module">
+      <keyboard-shortcut first-keystroke="alt F9" keymap="$default"/>
+      <add-to-group group-id="EditorPopupMenu1.FindRefactor" anchor="after"
+                    relative-to-action="com.vk.modulite.find.symbol.usage.in.current.module.php"/>
+    </action>
+  </actions>
+</idea-plugin>

@@ -1,0 +1,12 @@
+name: "@utils"
+namespace: "Utils001\\"
+
+export:
+  - "Strings001"
+
+require:
+  - "\\GlobalEnum"
+  - "\\GlobalCl::ZERO"
+  - "\\GlobalCl::$state"
+  - "\\GlobalCl::globalMethod()"
+

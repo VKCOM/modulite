@@ -1,0 +1,13 @@
+{
+  "name": "vk/curl",
+  "description": "description",
+  "minimum-stability": "stable",
+  "type": "library",
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "VK\\Curl\\": "./src"
+    }
+  }
+}

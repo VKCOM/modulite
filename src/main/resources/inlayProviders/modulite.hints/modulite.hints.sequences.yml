@@ -1,0 +1,11 @@
+name: "@name"
+description: "Some base modulite with useful classes"
+namespace: "Name\\"
+
+export:
+  # 1 modulite
+  - "@module"
+  # 1 class
+  - "Foo"
+  # 1 function
+  - "foo()"

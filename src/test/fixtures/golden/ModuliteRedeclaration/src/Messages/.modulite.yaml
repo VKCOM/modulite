@@ -1,0 +1,17 @@
+name: "@messages"
+description: ""
+namespace: "\\"
+
+# List of classes, methods, functions, constants, and global variables
+# Symbols not listed here will be internal.
+export:
+  - "VK\\Messages\\Message"
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

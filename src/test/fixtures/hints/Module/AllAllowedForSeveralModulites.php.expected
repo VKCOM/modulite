@@ -1,0 +1,27 @@
+<?php
+
+namespace Module\AllAllowedForSeveralModulites;
+
+<# [internal in   @module   [(visible for specific modulites)]] #>class Some {
+}
+
+<# [internal in   @module   [(visible for specific modulites)]] #>interface Other {
+  <# [internal in   @module   [(visible for specific modulites)]] #>static function interfaceMethod();
+}
+
+define("ALL_ALLOWED_FOR_SEVERAL_MODULITES", 0)<# [internal in   @module   [(visible for specific modulites)]] #>;
+
+const SOME = 0<# [internal in   @module   [(visible for specific modulites)]] #>, OTHER = 0<# [internal in   @module   [(visible for specific modulites)]] #>;
+
+$AllAllowedForSeveralModulitesGlobal = 10;
+
+<# [internal in   @module   [(visible for specific modulites)]] #>class TestClass extends Some implements Other {
+  public const CONSTANT = 0;
+  public $field = 0;
+  public static $staticField = 0;
+
+  <# [internal in   @module   [(visible for specific modulites)]] #>public static function interfaceMethod() {
+  }
+
+  private function privateFunction() {}
+}

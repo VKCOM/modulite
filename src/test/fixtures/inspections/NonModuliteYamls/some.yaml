@@ -1,0 +1,21 @@
+name: "@messages"
+description: ""
+namespace: "Messages\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "@messages/channels"
+  - "Message"
+
+# Class members to exclude, they override "export".
+force-internal:
+  - "Message::foo()"
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "@messages/channels/core"
+  - "\\Messages\\Channels\\Core\\foo()"
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

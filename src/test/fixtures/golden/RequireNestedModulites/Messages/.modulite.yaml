@@ -1,0 +1,14 @@
+name: "@msg"
+namespace: "Messages\\"
+
+export:
+  - "@msg/channels"
+  - "Messages"
+
+force-internal:
+
+require:
+  - "@api"
+  - "@msg/channels"
+  - "@msg/core"
+

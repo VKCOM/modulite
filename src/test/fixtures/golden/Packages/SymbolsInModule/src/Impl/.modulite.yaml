@@ -1,0 +1,17 @@
+name: "@impl"
+description: "internals of voice decoder"
+namespace: "VK\\Symbols\\Impl\\"
+
+# List of classes, methods, functions, constants, etc.
+# that'll be available outside the modulite.
+export:
+  - "Helpers"
+
+# List of class members that won't be available outside the modulite.
+force-internal:
+
+# List of dependencies for the modulite.
+require:
+
+# List of internal symbols that'd allowed for use by specific modulites.
+allow-internal-access:

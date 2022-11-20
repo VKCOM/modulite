@@ -1,0 +1,7 @@
+Usages of \Module\FindUsagesGlobalVariable
+   temp:///src/InCurrentModule/Module/main.php
+      15|echo| |$FindUsagesGlobalVariable|;
+   temp:///src/InCurrentModule/Module/main.php
+      6|global| |$FindUsagesGlobalVariable|;
+   temp:///src/InCurrentModule/Module/functions.php
+      7|$FindUsagesGlobalVariable| = |0|;

@@ -1,0 +1,13 @@
+name: "@utils"
+description: ""
+namespace: "Utils\\"
+
+export:
+  - "Strings"
+
+force-internal:
+
+require:
+  - "@msg"
+
+allow-internal-access:

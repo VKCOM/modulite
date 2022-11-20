@@ -1,0 +1,5 @@
+Usages of \FIND_USAGES_GLOBAL_DEFINE
+   temp:///src/InCurrentModule/Module/.modulite.yaml
+      12|- |"\\|FIND_USAGES_GLOBAL_DEFINE|"
+   temp:///src/InCurrentModule/Module/main.php
+      13|echo| |FIND_USAGES_GLOBAL_DEFINE|;

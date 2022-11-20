@@ -1,0 +1,68 @@
+name: "@base-module1"
+description: ""
+namespace: "BaseModule1\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "TestClassWithMethod"
+
+# Class members to exclude, they override "export".
+force-internal:
+  - "TestClassWithMethod::test_method()"
+  - "TestClassWithMethod::$test_field"
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:
+  "@base-module1/base-sub-module":
+    - "TestClass"
+    - "test_function()"
+    - "TEST_CONSTANT"
+    - "\\TEST_DEFINE"
+    - "TestClassWithMethod::test_method()"
+    - "TestClassWithMethod::$test_field"
+  "@module2":
+    - "TestClass"
+    - "test_function()"
+    - "TEST_CONSTANT"
+    - "\\TEST_DEFINE"
+    - "TestClassWithMethod::test_method()"
+    - "TestClassWithMethod::$test_field"
+  "@module2/sub-module":
+    - "TestClass"
+    - "test_function()"
+    - "TEST_CONSTANT"
+    - "\\TEST_DEFINE"
+    - "TestClassWithMethod::test_method()"
+    - "TestClassWithMethod::$test_field"
+  "\\Foo::__construct()":
+    - "TestClass"
+    - "test_function()"
+    - "TEST_CONSTANT"
+    - "\\TEST_DEFINE"
+    - "TestClassWithMethod::test_method()"
+    - "TestClassWithMethod::$test_field"
+  "\\Foo::boo()":
+    - "TestClass"
+    - "test_function()"
+    - "TEST_CONSTANT"
+    - "\\TEST_DEFINE"
+    - "TestClassWithMethod::test_method()"
+    - "TestClassWithMethod::$test_field"
+  "\\GlobalNamespace\\foo()":
+    - "TestClass"
+    - "test_function()"
+    - "TEST_CONSTANT"
+    - "\\TEST_DEFINE"
+    - "TestClassWithMethod::test_method()"
+    - "TestClassWithMethod::$test_field"
+  "\\foo()":
+    - "TestClass"
+    - "test_function()"
+    - "TEST_CONSTANT"
+    - "\\TEST_DEFINE"
+    - "TestClassWithMethod::test_method()"
+    - "TestClassWithMethod::$test_field"

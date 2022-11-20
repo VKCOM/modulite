@@ -1,0 +1,5 @@
+Usages of \Module\FIND_USAGES_GLOBAL_CONST
+   temp:///src/InCurrentModule/Module/.modulite.yaml
+      11|- |"|FIND_USAGES_GLOBAL_CONST|"
+   temp:///src/InCurrentModule/Module/main.php
+      14|echo| |FIND_USAGES_GLOBAL_CONST|;

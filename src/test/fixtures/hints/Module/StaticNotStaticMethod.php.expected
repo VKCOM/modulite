@@ -1,0 +1,13 @@
+<?php
+
+namespace Module\HideMethod;
+
+<# [exported from   @module   []] #>class Some {
+  <# [exported from   @module   []] #>public static function publicStatic() {}
+
+  public function publicNotStatic() {}
+
+  private static function privateStatic() {}
+
+  private static function privateNotStatic() {}
+}

@@ -1,0 +1,10 @@
+name: "@message"
+namespace: "Messages111\\"
+
+export:
+  - "User111"
+
+force-internal:
+
+require:
+

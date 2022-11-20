@@ -1,0 +1,14 @@
+<?php
+
+namespace Module;
+
+/**
+ * @readonly
+ */
+class TestClass {
+  /**
+   * @return void
+   */
+  public function method() {
+  }
+}

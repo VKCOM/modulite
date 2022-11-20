@@ -1,0 +1,36 @@
+name: "@module1"
+description: ""
+namespace: "Module1\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "KnownClass"
+  - "UnknownClass"
+#   ^^^^^^^^^^^^^^
+#   error: Unknown class Module1\UnknownClass
+  - "UnknownFunction()"
+#   ^^^^^^^^^^^^^^^^^^^
+#   error: Unknown function Module1\UnknownFunction()
+  - "UnknownClass::method()"
+#   ^^^^^^^^^^^^^^^^^^^^^^^^
+#   error: Unknown method Module1\UnknownClass::method()
+  - "UnknownClass::$field"
+#   ^^^^^^^^^^^^^^^^^^^^^^
+#   error: Unknown property Module1\UnknownClass::$field
+  - "UnknownClass::CONSTANT"
+#   ^^^^^^^^^^^^^^^^^^^^^^^^
+#   error: Unknown class constant Module1\UnknownClass::CONSTANT
+  - "UNKNOWN_CONSTANT"
+#   ^^^^^^^^^^^^^^^^^^
+#   error: Unknown constant Module1\UNKNOWN_CONSTANT
+
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

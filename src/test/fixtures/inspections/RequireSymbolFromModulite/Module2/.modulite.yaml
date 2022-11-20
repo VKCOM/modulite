@@ -1,0 +1,26 @@
+name: "@require-symbol-from-modulite2"
+description: ""
+namespace: "\\Module2\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "TestClass"
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "\\Module1\\TestClass"
+#   ^^^^^^^^^^^^^^^^^^^^^^
+#   error: Class Module1\TestClass is a part of @require-symbol-from-modulite,
+#           require @require-symbol-from-modulite directly instead of Module1\TestClass class
+
+  - "\\Module2\\Module2Class"
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^
+#   error: Current modulite requires a symbol from itself, there is no need to explicitly
+#          specify the @require-symbol-from-modulite2 symbols
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

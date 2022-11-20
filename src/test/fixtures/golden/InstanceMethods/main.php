@@ -1,0 +1,3 @@
+<?php
+
+Utils\Strings::demoAccessHidden();

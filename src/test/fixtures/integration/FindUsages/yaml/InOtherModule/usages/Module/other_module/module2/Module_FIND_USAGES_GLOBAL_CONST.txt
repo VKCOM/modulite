@@ -1,0 +1,5 @@
+Usages of \Module\FIND_USAGES_GLOBAL_CONST
+   temp:///src/InOtherModule/Module2/main.php
+      18|echo| |FIND_USAGES_GLOBAL_CONST|;
+   temp:///src/InOtherModule/Module2/main.php
+      7|use| |const| |Module|\|FIND_USAGES_GLOBAL_CONST|;

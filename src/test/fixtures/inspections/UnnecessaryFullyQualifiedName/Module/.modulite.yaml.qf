@@ -1,0 +1,27 @@
+name: "@unnecessary-fully-qualified-name"
+description: ""
+namespace: "\\Module\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "TestClass"
+#    ^^^^^^^^^^
+#    weak_warning: Qualifier is unnecessary and can be removed
+
+# Class members to exclude, they override "export".
+force-internal:
+  - "TestClass::foo()"
+#    ^^^^^^^^^^
+#    weak_warning: Qualifier is unnecessary and can be removed
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "\\Module\\OtherGlobalTestClass"
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:
+  "@module2":
+    - "TestClass::foo()"
+#      ^^^^^^^^^^
+#      weak_warning: Qualifier is unnecessary and can be removed

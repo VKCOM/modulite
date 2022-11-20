@@ -1,0 +1,27 @@
+<?php
+
+namespace Module\AllExport;
+
+<# [exported from   @module   []] #>class Some {
+}
+
+<# [exported from   @module   []] #>interface Other {
+  <# [exported from   @module   []] #>static function interfaceMethod();
+}
+
+define("ALL_EXPORT_NAME", 0)<# [exported from   @module   []] #>;
+
+const SOME = 0<# [exported from   @module   []] #>, OTHER = 0<# [exported from   @module   []] #>;
+
+$AllExportGlobal = 10;
+
+<# [exported from   @module   []] #>class TestClass extends Some implements Other {
+  public const CONSTANT = 0;
+  public $field = 0;
+  public static $staticField = 0;
+
+  <# [exported from   @module   []] #>public static function interfaceMethod() {
+  }
+
+  private function privateFunction() {}
+}

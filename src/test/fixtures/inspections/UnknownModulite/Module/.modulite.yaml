@@ -1,0 +1,35 @@
+name: "@module"
+description: ""
+namespace: "\\Module\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "@unknown-module"
+#    ^^^^^^^^^^^^^^^
+#    error: Unknown modulite @unknown-module
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "@known-module"
+  - "@known-module/known-sub-module"
+  - "@known-module/known-sub-module"
+  - "@known-module/known-sub-module/known-sub-sub-module"
+
+  - "@known-module/known-sub-module/unknown-sub-sub-module"
+#                                   ^^^^^^^^^^^^^^^^^^^^^^
+#                                   error: Unknown modulite @known-module/known-sub-module/unknown-sub-sub-module
+
+  - "@known-module/unknown-sub-module"
+#                  ^^^^^^^^^^^^^^^^^^
+#                  error: Unknown modulite @known-module/unknown-sub-module
+
+  - "@unknown-module"
+#    ^^^^^^^^^^^^^^^
+#    error: Unknown modulite @unknown-module
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

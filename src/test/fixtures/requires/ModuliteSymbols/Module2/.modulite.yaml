@@ -1,0 +1,12 @@
+name: "@modulite-symbols-module2"
+namespace: "\\Module2\\"
+require:
+export:
+  - "\\GlobalClass"
+  - "$GlobalVariable"
+  - "CommonGlobalClass"
+  - "\\global_function()"
+  - "common_global_function()"
+  - "\\GLOBAL_CONST"
+  - "COMMON_GLOBAL_CONST"
+  - "\\COMMON_GLOBAL_DEFINE"

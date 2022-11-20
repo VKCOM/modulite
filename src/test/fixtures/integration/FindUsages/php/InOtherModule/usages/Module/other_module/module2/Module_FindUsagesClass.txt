@@ -1,0 +1,11 @@
+Usages of \Module\FindUsagesClass
+   temp:///src/InOtherModule/Module2/main.php
+      12|var_dump|(|new| |FindUsagesClass|());
+   temp:///src/InOtherModule/Module2/main.php
+      13|echo| |FindUsagesClass|::|CONSTANT|;
+   temp:///src/InOtherModule/Module2/main.php
+      14|echo| |FindUsagesClass|::|staticMethod|();
+   temp:///src/InOtherModule/Module2/main.php
+      15|echo| |FindUsagesClass|::|$staticField|;
+   temp:///src/InOtherModule/Module2/main.php
+      5|use| |Module|\|FindUsagesClass|;

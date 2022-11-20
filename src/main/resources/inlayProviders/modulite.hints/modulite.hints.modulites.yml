@@ -1,0 +1,3 @@
+name: "@parent/name" # internal in @parent
+description: "Some base modulite with useful classes"
+namespace: "\\Parent\\Name\\"

@@ -1,0 +1,13 @@
+name: "@msg"
+description: ""
+namespace: "Messages\\"
+
+export:
+  - "Messages"
+
+force-internal:
+  - "Messages::instanceFnMarkedForceInternal()"
+
+require:
+
+allow-internal-access:

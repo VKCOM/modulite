@@ -1,0 +1,22 @@
+name: "@module/depth2"
+description: ""
+namespace: "Module\\Depth2\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:
+  "\\main()":
+    - "@module/depth2/depth3"
+  "\\MainClass":
+    - "@module/depth2/depth3"
+  "\\MainClass2::main()":
+    - "@module/depth2/depth3"

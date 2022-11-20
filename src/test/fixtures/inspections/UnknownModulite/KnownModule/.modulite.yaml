@@ -1,0 +1,5 @@
+name: "@known-module"
+description: ""
+namespace: "\\KnownModule\\"
+export:
+  - "@known-module/known-sub-module"

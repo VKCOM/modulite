@@ -1,0 +1,31 @@
+name: "@user"
+description: ""
+namespace: "VK\\User\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:
+  "\\do_any()":
+    - "User"
+    - "\\TEST_DEFINE"
+    - "$GlobalVariable"
+    - "test()"
+  "\\VK\\Messages\\Message":
+    - "User"
+    - "\\TEST_DEFINE"
+    - "$GlobalVariable"
+    - "test()"
+  "\\VK\\Messages\\Content::method()":
+    - "User"
+    - "\\TEST_DEFINE"
+    - "$GlobalVariable"
+    - "test()"

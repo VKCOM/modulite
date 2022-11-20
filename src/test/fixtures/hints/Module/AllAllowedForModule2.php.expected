@@ -1,0 +1,27 @@
+<?php
+
+namespace Module\AllAllowedForModule2;
+
+<# [internal in   @module   [(visible for   @module2  )]] #>class Some {
+}
+
+<# [internal in   @module   [(visible for   @module2  )]] #>interface Other {
+  <# [internal in   @module   [(visible for   @module2  )]] #>static function interfaceMethod();
+}
+
+define("ALL_ALLOWED_FOR_MODULE2_NAME", 0)<# [internal in   @module   [(visible for   @module2  )]] #>;
+
+const SOME = 0<# [internal in   @module   []] #>, OTHER = 0<# [internal in   @module   [(visible for   @module2  )]] #>;
+
+$AllAllowedForModule2Global = 10;
+
+<# [internal in   @module   [(visible for   @module2  )]] #>class TestClass extends Some implements Other {
+  public const CONSTANT = 0;
+  public $field = 0;
+  public static $staticField = 0;
+
+  <# [internal in   @module   [(visible for   @module2  )]] #>public static function interfaceMethod() {
+  }
+
+  private function privateFunction() {}
+}

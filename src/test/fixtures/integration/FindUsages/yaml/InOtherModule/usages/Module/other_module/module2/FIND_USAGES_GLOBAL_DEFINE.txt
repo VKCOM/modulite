@@ -1,0 +1,3 @@
+Usages of \FIND_USAGES_GLOBAL_DEFINE
+   temp:///src/InOtherModule/Module2/main.php
+      17|echo| |FIND_USAGES_GLOBAL_DEFINE|;

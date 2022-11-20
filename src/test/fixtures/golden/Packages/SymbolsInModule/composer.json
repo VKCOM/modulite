@@ -1,0 +1,10 @@
+{
+  "name": "vk/symbols-list",
+  "version": "1.0.0",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "VK\\Symbols\\": "src/"
+    }
+  }
+}

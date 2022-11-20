@@ -1,0 +1,14 @@
+name: "@feed"
+description:
+namespace: "Feed\\"
+
+export:
+  - "Post"
+  - "\\DEF_POST_PUB"
+
+force-internal:
+  - "Post::THREE"
+
+require:
+  - "@feed/infra"
+

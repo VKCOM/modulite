@@ -1,0 +1,13 @@
+name: "@utils"
+namespace: "Utils\\"
+
+export:
+  - "Strings"
+
+force-internal:
+  - "Strings::hidden1()"
+  - "Strings::hidden2()"
+
+require:
+  - "@feed"
+  - "\\GlobalCl"

@@ -1,0 +1,10 @@
+name: "@plain"
+description:
+namespace: "\\"
+
+export:
+  - "plain()"
+
+force-internal:
+
+require:

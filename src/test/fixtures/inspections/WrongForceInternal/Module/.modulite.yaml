@@ -1,0 +1,40 @@
+name: "@module"
+description: ""
+namespace: "\\Module\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "ModuleClass"
+  - "$ModuleGlobalVariable"
+  - "module_global_function()"
+  - "MODULE_GLOBAL_CONST"
+  - "\\MODULE_GLOBAL_DEFINE"
+
+# Class members to exclude, they override "export".
+force-internal:
+  - "ModuleClass::staticMethod()"
+  - "ModuleClass::$staticField"
+  - "ModuleClass::CONSTANT"
+
+  - "ModuleClass"
+#   ^^^^^^^^^^^^^
+#   error: Force internal is only allowed for class members
+  - "$ModuleGlobalVariable"
+#   ^^^^^^^^^^^^^^^^^^^^^^^
+#   error: Force internal is only allowed for class members
+  - "module_global_function()"
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   error: Force internal is only allowed for class members
+  - "MODULE_GLOBAL_CONST"
+#   ^^^^^^^^^^^^^^^^^^^^^
+#   error: Force internal is only allowed for class members
+  - "\\MODULE_GLOBAL_DEFINE"
+#   ^^^^^^^^^^^^^^^^^^^^^^^^
+#   error: Force internal is only allowed for class members
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

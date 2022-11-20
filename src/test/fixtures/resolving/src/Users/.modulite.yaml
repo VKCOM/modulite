@@ -1,0 +1,25 @@
+name: "@users"
+description: "Some brief description"
+namespace: "\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "\\VK\\Monolith\\Test"
+  - "\\VK\\Monolith\\Test::staticMethod()"
+  - "\\VK\\Monolith\\Test::$staticField"
+  - "\\VK\\Monolith\\Test::CONSTANT"
+  - "\\VK\\Monolith\\test()"
+  - "\\TEST_MONOLITH_DEFINE"
+  - "\\VK\\Monolith\\TEST_CONST"
+  - "$GlobalMonolithVariable"
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:
+

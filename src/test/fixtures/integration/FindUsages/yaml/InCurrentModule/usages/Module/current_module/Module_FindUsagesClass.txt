@@ -1,0 +1,11 @@
+Usages of \Module\FindUsagesClass
+   temp:///src/InCurrentModule/Module/main.php
+      10|echo| |FindUsagesClass|::|staticMethod|();
+   temp:///src/InCurrentModule/Module/main.php
+      11|echo| |FindUsagesClass|::|$staticField|;
+   temp:///src/InCurrentModule/Module/.modulite.yaml
+      8|- |"|FindUsagesClass|"
+   temp:///src/InCurrentModule/Module/main.php
+      8|var_dump|(|new| |FindUsagesClass|());
+   temp:///src/InCurrentModule/Module/main.php
+      9|echo| |FindUsagesClass|::|CONSTANT|;

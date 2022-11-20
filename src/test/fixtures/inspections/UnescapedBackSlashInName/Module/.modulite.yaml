@@ -1,0 +1,27 @@
+name: "@unescaped-backslash-in-name"
+description: ""
+namespace: "\\Module\Name\\"
+#          ^^^^^^^^^^^^^^^^^
+#          error: Name must not contain unescaped backslashes
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "Name\Test"
+#   ^^^^^^^^^^^
+#   error: Name must not contain unescaped backslashes
+
+# Class members to exclude, they override "export".
+force-internal:
+  - "Name\Test"
+#   ^^^^^^^^^^^
+#   error: Name must not contain unescaped backslashes
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "\Name\Test"
+#   ^^^^^^^^^^^^
+#   error: Name must not contain unescaped backslashes
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

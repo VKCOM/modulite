@@ -1,0 +1,18 @@
+name: "@compiler1/lexer/impl2"
+description: ""
+namespace: "Compiler\\Lexer\\Impl2\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "InternalImplFlexLexer"
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "@compiler1/lexer"
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

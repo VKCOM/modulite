@@ -1,0 +1,5 @@
+name: "@modulite-symbols-module"
+namespace: "Module\\"
+require:
+  - "@modulite-symbols-module2"
+  - "$GlobalVariable"

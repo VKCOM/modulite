@@ -1,0 +1,27 @@
+<?php
+
+namespace Module\AllInternal;
+
+<# [internal in   @module   []] #>class Some {
+}
+
+<# [internal in   @module   []] #>interface Other {
+  <# [internal in   @module   []] #>static function interfaceMethod();
+}
+
+define("ALL_INTERNAL_NAME", 0)<# [internal in   @module   []] #>;
+
+const SOME = 0<# [internal in   @module   []] #>, OTHER = 0<# [internal in   @module   []] #>;
+
+$AllInternalGlobal = 10;
+
+<# [internal in   @module   []] #>class TestClass extends Some implements Other {
+  public const CONSTANT = 0;
+  public $field = 0;
+  public static $staticField = 0;
+
+  <# [internal in   @module   []] #>public static function interfaceMethod() {
+  }
+
+  private function privateFunction() {}
+}

@@ -1,0 +1,5 @@
+Usages of \Module\FindUsagesGlobalVariable
+   temp:///src/InOtherModule/Module2/main.php
+      10|global| |$FindUsagesGlobalVariable|;
+   temp:///src/InOtherModule/Module2/main.php
+      19|echo| |$FindUsagesGlobalVariable|;

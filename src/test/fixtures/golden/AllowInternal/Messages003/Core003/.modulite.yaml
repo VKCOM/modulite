@@ -1,0 +1,12 @@
+name: "@msg/core"
+description: ""
+namespace: "Messages003\\Core003\\"
+
+export:
+  - "Core003"
+
+force-internal:
+
+require:
+
+allow-internal-access:
