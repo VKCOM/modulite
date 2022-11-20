@@ -5,11 +5,10 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.util.elementType
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
-import com.jetbrains.php.lang.lexer.PhpTokenTypes
 import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
+import com.vk.modulite.SymbolName
 import com.vk.modulite.composer.ComposerPackage
 import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.modulite.ModuliteRestrictionChecker
@@ -26,25 +25,14 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
         private val LOG = logger<InternalSymbolUsageInspection>()
     }
 
-    class AddSymbolToRequiresQuickFix(private val contextModulite: Modulite) : LocalQuickFix {
+    class AddSymbolToRequiresQuickFix(
+        private val contextModulite: Modulite,
+        private val symbol: SymbolName,
+    ) : LocalQuickFix {
         override fun getFamilyName() = "Add symbol to requires"
 
         override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
-            val element = descriptor.psiElement
-
-            val ref = if (element.elementType == PhpTokenTypes.IDENTIFIER) {
-                element.parent as? PhpReference
-            } else {
-                descriptor.psiElement as? PhpReference
-            }
-
-            if (ref == null) {
-                return
-            }
-
-            val reference = ref.resolveGlobal(false).firstOrNull() ?: return
-
-            contextModulite.addDependencies(reference.symbolName(forNotRequired = true))
+            contextModulite.addDependencies(symbol)
         }
     }
 
@@ -156,6 +144,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                         holder.addProblem(
                             reason,
                             element,
+                            reference,
                             context,
                             problemPsiElement
                         )
@@ -168,6 +157,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
     private fun ProblemsHolder.addProblem(
         reason: ModuliteRestrictionChecker.ViolationTypes,
         symbolElement: PhpNamedElement,
+        reference: PhpReference,
         context: ModuliteRestrictionChecker.Context,
         problemElement: PsiElement,
     ) {
@@ -186,7 +176,8 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             }
 
             ModuliteRestrictionChecker.ViolationTypes.NotRequired           -> {
-                val readableName = symbolElement.symbolName(forNotRequired = true).readableNameWithAction()
+                val symbol = symbolElement.symbolName(reference, forNotRequired = true)
+                val readableName = symbol.readableNameWithAction()
 
                 // Если символ определен в композер пакете, то нужно добавить его, а не модуль.
                 if (refPackage != null) {
@@ -202,7 +193,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                         restricted to $readableName, $refModulite is not required by ${context.modulite}
                     """.trimIndent()
                 } else {
-                    quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!))
+                    quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, symbol))
 
                     """
                         restricted to $readableName, it's not required by ${context.modulite}

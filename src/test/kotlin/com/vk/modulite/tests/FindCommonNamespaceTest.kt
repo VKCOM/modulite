@@ -2,7 +2,6 @@ package com.vk.modulite.tests
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.vk.modulite.Namespace
-import com.vk.modulite.SymbolName.Kind
 import com.vk.modulite.services.ModuliteDependenciesCollector
 import io.kotest.matchers.shouldBe
 

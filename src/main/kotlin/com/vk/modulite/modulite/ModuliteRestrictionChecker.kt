@@ -10,6 +10,7 @@ import com.vk.modulite.composer.ComposerPackage
 import com.vk.modulite.psi.extensions.files.containingComposerPackage
 import com.vk.modulite.psi.extensions.files.containingModulite
 import com.vk.modulite.psi.extensions.php.symbolName
+import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromVendor
 
@@ -111,7 +112,7 @@ object ModuliteRestrictionChecker {
 
         // Не проверяем использования символов, которые определены в
         // стабах или являются сторонними.
-        if (file.fromStubs() || file.fromVendor()) {
+        if (file.fromStubs() || file.fromVendor() || file.fromKphpPolyfills()) {
             return result(ViolationTypes.Ok)
         }
 

@@ -1,7 +1,6 @@
 package com.vk.modulite.tests
 
 import com.vk.modulite.infrastructure.ModuliteInspectionTestBase
-import com.vk.modulite.inspections.InternalSymbolUsageInspection
 import com.vk.modulite.inspections.config.*
 
 class YamlInspectionsTest : ModuliteInspectionTestBase() {

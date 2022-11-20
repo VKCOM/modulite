@@ -6,9 +6,9 @@
 
   <description><![CDATA[
 <p><b>About</b></p>
-<p>Modulite is a conception the plugin modules into the PHP language. PHP does not have native modules (internal classes, private namespaces, explicit exports), and Modulite tries to eliminate this drawback.</p>
+<p>Modulite is a conception that brings modules into the PHP language. PHP does not have native modules (internal classes, private namespaces, explicit exports), and Modulite tries to eliminate this drawback.</p>
 <br>
-<p>Modulite plugin for PHPStorm deeply integrates into an IDE, allowing you to create modules from folders, declare private classes, and see errors right in the editor. Actually, all "modularity" is represented as .modulite.yaml files, and that plugin is a great UI that visualizes yaml config and provides actions to modify it.</p>
+<p>Modulite plugin for PHPStorm deeply integrates into an IDE, allowing you to create modules from folders, declare private classes, and see errors right in the editor. Actually, all "modularity" is represented as .modulite.yaml files, and the plugin is a great UI that visualizes yaml config and provides actions to modify it.</p>
 <br>
 <p><b>Homepage</b></p>
 <p><a href="https://vkcom.github.io/modulite/">Landing page</a> (in Russian)</p>

@@ -138,6 +138,10 @@ fun VirtualFile.fromTests(): Boolean {
     return path.contains("/tests/")
 }
 
+fun VirtualFile.fromKphpPolyfills(): Boolean {
+    return path.contains("/kphp-polyfills/")
+}
+
 inline fun <reified T : PsiElement> PsiElement.childOfType(): T? {
     var found: T? = null
     PsiTreeUtil.processElements(this) {

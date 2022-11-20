@@ -13,6 +13,7 @@ import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
+import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
 import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
@@ -255,6 +256,10 @@ class ModuliteDependenciesCollector(val project: Project) {
                 fun getPhpDocTypes(type: PsiElement): List<PhpDocType> {
                     val types = mutableListOf<PhpDocType>()
 
+                    if (type.children.isEmpty()) {
+                        types.add(type as PhpDocType)
+                    }
+
                     type.children.forEach {
                         if (it is PhpDocType) {
                             if (it.children.isEmpty() || it.firstChild is PhpNamespaceReference) {
@@ -307,6 +312,13 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                         // Не статические методы добавлять не надо
                         if (!element.isStatic) {
+                            return null
+                        }
+                    }
+
+                    // Если у функции нет имени, то это лямбда. Значит мы её пропускаем
+                    if (element is FunctionImpl) {
+                        if (element.name.isEmpty()) {
                             return null
                         }
                     }

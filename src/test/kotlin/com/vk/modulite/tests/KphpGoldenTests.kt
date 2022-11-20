@@ -14,7 +14,4 @@ class KphpGoldenTests : ModuliteInspectionTestBase() {
     // fun `test 007_composer_ok`()         = runFixture("kphp_golden/007_composer_ok")
     fun `test 008_mod_generics`()        = runFixture("kphp_golden/008_mod_generics")
     fun `test 009_mod_magic_m`()        = runFixture("kphp_golden/009_mod_magic_m")
-
-
-    fun `test 110_check_extends`()        = runFixture("kphp_golden/110_check_extends")
 }

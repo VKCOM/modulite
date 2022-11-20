@@ -1,11 +1,13 @@
 package com.vk.modulite.index
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.util.indexing.*
 import com.intellij.util.io.DataExternalizer
 import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
+import com.vk.modulite.inspections.InternalSymbolUsageInspection
 import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.modulite.ModuliteRequires
 import gnu.trove.THashMap
@@ -18,8 +20,13 @@ class ModuliteFilesIndex : FileBasedIndexExtension<String, Modulite>() {
         return DataIndexer { inputData ->
             val map = THashMap<String, Modulite>()
 
-            val model = Modulite.fromYamlPsi(inputData.psiFile as YAMLFile)
-            map[model.name] = model
+            val psiFile = inputData.psiFile
+            if (psiFile is YAMLFile) {
+                val model = Modulite.fromYamlPsi(psiFile)
+                map[model.name] = model
+            } else {
+                LOG.error("File '${inputData.file}' expected type: 'YAMLFile', actual type: '${inputData.fileType.name}'")
+            }
 
             map
         }
@@ -126,5 +133,6 @@ class ModuliteFilesIndex : FileBasedIndexExtension<String, Modulite>() {
 
     companion object {
         val KEY = ID.create<String, Modulite>("modulite.config.file")
+        private val LOG = logger<InternalSymbolUsageInspection>()
     }
 }

@@ -11,12 +11,10 @@ import com.intellij.ui.dsl.builder.*
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import com.intellij.ui.dsl.gridLayout.VerticalAlign
 import com.intellij.util.ui.JBDimension
-import com.intellij.util.ui.JBUI
 import com.vk.modulite.SymbolName
 import com.vk.modulite.actions.panels.SymbolTreeNode
 import com.vk.modulite.actions.panels.SymbolsTreeBase
 import com.vk.modulite.modulite.Modulite
-import com.vk.modulite.services.ModuliteDepsDiff
 import javax.swing.JComponent
 import javax.swing.border.Border
 import javax.swing.tree.TreeSelectionModel

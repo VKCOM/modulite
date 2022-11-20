@@ -28,7 +28,7 @@ fun PhpNamedElement.symbolName(
             }
         }
 
-        val className = resolveUsedClass(reference) ?: return SymbolName("$normalized()", kind = SymbolName.Kind.Method)
+        val className = resolveUsedClassName(reference) ?: return SymbolName("$normalized()", kind = SymbolName.Kind.Method)
         val methodName = name
         val fqn = "$className::$methodName"
         return SymbolName("$fqn()", kind = SymbolName.Kind.Method)
@@ -36,13 +36,13 @@ fun PhpNamedElement.symbolName(
 
     if (this is FieldImpl && !this.isConstant) {
         if (forNotRequired) {
-            val containingClass = this.containingClass
+            val containingClass = resolveUsedClass(reference)
             if (containingClass != null) {
-                return containingClass.symbolName(reference)
+                return containingClass.symbolName()
             }
         }
 
-        val className = resolveUsedClass(reference) ?: return SymbolName(normalized, kind = SymbolName.Kind.Field)
+        val className = resolveUsedClassName(reference) ?: return SymbolName(normalized, kind = SymbolName.Kind.Field)
         val fieldName = name
         val fqn = "$className::$$fieldName"
         return SymbolName(fqn, kind = SymbolName.Kind.Field)
@@ -50,13 +50,13 @@ fun PhpNamedElement.symbolName(
 
     if (this is ClassConstImpl) {
         if (forNotRequired) {
-            val containingClass = this.containingClass
+            val containingClass = resolveUsedClass(reference)
             if (containingClass != null) {
-                return containingClass.symbolName(reference)
+                return containingClass.symbolName()
             }
         }
 
-        val className = resolveUsedClass(reference) ?: return SymbolName(normalized, kind = SymbolName.Kind.ClassConstant)
+        val className = resolveUsedClassName(reference) ?: return SymbolName(normalized, kind = SymbolName.Kind.ClassConstant)
         val constName = name
         val fqn = "$className::$constName"
         return SymbolName(fqn, kind = SymbolName.Kind.ClassConstant)
@@ -80,15 +80,19 @@ fun PhpNamedElement.symbolName(
     return SymbolName(normalized, kind = kind)
 }
 
-private fun resolveUsedClass(reference: PhpReference?): String? {
+private fun resolveUsedClass(reference: PhpReference?): PhpClass? {
     if (reference is MemberReference && reference.classReference is ClassReference) {
         val klass = (reference.classReference as ClassReference).resolve()
         if (klass != null && klass is PhpClass) {
-            return klass.fqn
+            return klass
         }
     }
 
     return null
+}
+
+private fun resolveUsedClassName(reference: PhpReference?): String? {
+    return resolveUsedClass(reference)?.fqn
 }
 
 fun PhpNamedElement.modulitesWithAllowedAccess(module: Modulite): List<SymbolName> {

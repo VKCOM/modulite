@@ -36,6 +36,7 @@ object ModuliteNodeDecoration {
                     if (!isExported) {
                         data.setIcon(PluginIcons.InternalMultiModulite)
                         data.tooltip = "Internal modulite with sub-modulites"
+                        suffix = "(internal)"
                     } else {
                         data.setIcon(PluginIcons.MultiModulite)
                         data.tooltip = "Modulite with sub-modulites"

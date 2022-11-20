@@ -321,8 +321,6 @@ data class Modulite(
             val fqn = context.function.symbolName()
             if (containsInAllowedInternalAccessKey(fqn, name)) {
                 return true
-            } else {
-                println()
             }
         }
 

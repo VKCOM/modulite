@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.changelog.Changelog
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -6,11 +6,13 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    id("org.jetbrains.kotlin.jvm") version "1.7.21"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.7.0"
+    id("org.jetbrains.intellij") version "1.10.0"
     // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "1.3.1"
+    id("org.jetbrains.changelog") version "2.0.0"
+    // Gradle Kover Plugin
+    id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
 
 group = properties("pluginGroup")
@@ -21,8 +23,13 @@ repositories {
     mavenCentral()
 }
 
+// Set the JVM language level used to build project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
+kotlin {
+    jvmToolchain(11)
+}
+
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.8.2"))
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
@@ -38,33 +45,18 @@ intellij {
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
-    version.set(properties("pluginVersion"))
     groups.set(emptyList())
+    repositoryUrl.set(properties("pluginRepositoryUrl"))
+}
+
+// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
+kover.xmlReport {
+    onCheck.set(true)
 }
 
 tasks {
-    // Set the JVM compatibility versions
-    properties("javaVersion").let {
-        withType<JavaCompile> {
-            sourceCompatibility = it
-            targetCompatibility = it
-        }
-        withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = it
-            kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=all")
-        }
-    }
-
     wrapper {
         gradleVersion = properties("gradleVersion")
-    }
-
-    runIde {
-        maxHeapSize = "8g"
-    }
-
-    buildSearchableOptions {
-        enabled = false
     }
 
     patchPluginXml {
@@ -74,10 +66,21 @@ tasks {
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
-            changelog.run {
-                getOrNull(properties("pluginVersion")) ?: getLatest()
-            }.toHTML()
+            with(changelog) {
+                renderItem(
+                    getOrNull(properties("pluginVersion")) ?: getLatest(),
+                    Changelog.OutputType.HTML,
+                )
+            }
         })
+    }
+
+    runIde {
+        maxHeapSize = "8g"
+    }
+
+    buildSearchableOptions {
+        enabled = false
     }
 
     sourceSets {
