@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <meta property="og:title" content="Modulite for PHPStorm">
+    <meta property="og:description" content="Bring modules into the PHP language: internal classes and private namespaces">
+    <meta property="og:image" content="img/preview.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vkcom.github.io/modulite/install.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Modulite for PHPStorm">
+    <meta name="twitter:description" content="Bring modules into the PHP language: internal classes and private namespaces">
+    <meta name="twitter:image:src" content="img/preview.png">
+    <meta name="twitter:image" content="img/preview.png">
+
+    <title>Modulite for PHPStorm</title>
+
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<header>
+    <div class="header__inner">
+        <a href="https://vkcom.github.io/modulite/" class="header__title">
+            <span>Mod</span><span style="margin-left: -1px;">ulite</span>
+        </a>
+        <nav class="header__navbar">
+            <ul class="header__links">
+                <li>
+                    <a href="https://vkcom.github.io/modulite/">Главная</a>
+                </li>
+                <li>
+                    <a href="install.html">Установка</a>
+                </li>
+                <li class="header__github-link">
+                    <a href="https://github.com/VKCOM/modulite" target="_blank">GitHub</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="chapter light">
+    <div class="chapter_inner">
+        <h2 class="title">
+            Установка Modulite в PHPStorm
+        </h2>
+
+        <div style="margin: 50px 0; padding: 30px 30px 40px; background: #c84d4d; color: white; border-top-left-radius: 30px; border-bottom-right-radius: 30px;">
+            <p style="margin-top: 0;">JebBrains до сих пор не отмодерировали наш плагин, но ждать дальше некуда. Релизимся.</p>
+            <p>Скачиваем <b>modulite-1.1.0.zip</b> по ссылке
+                <a href="https://github.com/VKCOM/modulite/releases/tag/v1.1.0" class="a-white a-underline"><b>с гитхаба</b></a>,
+                жмём "Install plugin from disk" и&nbsp;выбираем этот zip:
+            </p>
+            <div class="img-single-c">
+                <img src="img/ui-install-from-disk.png" alt="ui-install-from-disk" width="700" style="border-top-left-radius: 15px; border-bottom-right-radius: 15px;">
+            </div>
+        </div>
+
+        <p style="display: none">
+            Плагин совместим с версиями 2022.2 и выше.<br>
+            Устанавливается через интерфейс IDE в <code>Settings | Plugins</code>:
+        </p>
+        <p>
+            Плагин совместим с версиями 2022.2 и выше.
+        </p>
+        <div class="img-single-c img-single-c--is-window" style="margin: 30px 0; display: none">
+            <img src="img/ui-install-page.png" alt="ui-install-page" width="800">
+        </div>
+
+        <p>Рекомендуется иметь также <a href="https://vkcom.github.io/kphpstorm/">KPHPStorm</a>,
+            чтобы когда классы встречаются внутри <code>tuple(...)</code>
+            и&nbsp;других ненативных типах, Modulite их тоже обнаруживал и добавлял в <code>require</code>.
+        </p>
+
+        <p>Если в проекте уже есть <code>.modulite.yaml</code> файлики, лучше вызвать переиндексацию.</p>
+        
+    </div>
+</div>
+
+<footer>
+    <div class="footer__inner">
+        <div class="footer__menu">
+            <h3>Ссылки</h3>
+            <ul>
+                <li>
+                    <a href="https://vkcom.github.io/modulite/">Главная</a>
+                </li>
+                <li>
+                    <a href="install.html">Установка</a>
+                </li>
+                <li>
+                    <a href="https://github.com/VKCOM/modulite-phpstan">Плагин для PHPStan</a>
+                </li>
+                <li>
+                    <a href="https://github.com/VKCOM/modulite" target="_blank">Github</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer__copyright">
+            <a href="https://github.com/VKCOM/kphp" target="_blank">KPHP team</a> from VK.com © 2022
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
+

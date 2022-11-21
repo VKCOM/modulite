@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <meta property="og:title" content="Modulite for PHPStorm">
+    <meta property="og:description" content="Bring modules into the PHP language: internal classes and private namespaces">
+    <meta property="og:image" content="img/preview.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vkcom.github.io/modulite/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Modulite for PHPStorm">
+    <meta name="twitter:description" content="Bring modules into the PHP language: internal classes and private namespaces">
+    <meta name="twitter:image:src" content="img/preview.png">
+    <meta name="twitter:image" content="img/preview.png">
+
+    <title>Modulite for PHPStorm</title>
+
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<header>
+    <div class="header__inner">
+        <a href="https://vkcom.github.io/modulite/" class="header__title">
+            <span>Mod</span><span style="margin-left: -1px;">ulite</span>
+        </a>
+        <nav class="header__navbar">
+            <ul class="header__links">
+                <li>
+                    <a href="https://vkcom.github.io/modulite/">Главная</a>
+                </li>
+                <li>
+                    <a href="install.html">Установка</a>
+                </li>
+                <li class="header__github-link">
+                    <a href="https://github.com/VKCOM/modulite" target="_blank">GitHub</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="c-beam">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1313 1156" id="beam">
+        <defs>
+            <linearGradient x1="43.164%" y1="98.551%" x2="56.703%" y2="13.241%" id="beam-1_a">
+                <stop stop-color="#FF6C93" offset="0%"></stop>
+                <stop stop-color="#FF438B" offset="100%"></stop>
+            </linearGradient>
+            <linearGradient x1="44.733%" y1="13.063%" x2="57.576%" y2="87.809%" id="beam-1_b">
+                <stop stop-color="#FF318C" offset="0%"></stop>
+                <stop stop-color="#FF438B" offset="100%"></stop>
+            </linearGradient>
+            <linearGradient x1="10.542%" y1="44.612%" x2="82.212%" y2="56.679%" id="beam-1_c">
+                <stop stop-color="#FF318C" offset="0%"></stop>
+                <stop stop-color="#765AF8" offset="100%"></stop>
+            </linearGradient>
+            <linearGradient x1="7.476%" y1="49.697%" x2="91.046%" y2="50.357%" id="beam-1_d">
+                <stop stop-color="#B345F1" offset="0%"></stop>
+                <stop stop-color="#765AF8" offset="100%"></stop>
+            </linearGradient>
+            <linearGradient x1="7.447%" y1="51.203%" x2="82.257%" y2="46.892%" id="beam-1_e">
+                <stop stop-color="#B345F1" offset="0%"></stop>
+                <stop stop-color="#F445F1" offset="100%"></stop>
+            </linearGradient>
+        </defs>
+        <g fill-rule="nonzero" fill="none">
+            <path fill="url(#beam-1_a)" d="M692.8 1200H740l147.5-252.4-45.4-30.8z"
+                  transform="translate(0 -44)"></path>
+            <path fill="url(#beam-1_b)" d="M550 554.5l282 468.4 55.5-75.3-267.4-456.9-91.2-21.6z"
+                  transform="translate(0 -44)"></path>
+            <path fill="url(#beam-1_c)" d="M1167.9 728.9l-96.3 189.4-474-290.6-47.6-73.2-21.1-85.4 91.2 21.6z"
+                  transform="translate(0 -44)"></path>
+            <path fill="url(#beam-1_d)" d="M0 520l54.1 188.6 1017.5 209.7 96.3-189.4z"
+                  transform="translate(0 -44)"></path>
+            <path fill="url(#beam-1_e)" d="M740 0h661v231.2L54.1 708.6 0 520z" transform="translate(0 -44)"></path>
+        </g>
+    </svg>
+</div>
+
+<div class="first-page">
+
+    <div class="first-page__inner">
+        <h1 class="first-page__title">
+            <span>Mod</span><span style="margin-left: -3px;">ulite</span>
+        </h1>
+        <p class="first-page__description">Честная модульность внутри PHP</p>
+        <div class="first-page__download-block">
+            <a href="install.html" class="first-page__download-button">Установить</a>
+        </div>
+        <div class="first-page__vk_logo">
+            <svg fill="none" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
+                <path clip-rule="evenodd" fill-rule="evenodd" fill="#000"
+                      d="m3.37413 3.37413c-3.37413 3.37413-3.37413 8.80467-3.37413 19.66587v1.92c0 10.8612 0 16.2917 3.37413 19.6659 3.37413 3.3741 8.80467 3.3741 19.66587 3.3741h1.92c10.8612 0 16.2917 0 19.6659-3.3741 3.3741-3.3742 3.3741-8.8047 3.3741-19.6659v-1.92c0-10.8612 0-16.29174-3.3741-19.66587-3.3742-3.37413-8.8047-3.37413-19.6659-3.37413h-1.92c-10.8612 0-16.29174 0-19.66587 3.37413zm4.72587 11.22607c.26 12.48 6.4999 19.9799 17.4399 19.9799h.6202v-7.14c4.02.4 7.0597 3.34 8.2797 7.14h5.6802c-1.56-5.68-5.6602-8.82-8.2202-10.02 2.56-1.48 6.16-5.0799 7.02-9.9599h-5.1601c-1.12 3.96-4.4396 7.5599-7.5996 7.8999v-7.8999h-5.1602v13.8399c-3.2-.8-7.2399-4.6799-7.4199-13.8399z"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<div class="chapter light chapter__topimg">
+    <div class="chapter_inner chapter_inner--topwide">
+        <div>
+            <h2 class="title" style="position: relative">
+                Что такое<br>
+                <span>Mod</span><span style="margin-left: -2px;">ulite</span>?
+            </h2>
+
+            <p class="chapter__text">
+                В языке PHP очень не хватает нативных модулей: internal классов,
+                private неймспейсов, явных export'ов.
+                Любой класс доступен из любого места.
+                Отсюда растёт связность кода, и растёт неконтролируемо: язык этому не препятствует.
+
+                <br>
+                <br>
+
+                Плагин Modulite внедряет в PHPStorm честную модульность.
+                Теперь можно превращать папки в модули, хоткеями делать приватные классы
+                и сразу в редакторе видеть ошибки.
+
+                <br>
+                <br>
+
+                Плагин — это по сути удобный UI над конфигами — файликами
+                <code>.modulite.yaml</code>.
+                Во время компиляции и на CI уже внешние интеграции проверяют код на соответствие правилам.
+
+                <br>
+                <br>
+
+                Ниже — подробности, скриншоты, примеры и ответы на все вопросы.
+            </p>
+        </div>
+        <div class="main-image-c">
+            <img src="img/screen-main.png" alt="" height="804">
+        </div>
+    </div>
+</div>
+
+<div class="chapter dark">
+    <div class="chapter_inner">
+        <h2 class="title">
+            Модульность, часть 1: явные export
+        </h2>
+
+        <p>Представим, что в проекте работают Месси и Адам.
+            Месси пишет мессенджер (папка <code>Messinger</code>), а Адам пишет админку (папка <code>Adaminka</code>).
+            В мессенджере есть каналы, папки и другие сущности в базе.
+            Ещё есть нотификации: при добавлении в канал, при выходе и т.п.</p>
+        <p>Адам пишет добавление юзера в канал из админки.
+            Он вставляет напрямую юзера в базу через <code>MsgDatabase</code>
+            и создаёт <code>JoinNotification</code> — "потому что релиз через 2 часа" или
+            "а&nbsp;в&nbsp;чём проблема вообще?". Действительно, в чём? Ведь работает же. Сегодня — работает.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/screen-adaminka-1.png" alt="screen-adaminka-1" width="800">
+        </div>
+
+        <p>Месси узнаёт про этот произвол. Что, мол, за дела? Ведь только внутренности каналов должны слать нотификации,
+            внешний код вообще не должен туда лезть. Внешний код не знает про нюансы, про флуд-контроль и т.п.
+            Нужно запретить! Чтобы даже в админке такое не писали.</p>
+
+        <p>И тут Месси делает фокус: создаёт модуль <code>@messi-channels</code> из папки <code>Channels/</code>.
+            Он убирает галочки в дереве <code>Notifications/</code> — таким образом, те классы будут internal.
+        </p>
+        <div class="img-single-c img-single-c--is-window">
+            <img src="img/new-messi-channel.png" alt="new-messi-channel" width="586">
+        </div>
+
+        <p>И вуаля! Теперь Адам не может создать недоступный класс. Ошибка видна в IDE,
+            а в структуре файлов видны @названия и internal-бейджи.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/screen-adaminka-2.png" alt="screen-adaminka-2" width="800">
+        </div>
+
+        <p>Физически это привело к тому, что создался файл <code>Channels/.modulite.yaml</code>,
+            который содержит список <code>export</code>, в частности.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/new-messi-channel-yaml.png" alt="new-messi-channel-yaml" width="800">
+        </div>
+
+
+        <h2 class="title">
+            Модульность, часть 2: явные require
+        </h2>
+
+        <p>Когда Месси создал модуль, он не только зафиксировал export'ы: он также зафиксировал внутреннее состояние
+            (зависимости, dependencies, requires — это синонимы). Допустим, в команду к Месси пришёл джун.
+            У джуна задание: сделать метод <code>isUserSubscribed()</code>, который будет проверять,
+            подписан ли юзер на канал. Окей, подумал джун, пишет код, но видит ошибку:
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/current-user-err.png" alt="current-user-err" width="800">
+        </div>
+
+        <p>В чём ошибка? Функция <code>currentUser()</code> никогда раньше не вызывалась
+            изнутри модуля, она не добавлена в <code>requires</code>.
+            На самом деле, причина ошибки в том, что <code>$user_id</code> нужно передавать снаружи,
+            а не брать id текущего пользователя: вот функция и не вызывалась.
+            "Окей", — подумал джун, — "Делов-то. Возьму и добавлю":
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/current-user-add.png" alt="current-user-add" width="800">
+        </div>
+
+        <p>От ошибки-то джун избавился. Вот только это привело к изменению <code>.modulite.yaml</code>:
+            добавилась зависимость. А значит, это будет видно на ревью.</p>
+        <p>В данном случае Месси скажет, что код не верный, модуль не должен зависеть от текущего пользователя.
+            Но если бы был другой пример (не <code>currentUser()</code>, а что-то действительно нужное),
+            было бы ок. В любом случае — появление новых зависимостей не пройдёт незамеченным.
+            А если и пройдёт, это останется в Git'овой истории.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/current-user-yaml.png" alt="current-user-yaml" width="800">
+        </div>
+
+        <p class="chapter-conclusion chapter-conclusion--bg-light">
+            Итого. Модуль — это обычная папка с PHP-кодом.<br>
+            С одной стороны, она определяет доступ "внутрь" через export.<br>
+            Всё, что не публичное — значит, приватное.<br>
+            С другой, она определяет доступ "наружу" через requires.<br>
+            Нельзя использовать внешние символы, не разрешив это явно.
+        </p>
+    </div>
+</div>
+
+<div class="chapter light">
+    <div class="chapter_inner">
+        <div class="chapter__header-row">
+            <h2 class="title text-c">* * *</h2>
+        </div>
+
+        <p>
+            Цель модульности формулируется так:
+            <b>не допустить неконтролируемого разрастания энтропии</b> внутри монолита.
+            Предпосылки — именно изоляция отдельных папок <b>в существующем коде</b>.
+        </p>
+
+        <p>
+            VKCOM, как и другие огромные проекты — клубок кода с крайне высокой связностью.
+            Хочется его "распутывать", только все друг другу мешаются, лишь добавляя новые связи.
+            Многие порываются выносить папки в отдельные Composer-пакеты — но пока код не автономен,
+            пока есть хоть один внешний вызов, это невозможно. И в 100% случаев у нас именно такая ситуация.
+            Любой крупный неймспейс тесно связан с остальным кодом — как в прямом, так и в обратном направлении.
+        </p>
+
+        <p>
+            Вынос в пакет должен происходить итеративно, постепенно уменьшая зависимости от остального монолита.
+            Проблема в том, что пока вы это делаете, другие разработчики всё равно используют что не нужно,
+            заново связывая код с монолитом. Это происходит непредумышленно, поскольку нет инструментов для контроля.
+            Точнее, не было. Теперь есть.
+        </p>
+
+        <p>
+            Модульность позволяет <b>изолировать отдельные участки кода, которые подчиняются правилам,
+            которые задаются владельцами этого участка</b>. Это позволяет рефакторить код,
+            постепенно уменьшая число зависимостей — и гарантируя, что новых не появляется.
+            В идеале модуль стремится к полной автономности, и тогда его можно вынести в пакет.
+        </p>
+
+        <p>
+            Из "существующих решений" можно отметить разве что аннотацию <code>@psalm-internal</code>.
+            Она позволяет задать namespace, где функция/класс могут быть использованы.
+            В целом, эта аннотация решила бы вопрос публичного интерфейса, но: если забыть пометить новый класс,
+            вся концепция пошатнётся. В нашей же концепции, всё новое по умолчанию приватное, нужен явный export.
+            К тому же, фиксировать requires не менее важно для итеративного рефакторинга.
+        </p>
+
+        <p>
+            <b>И кстати, важный момент.</b>
+            Когда модуль становится автономным — да, его можно вынести в пакет.
+            А можно и не выносить, потому что зачем? Если не предполагается его подключать в другую репу,
+            то лучше просто оставить в монолите. Ведь желание "вынести в пакет" возникает лишь потому,
+            что есть ассоциация "пакет это хорошо, это изоляция". А если изоляция обеспечивается модульностью —
+            то <b>Composer уже и не нужен</b> для этих целей.
+        </p>
+
+        <p class="chapter-conclusion chapter-conclusion--bg-dark">
+            В общем, не найдя аналогов, мы сделали Modulite.<br>
+            Мы скрестили наш опыт в IDE, чтобы это было удобным.<br>
+            Наш опыт в разработке, чтобы это было правильным.<br>
+            И наш опыт в компиляторах, чтобы это было быстрым.
+        </p>
+    </div>
+</div>
+
+<div class="chapter dark">
+    <div class="chapter_inner">
+        <h2 class="title">Создание модуля из папки</h2>
+
+        <p>В контекстом меню папки <code>New -> Modulite from Folder...</code>.
+            Если папка большая, нужно чуть подождать, пока плагин сканирует содержимое. Покажется форма создания:
+        </p>
+        <div class="img-single-c img-single-c--is-window">
+            <img src="img/new-modulite-window-kernel.png" alt="new-modulite-window-kernel" width="586">
+        </div>
+        <p>Там указывается имя модуля (по умолчанию по имени папки) и видимость символов галочками.
+            Отмеченные это export, неотмеченные internal.
+            Мы оперируем конкретными символами: никаких масок "по звёздочке" (что при создании, что впоследствии).
+            Символы — это не только классы. Это также обычные функции, глобальные константы, дефайны.
+            Да, Modulite оперирует символами гранулярно: зато можно насоздавать дефайнов в модуле,
+            и если они internal, то внешний код их не увидит.
+            Также в форме есть namespace и folder — но это скорее для сверки, они неизменяемы.
+            Если модуль вложенный, то ещё информация про родительский.
+        </p>
+        <p>Плагин автоматически сгенерирует requires, а также если нужно, перегенерирует зависимости других модулей.
+            После нажатия "OK" откроется созданный <code>.modulite.yaml</code>.
+        </p>
+        <p>Если вы сделали все символы публичными, то код остался валиден.
+            Если же некоторые приватные и есть внешний код, который их использует — компиляция упадёт с ошибкой.
+        </p>
+
+
+        <h2 class="title">Делаем символы internal и обратно</h2>
+
+        <p>Возле символов модуля @name есть надпись <code>exported from @name</code>
+            (или <code>internal in @name</code>). Менять состояние можно либо через Alt+Enter,
+            либо контекстным меню прям на этом хинте.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-make-symbol-internal.png" alt="ui-make-symbol-internal" width="800">
+        </div>
+
+        <p>Область видимости есть не только у классов: у методов, у обычных функций и даже у дефайнов.
+            Также помним, что все новые символы по умолчанию приватные (т.к. не экспортированы),
+            о чём подсказки лишний раз напоминают.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-export-define.png" alt="ui-export-define" width="800">
+        </div>
+
+        <p>Кстати, эти хинты справа интерактивные: на @name можно кликнуть и перейти в yaml-файл.</p>
+
+        <p><b>Правила видимости следующие:</b></p>
+        <ul class="text-li">
+            <li>все новые символы по умолчанию — приватные; нужен явный export;</li>
+            <li>если класс exported, то все его методы/поля/константы по дефолту тоже exported;</li>
+            <li>даже в exported-классе зафорсить internal для его статик-поля/статик-метода/константы;</li>
+            <li>инстанс-поля и инстанс-методы отдельно не контролируются и вообще не анализируются плагином:
+                иначе будут расхождения в выводе типов между IDE и KPHP.
+            </li>
+        </ul>
+
+
+        <h2 class="title">Делаем internal уже используемый класс</h2>
+
+        <p>Представим ситуацию: есть класс <code>SortPolicy</code> в <code>@messi-folders</code>,
+            он по идее деталь реализации и должен быть приватным, но уже где-то внешний код его уже использует.
+            Если просто сделать его internal, то существующий код перестанет компилироваться. Что делать?
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-make-internal-used-class.png" alt="code-make-internal-used-class" width="800">
+        </div>
+        <p>Ответ такой: можно сделать его internal, но добавить конкретные места, которые есть уже сейчас,
+            в исключения. Таким образом, существующий код будет работать (и от исключений в будущем нужно избавиться),
+            а новый код уже не сможет использовать internal-класс. Таким образом, мы зафиксируем текущее состояние,
+            но не позволим ему становиться хуже.
+        </p>
+        <p><b>Действие "Make internal in @name" делает это автоматически!</b>
+            Плагин анализирует использования в текущем коде и добавляет их в исключения.
+        </p>
+        <p>После этого хинт будет "internal in @name (visible for ...)", а само использование
+            хоть и разрешено, но&nbsp;перечёркнуто, будто бы deprecated.</p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-made-internal-used-class.png" alt="code-made-internal-used-class" width="800">
+        </div>
+        <p>Физически это привело к тому, что в конфиг добавилось <code>allow-internal-access</code>:</p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/allow-internal-access-sort.png" alt="allow-internal-access-sort" width="800">
+        </div>
+
+
+        <h2 class="title">Разрешаем символ самостоятельно</h2>
+
+        <p>Выше мы доверялись плагину в открытии доступа ко внутренним символам извне.
+            Однако мы можем сделать это и вручную.
+            Например, мы хотим разрешить использовать <code>SortPolicy</code> не в конкретной глобальной функции,
+            а во всём модуле @api. Можно нажать "Allow internal access for specific modulite"
+            и там уже выбрать из списка.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-make-internal-for-modulite.png" alt="code-make-internal-for-modulite" width="800">
+        </div>
+        <div class="img-single-c img-single-c--is-window">
+            <img src="img/window-make-internal-for-modulite.png" alt="window-make-internal-for-modulite" width="536">
+        </div>
+        <p>В любом случае, это сводится к изменению конфига.
+            Если каких-то действий в UI не хватает, можно поменять ручками.</p>
+
+
+        <h2 class="title">Скрываем члены публичного класса</h2>
+
+        <p>Вряд ли это будет частым, но иногда хочется запретить доступ к конкретному методу снаружи,
+            оставив его public. Спрашивается, зачем, ведь можно сделать метод private? Не всегда.
+            Если это класс, который используется из других классов модуля — то модификатор доступа не подходит.
+            При этом сам класс зачем-то должен быть export.
+            Вряд ли это хорошая архитектура — но напомню, что модульность в первую очередь обеспечивает
+            потребности <b>уже существующего</b> кода с порой сомнительной архитектурой, чтобы не допускать ещё хуже.
+        </p>
+        <p>Здесь на помощь приходит форсирование internal для членов класса.
+            Опять-таки, это можно сделать как через Alt+Enter, так и мышкой на хинте.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-make-internal-method.png" alt="code-make-internal-method" width="800">
+        </div>
+        <p>Это привело к модификации конфига, а конкретнее — секции <code>force-internal</code>:</p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-make-internal-method-yaml.png" alt="code-make-internal-method-yaml" width="800">
+        </div>
+        <p>Если у метода уже были внешние использования, то как и раньше, плагин это обнаружит
+            и также дополнит <code>allow-internal-access</code>.
+        </p>
+
+
+        <h2 class="title">Новый код и require</h2>
+
+        <p>Надеюсь, вы помните, что в секции <code>require</code> конфига указываются все вншение символы,
+            разрешённые к использованию. При первичном создании модуля плагин его создаёт автоматически.
+            Что там перечисляется:
+        </p>
+        <ul class="text-li">
+            <li>другие модули <code>@another-modulite</code></li>
+            <li>композер-пакеты <code>#some/package</code></li>
+            <li>внешние классы <code>\Some\External\Class</code></li>
+            <li>статические методы классов <code>\Some\External\Class::itsMethod()</code></li>
+            <li>внешние глобальные функции <code>\externalGlobalFunction()</code></li>
+            <li>внешние дефайны и константы <code>\SOME_DEFINE</code></li>
+            <li>все глобальные переменные <code>$global_var</code></li>
+        </ul>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-requires-list-yaml.png" alt="code-requires-list-yaml" width="800">
+        </div>
+        <p>Плагин при просмотре yaml-файлика удобно группирует зависимости, хотя это сплошной список по сути.
+            Согласно yaml-синтаксису, для строк требуется экранирование слешей, однако все символы кликабельные,
+            будто в обычном PHP-коде.</p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-requires-list-yaml-hover.png" alt="code-requires-list-yaml-hover" width="800">
+        </div>
+        <p>При написании нового кода плагин будет проверять, что используются только указанные зависимости,
+            иначе ошибка, что символ не прописан в <code>requires</code>. Есть quick fix для исправления,
+            это приведёт к изменению yaml-файлика — явная фиксация новой зависимости,
+            что видно на ревью и остаётся в гите.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-requires-unknown-global.png" alt="code-requires-unknown-global" width="800">
+        </div>
+        <p>Если подключен другой модуль — можно использовать любой его символ, аналогично с композер-пакетами.
+            Если подключен класс — можно использовать его константы, поля, и инстанс-методы,
+            а вот статик-методы нужно перечислять отдельно каждый.
+            Quick fix обо всём этом знает и будет предлагать "Add @api to requires",
+            если обращаешься к любому символу из <code>@api</code>.
+        </p>
+        <p>В текущем VKCOM-коде, пока модулей мало, каждый новый модуль будет содержать десятки внешних зависимостей
+            на глобал классы и функции. С течением времени, когда всё больше кода будет оформляться в модули,
+            зависимости на конкретные символы будут переделываться на зависимости от модулей.
+            В идеале, модули должны стремиться только к зависимостям от других модулей и пакетов.
+            Так, в примере выше явно перечисляются <code>\Messinger\Kernel\...</code> символы.
+            А вот когда Месси сделает из этого модуль, то эти зависимости схлопнутся в одну
+            (опять-таки автоматически при создании <code>@messi-kernel</code>):
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-requires-after-messi-kernel.png" alt="code-requires-after-messi-kernel" width="800">
+        </div>
+        <p>Таким образом, заглядывая в yaml-файлик, <b>мы всегда видим глазами,
+            насколько модуль привязан к внешнему коду</b> — и к какому конкретно.</p>
+
+
+        <h2 class="title">Регенерация зависимостей модуля</h2>
+
+        <p>По мере рефакторинга, некоторые символы в <code>requires</code>
+            становятся уже не нужны, то есть список устаревает.
+            Чтобы привести его в актуальное состояние, полезно иногда нажимать "click to regenerate" —
+            над пунктом или в контекстном меню:
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-menu-regenerate-requires.png" alt="ui-menu-regenerate-requires" width="800">
+        </div>
+        <p>Плагин заново пересчитает зависимости, проапдейтит yaml-файл и выдаст сообщение справа внизу.
+            Клик по "Show details" покажет, что конкретно изменилось:
+        </p>
+        <div class="img-single-c img-single-c--is-window">
+            <img src="img/window-requires-regenerated.png" alt="window-requires-regenerated" width="586">
+        </div>
+
+
+        <h2 class="title">Вложенные модули, подмодули</h2>
+
+        <p>Модули могут быть вложены друг в друга. При этом имя подмодуля должно начинаться
+            с имени его родителя. Например, если родительский <code>@messi</code>, то дочерние
+            <code>@messi/folders</code> и т.п.
+        </p>
+        <p>С точки зрения родительского, подмодуль может быть как экспортирован наружу, так и приватным.
+            Пусть есть структура мессенджера, с тремя модулями:
+        </p>
+        <pre class="folders">
+  Messinger/
+    Channels/    <span class="comment">@messi-channels</span>
+      ...
+    Folders/     <span class="comment">@messi-folders</span>
+      ...
+    Kernel/      <span class="comment">@messi-kernel</span>
+      ...</pre>
+        <p>В таком виде, это 3 независимых модуля, объединённых только общим namespace, но не общими правилами.
+            Внешний код может использовать любой из них (в рамках разрешённых export'ов).
+            Иными словами, в этой структуре админка может лезть в ядро мессенджера,
+            и ровно по тем же правилам, что и каналы.
+        </p>
+        <p>Грамотнее — не так. Грамотнее — сделать внешний модуль <code>@messi</code> и 3 подмодуля.
+            При этом <code>@messi/kernel</code> чтоб был приватным.
+            Такая структура не позволит админке лезть в ядро мессенджера,
+            а каналы и папки будут работать по-прежнему:
+        </p>
+        <pre class="folders">
+  Messinger/     <span class="comment">@messi</span>
+    Channels/    <span class="comment">@messi/channels</span>
+      ...
+    Folders/     <span class="comment">@messi/folders</span>
+      ...
+    Kernel/      <span class="comment">@messi/kernel (internal)</span>
+      ...</pre>
+        <p>Итого, просто делаем "New Modulite from Folder" и настраиваем галочки:</p>
+        <div class="img-single-c img-single-c--is-window">
+            <img src="img/window-create-messi-outer.png" alt="window-create-messi-outer" width="586">
+        </div>
+        <p>Выглядит это так:</p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-messi-outer-before-rename-yaml.png" alt="code-messi-outer-before-rename-yaml"
+                 width="800">
+        </div>
+        <p>Обратите внимание, что все дочерние модули переменовались: <code>@any-child</code>
+            стал называться <code>@messi/any-child</code>. Вероятно, их захочется вручную укоротить,
+            чтобы было лаконичнее. Это легко делать через Rename, когда курсор на имени модуля в yaml-файлике.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-messi-channel-rename.png" alt="ui-messi-channel-rename" width="800">
+        </div>
+        <p>Допустим, мы переименовали все три, и в итоге добились нужной структуры:</p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-messi-outer-tree.png" alt="ui-messi-outer-tree" width="800">
+        </div>
+        <p>Как и ожидается, из админки <code>@messi/kernel</code> недоступно, даже если указать вручную в requires.
+            А вот из каналов и других внутренностей мессенджера — по-прежнему без проблем
+            (конечно же, следуя правилам на export, которые наложены kernel'ом).
+            <b>По сути, вложенный модуль тоже может быть атомарной деталью реализации</b>.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-messi-kernel-denied-yaml.png" alt="code-messi-kernel-denied-yaml" width="800">
+        </div>
+        <p>Вообще, это нормальный (и даже рекомендуемый) процесс: сначала делать модулями какие-нибудь небольшие
+            и внутренние вещи, называя модули длинно, по типу <code>@feed-smart-blocks-proxy</code>.
+            А потом по мере того как код рефакторится и появляется структура,
+            уже оформлять родительские модули, укорачивая дочерние.
+        </p>
+        <p>Кстати, внешний код может подключать как <code>@messi/folders</code> и другие подмодули поодиночке,
+            так и подключить <code>@messi</code> целиком и использовать все доступные публичные символы,
+            которые существуют сейчас и появятся в будущем.
+        </p>
+
+
+        <h2 class="title">Find usages внутри модуля</h2>
+
+        <p>Одной из важных фичей плагина является возможность отвечать на вопросы "Где?" и "Что?".
+            Допустим, вы лазите по коду и видите вызов <code>currentUser()</code>.
+            Либо смотрите yaml-файлик и видите его в requires.
+            И сразу же возникает вопрос: окей, мой модуль зависит от этой функции, но <b>насколько сильно?</b>
+            Если там пара вызовов, это легко переделать, а если 100, то печаль.
+        </p>
+        <p>В контекстом меню любого символа, помимо обычного "Find usages", добавляется новый пункт:
+            "Find usages in @{current}...":
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-find-usages-in-api.png" alt="ui-find-usages-in-api" width="800">
+        </div>
+        <p>Будет показано нативное окошко — только с фильтрацией внутри текущего модуля.
+            И даже если в проекте символ используется тысячи раз, а внутри модуля только два — будет видно только два.
+        </p>
+        <p>Пунктом ниже в том же меню есть "Find usages in Modulite...".
+            Выскочит окошко, где нужно выбрать модуль, и поиск будет идти внутри него, а не в текущем.
+        </p>
+        <div class="img-single-c img-single-c--is-window">
+            <img src="img/window-find-usages-in.png" alt="window-find-usages-in" width="536">
+        </div>
+
+
+        <h2 class="title">Степень зависимости от другого модуля</h2>
+
+        <p>Мы же помним, что когда используем символ из модуля, то добавляем в requires сам модуль.
+            Так, для использования <code>MsgDatabase</code> подключаем <code>@messi/kernel</code>.
+            Впоследствии, если используем другие символы из модуля, requires уже менять не нужно.
+            И бывает, хочется узнать: <b>насколько сильно я завишу от </b> <code>@messi/kernel</code>?
+            Возможно, я использую только один класс оттуда, а возможно, целых десять.
+        </p>
+        <p>Делается в контекстном меню на интересующем модуле в yaml-файлике:</p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-find-usages-of-another-m.png" alt="ui-find-usages-of-another-m" width="800">
+        </div>
+        <p>Плагин чуть подумает и выдаст окошко с публичными символами интересующего модуля.
+            Сереньким будут те, зависимости от которых нет.
+            А для остальных можно даблкликом поискать конкретно его в текущем модуле — как в разделе выше.
+            Это очень удобный способ визуально оценить, от скольких символов чужого модуля вы зависите.
+        </p>
+        <div class="img-single-c img-single-c--is-window">
+            <img src="img/window-find-usages-of-another-m.png" alt="window-find-usages-of-another-m" width="736">
+        </div>
+
+
+        <h2 class="title">Имена модулей в интерфейсе</h2>
+
+        <p>Интерфейс IDE чуть модифицируется, чтобы визуально подсвечивать наличие модулей.</p>
+        <p>Во-первых, возле классов, статик-методов и некоторых других символов всегда пишется
+            напоминание, internal он или нет. При этом, если вложенность длинная, то
+            хинт сворачивается до <code>@.../childname</code>, а при клике на многоточие раскрывается.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-static-method-hint-collapsed.png" alt="code-static-method-hint-collapsed" width="800">
+        </div>
+        <p>Хинты кликабельные, можно перейти в любого родителя прям здесь:
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-static-method-hint-hover.png" alt="code-static-method-hint-hover" width="800">
+        </div>
+        <p>В дереве файлов тоже отображаются имена модулей, пропуская родительские, для читаемости.
+            То же самое и в строке навигации.
+            В дереве файлов есть постфикс <code>(internal)</code>.
+            Меняются иконки папок-модулей: если нет дочерних, то один квадратик, а если есть, то четыре;
+            если экспортирован из родителя, то яркий, иначе оранжевый.
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/ui-names-in-tabbar.png" alt="ui-names-in-tabbar" width="800">
+            <img src="img/ui-names-in-tree.png" alt="ui-names-in-tree" width="800">
+        </div>
+
+        <p class="chapter-conclusion chapter-conclusion--bg-light">
+            Плагин — это удобный UI над конфигом (файликом .modulite.yaml).<br>
+            Всё это можно делать и без плагина — просто не так удобно.<br>
+            Именно файлик хранится под гитом, именно изменения в нём<br>
+            видны на ревью при добавлении зависимостей или исключений.
+        </p>
+    </div>
+</div>
+
+<div class="chapter light">
+    <div class="chapter_inner">
+        <h2 class="title">Структура файла .modulite.yaml</h2>
+
+        <pre class="code" style="margin-bottom: 50px;">
+name: <span class="string">"@modulite-name"</span>
+description: <span class="string">"..."</span>
+namespace: <span class="string">"Some\\Namespace\\"</span>
+
+export:
+  - <span class="string">"ClassInNamespace"</span>
+  - <span class="string">"OrConcrete::CLASS_MEMBER"</span>
+  <span class="comment">and others</span>
+
+force-internal:
+  - <span class="string">"ClassInNamespace::staticMethod()"</span>
+  <span class="comment">and others</span>
+
+require:
+  - <span class="string">"@another-modulite"</span>
+  - <span class="string">"#composer/package"</span>
+  - <span class="string">"\\GlobalClass"</span>
+  <span class="comment">and others</span>
+
+allow-internal-access:
+  "@rpc":
+    - <span class="string">"ClassAllowedForRpcModule"</span>
+    - <span class="string">"OrConcrete::method()"</span>
+  <span class="comment">and others</span></pre>
+
+        <p><b>name</b> — уникальное в пределах проекта, начинается с <code>@</code>. По нему можно ссылаться на модуль.
+            Дочерние модули префиксированы именем родителя, типа <code>@api/exceptions</code>.
+            Когда курсор на имени, работает "Refactor | Rename".
+        </p>
+
+        <p><b>description</b> — произвольная строка, на логику никак не влияет.
+        </p>
+
+        <p><b>namespace</b> — пространство имён, в целом согласно autoload-стандарту равно пути к папке.
+            Служит для резолвинга относительных имён в конфиге: так, <code>"Relative\\Symbol"</code>
+            резолвится в класс <code>\Some\Namespace\Relative\Symbol</code>.
+            Если модуль находится в глобальном пространстве имён, то здесь пустая строка или просто слеш.
+        </p>
+
+        <p><b>export</b> — публичные символы модуля, список строк.
+            Символы, не перечисленные здесь явно, являются приватными (internal).
+            Без лидирующего слеша (относительно namespace), см. выше.
+            Естественно, нельзя указывать здесь символы, объявленные за пределами модуля.
+        </p>
+        <ul class="text-li">
+            <li><code>someFunction()</code> делает публичной функцию вне класса;
+                особенно актуально для модулей, содержащих просто набор функций в global scope.
+            </li>
+            <li><code>SOME_DEFINE</code> экспортирует глобальную константу или define.</li>
+            <li><code>ClassName</code> делает публичный класс; по умолчанию все члены этого класса тоже доступны,
+                то есть вступают в игру обычные public/private/protected модификаторы, с помощью которых
+                разработчик контролирует видимость членов. Для более сложной логики см. далее.
+            </li>
+        </ul>
+
+        <p><b>force-internal</b> — убрать видимость у членов публичных классов.
+            По умолчанию класс в export открывает доступ ко всем public-символам, а здесь можно их форсированно скрыть.
+        </p>
+        <ul class="text-li">
+            <li><code>SomeClass::staticMethod()</code></li>
+            <li><code>SomeClass:CONST</code></li>
+            <li><code>SomeClass::$static_field</code></li>
+            <li><code>SomeClass::instanceMethod()</code> не имеет эффекта, инстанс-методы не анализируются</li>
+            <li><code>SomeClass::$instance_field</code> аналогично</li>
+        </ul>
+
+        <p><b>require</b> — список внешних символов, к которым разрешено обращаться из кода модуля.
+            Если обратиться к символу, который не перечислен, будет ошибка.
+            Здесь строки уже начинаются со слеша, ведь они не локальны относительно namespace.
+        </p>
+        <ul class="text-li">
+            <li><code>@another-modulite</code> подключает другой модуль и все публичные символы в нём</li>
+            <li><code>#composer/package</code> подключает композер-пакет и все публичные символы в нём</li>
+            <li><code>\VK\SomeClass</code> подключает глобальный класс (т.е. не принадлежащий никакому модулю,
+                ведь если он принадлежит, то нужно подключать модуль, а не сам класс),
+                а также все его поля, константы, инстанс-методы и конструктор
+            </li>
+            <li><code>\VK\SomeClass::staticMethod()</code> при этом статик-методы требуют перечисления намеренно</li>
+            <li><code>\someFunction()</code> подключает глобальную функцию</li>
+            <li><code>\SOME_DEFINE</code> подключает глобальную константу или define</li>
+            <li><code>$some_var</code> для использования внутри выражения <code>global $some_var</code>
+                (должны быть явно перечислены все global-переменные,
+                даже если за пределами модуля они нигде не используются, ведь у глобалов нет точки объявления)
+            </li>
+        </ul>
+
+        <p><b>allow-internal-access</b> задаёт исключения, по каким правилам внешнему коду разрешено использовать
+            internal
+            символы. Это стоит раскрыть подробнее.
+        </p>
+
+
+        <h2 class="title" style="margin-top: 40px;">allow-internal-access</h2>
+
+        <p>
+            Ввиду того, что код в монолите очень связный, не всегда удаётся обеспечить один публичный
+            интерфейс для всех. Часто будут возникать ситуации, что хочется сделать класс внутренним,
+            но уже где-то есть его использования. Публичным оставлять его не хочется, чтобы новых использований
+            не появлялось.
+        </p>
+        <p>
+            Здесь важно, что если А хочет подлезть в модуль В, то не А пишет исключение, а именно В.
+        </p>
+        <p>
+            <b>На примере.</b>
+            Пусть Адам в своей админке всё-таки хочет залезть в ядро мессенджера, а оно приватное.
+            Но он не может написать у себя "я разрешаю себе лезть в ядро" — нет. Даже если релиз через 2 часа.
+            А как тогда? А вот так: Адам идёт к Месси и объясняет, зачем ему лезть в мессенджер.
+            И вот тут уже возможны варианты. Может быть, Месси что-то не предусмотрел, и функциональности в его модуле
+            действительно не хватает — тогда он должен её реализовать, сделать публичное API, и Адам будет его
+            использовать.
+            Может быть, Месси просто забыл экспортировать символ — тогда он изменит свой конфиг, и всё.
+            А может быть, действительно там какой-то corner case, который решать долго —
+            вот тогда Месси и правда через конфиг <code>@messi-kernel</code> разрешит подлезть куда нужно.
+            Но — только Адаму, только из конкретного места админки, и больше никому.
+            А то место в конфиге самому Месси будет мозолить глаза, напоминая избавиться от этого техдолга в будущем.
+        </p>
+        <p>
+            Сами правила пишутся так. Ключ — это функция/класс/модуль, которому разрешаем.
+            Значение — это список символов, ровно такой же как в export. Пример:
+        </p>
+        <pre class="code">
+allow-internal-access:
+  "@adaminka":
+    - <span class="string">"MsgDatabase::insertUser()"</span>
+    - <span class="string">"MsgDatabase::TABLE_MESSAGES"</span>
+  "\\SomeGlobalClass\\itsMethod()":
+    <span class="comment">more exceptions</span></pre>
+
+        <p class="chapter-conclusion chapter-conclusion--bg-blue">
+            Именно благодаря конфигу работают проверки<br>
+            во время компиляции, в Git-хуках и в Teamcity.<br>
+            Поэтому даже если кто-то не пользуется IDE,<br>
+            он не сможет запушить в обход модульности.
+        </p>
+    </div>
+</div>
+
+<div class="chapter blue">
+    <div class="chapter_inner">
+        <h2 class="title text-c">
+            Компиляция, инструменты, деплой
+        </h2>
+        <p class="text-c" style="margin-bottom: 100px; font-size: 20px;">
+            Для полноценного использования должен существовать не только плагин.<br>
+            Ведь не все пользуются IDE, а код в master может попасть и в обход.
+        </p>
+
+        <div class="chapter__block">
+            <div class="chapter__three-block-row">
+                <div>
+                    <h2 class="chapter__small-title text-c">KPHP</h2>
+                    <p class="chapter__text">
+                        В KPHP встроена полная поддержка Modulite.
+                        Он читает yaml-файлики и проверяет код на все правила.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="chapter__small-title text-c">noverify</h2>
+                    <p class="chapter__text">
+                        В наш линтер Modulite не встроен, т.к. это несовместимо с diff-режимом.
+                        Да и не нужно: у нас везде KPHP.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="chapter__small-title text-c">PHPStan</h2>
+                    <p class="chapter__text">
+                        Для сообщества мы сделали PHPStan-плагин.
+                        Это позволяет использовать Modulite и в обычных PHP-проектах.
+                    </p>
+                </div>
+            </div>
+            <div class="chapter__three-block-row">
+                <div>
+                    <h2 class="chapter__small-title text-c">CI и git hooks</h2>
+                    <p class="chapter__text">
+                        На препуше гоняется KPHP, так что пройдут все проверки.
+                        А если пушнуть в обход, то при сборке уж точно свалится.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="chapter__small-title text-c">PHPStorm</h2>
+                    <p class="chapter__text">
+                        В PHPStorm все проверки выполняются этим плагином.
+                        Он автоматически генерит конфиги и показывает ошибки.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="chapter__small-title text-c">Другие IDE</h2>
+                    <p class="chapter__text">
+                        Для других IDE плагинов нет.
+                        Я не&nbsp;понимаю, как можно разрабатывать большие проекты, сидя в vim.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <h2 class="title">Modulite + KPHP</h2>
+
+        <p>
+            KPHP помимо php-исходников теперь читает yaml-файлики.
+            Если они содержат ошибки, компиляция прерывается в самом начале.
+            Далее идёт обычный анализ кода, параллельно проверяя модульность.
+            Из неочевидного — анализ кода разбит на этапы: сначала встраивание констант,
+            потом применение PHPDoc, потом связка функций (call graph) и т.д.
+            Поэтому если ошибка модульности при инлайне констант, он не пойдёт дальше.
+            Аналогично, если невалидно используются классы в тайпхинтах, он не будет анализировать вызовы функций.
+            Кстати, KPHP расценивает Composer-пакеты как неявные модули,
+            так что автоматически проверяет нужные requires, а также то, что пакеты не лезут в код монолита.
+        </p>
+        <p>
+            Ошибки компиляции выглядят максимально понятно:
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/screen-err-kphp.png" alt="screen-err-kphp" width="800">
+        </div>
+
+
+        <h2 class="title">Modulite + PHPStan</h2>
+
+        <p>
+            Чтобы модульность можно было использовать в обычных PHP-проектах, мы решили сделать
+            <a class="a-blue" href="https://github.com/VKCOM/modulite-phpstan"><b>плагин Modulite для PHPStan</b></a>.
+            Это совершенно отдельное от KPHP решение, полностью с нуля, с учётом PHPStan-специфики.
+            Мы научили его парсить yaml-файлы, резолвить символы через рефлексию,
+            а потом проверять модульность на классах / методах / функциях — по тем же самым правилам,
+            что в IDE и в KPHP. Поэтому при дальнейшей модернизации нужно будет поддерживать 3&nbsp;независимых решения.
+            Из неочевидного — это PHPStan-кеш, который так и не удалось победить.
+            Модульность устроена так, что при изменении yaml-правил могут появляться/исчезать ошибки
+            в PHP-коде, который вообще не менялся. Для KPHP это не проблема: он анализирует проект целиком.
+            А вот PHPStan не запускает анализ на нетронутых файлах, поэтому может выдавать старые ошибки.
+            Если будет запрос от сообщества, можно поизучать эту проблему и связаться с разработчиками PHPStan,
+            а пока что при сбросе кеша это работает всегда.
+        </p>
+        <p>
+            Ошибки анализа выдаются в традиционном для PHPStan виде:
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/screen-err-phpstan.png" alt="screen-err-phpstan" width="800">
+        </div>
+
+
+        <p class="chapter-conclusion chapter-conclusion--bg-dark" style="margin-top: 150px;">
+            Modulite удобно использовать не только в монолите.<br>
+            А например, разрабатывая любой Composer-пакет:<br>
+            почему бы не писать его внутренности модульными?<br>
+            И даже задавать export у пакета, чего в Composer вообще нет.
+        </p>
+    </div>
+</div>
+
+<div class="chapter dark">
+    <div class="chapter_inner">
+        <h2 class="title">Modulite + Composer</h2>
+
+        <p>Философия такая: <b>разрабатывая пакет, можно тоже пользоваться модульностью</b>.
+            Как и в монолите, создавать внутренние папочки со своими областями ответственности,
+            контролировать requires и т.п. Это помогает структурировать код,
+            что особенно актуально в случае больших пакетов.
+        </p>
+        <p>Так, пусть Герасим пишет отдельный пакет для преобразования речи в текст.
+            Это отдельный репозиторий <code>voice-text</code>, который тоже включает в себя модули
+            (в частности, <code>@impl</code>):
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-voice-text-screen.png" alt="code-voice-text-screen" width="800">
+        </div>
+        <p>Как и ожидается, в <code>EmojiTable</code> залезть нельзя снаружи, это ведь internal.
+            Сам модуль <code>@impl</code> обязан перечислять requires и т.п.
+            — в общем, пакет Герасима ничем не отличается от обычного проекта.
+        </p>
+
+        <p>А теперь Месси внедряет расшифровку аудиосообщений.
+            Он подключает пакет через Composer, как обычно.
+            Чтобы использовать внутри мессенджера, должен явно существовать
+            <code>#vk/voice-text</code> в requires
+            (при использовании любого символа плагин это сам предложит и вставит):
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/yaml-require-vk-voicetext.png" alt="yaml-require-vk-voicetext" width="800">
+        </div>
+        <p>На самом деле, <b>при подключении пакета в монолит он становится неявным модулем</b>.
+            С точки зрения модульности, папка <code>vendor/vk/voice-text</code> это модуль с названием
+            <code>#vk/voice-text</code>.
+            Все внутренние модули префиксируются: так, модуль <code>@impl</code> внутри пакета
+            имеет название <code>#vk/voice-text/@impl</code> внутри монолита.
+            Это позволяет избежать конфликта имён.
+            При анализе <code>composer.json</code> оттуда вычитываются <code>require</code>
+            (ссылки на другие пакеты), они и являются зависимостями этого неявного модуля
+            (как следствие, Modulite также проверяет наличие и валидность связей между пакетами внутри монолита).
+            У пакета не задан <code>export</code>, и для композер-пакетов действует логика
+            "в таком случае, разрешено всё". Впрочем, у модуля <code>#vk/voice-text/@impl</code>
+            собственный <code>export</code> вполне себе есть, и все проверки будут срабатывать.
+            Правда, плагин такое не определит — встроиться в IDE на связке "использование пакета внутри монолита"
+            не представилось возможным, но KPHP при компиляции вполне себе ругнётся.
+        </p>
+        <p>Так, если Месси решит залезть внутрь имлементации Герасима, защищённой модулем внутри пакета,
+            он получит ошибку компиляции:
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/screen-use-vk-voicetext-kphp-error.png" alt="screen-use-vk-voicetext-kphp-error" width="800">
+        </div>
+
+
+        <h2 class="title">export из Composer-пакета</h2>
+
+        <p>Отвлечёмся от модулей и переключимся на обычный Composer. Что такое пакет?
+            Это просто классы/функции, лежащие отдельно, и способ автолоадить их.
+            Но по факту, ничто нам не мешает из кода монолита обращаться к любым классам,
+            которые есть в пакете. Даже если пакет в документации описывает предполагаемое использование,
+            в любом случае у него есть какие-то внутренние хелперы и приватные части —
+            которые тем не менее доступны из монолита.
+            Просто в случае с пакетами такое происходит значительно реже, чем когда код в одном репозитории,
+            но всё равно: препятствий никаких нет.
+        </p>
+        <p>Modulite расширяет Composer-пакеты: появляется возможность явных export'ов,
+            чтобы уже точно никто не мог использовать что не предполагается.
+        </p>
+        <p>Делается это так: на корневом уровне, рядом с <code>composer.json</code>, создаём файлик
+            <code>.modulite.yaml</code>.
+        </p>
+        <ul>
+            <li><b>name</b> = "&lt;composer_root&gt;"</li>
+            <li><b>namespace</b> = "The\\Same\\As\\PSR4\\"</li>
+            <li><b>export</b> перечисляем как обычно</li>
+            <li><b>force-internal</b> тоже работает</li>
+            <li><b>require</b> оставляем пустым, он всё равно берётся из composer.json</li>
+        </ul>
+        <p>Например, Герасим укажет <code>TextToSpeech</code> и <code>WaveMultiplier</code> внутри export,
+            поэтому <code>Transliteration</code> будет internal:
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/code-modulite-at-composer-root.png" alt="code-modulite-at-composer-root" width="800">
+        </div>
+
+        <p>Теперь из монолита нет доступа к <code>Transliteration</code>.
+            И к неймспейсу <code>VK\VoiceText\impl</code> тоже нет.
+            А вот если бы Герасим упомянул <code>@impl</code> в <code>export</code>, то был бы
+            (в рамках публичных символов <code>@impl</code> опять же):
+        </p>
+        <div class="img-single-c img-single-c--is-code">
+            <img src="img/screen-use-vk-voicetext-impl-error.png" alt="screen-use-vk-voicetext-impl-error" width="800">
+        </div>
+
+        <p class="chapter-conclusion chapter-conclusion--bg-white" style="margin-top: 100px;">
+            Подводя итоги, Modulite дополняет язык PHP модулями,<br>
+            не вмешиваясь в его синтаксис, а удобно находясь рядом.<br>
+            Он подходит как для старта новых проектов, так и позволяет<br>
+            зафиксировать состояние монолита и рефакторить итеративно.
+        </p>
+    </div>
+</div>
+
+<div class="chapter white">
+    <div class="chapter_inner">
+        <h2 class="title text-c">Почему Modulite так называется</h2>
+
+        <p>
+            Я недолюбливаю слово "модуль", оно слишком общее и встречается везде.
+            Не хочется, чтобы наши модули путали с JS-модулями, с Composer-модулями и так далее.
+            Тем более, вдруг в PHP когда-то появятся нативные модули.
+            Так что хотелось какое-то похожее, но в то же время уникальное название.
+            И чтобы была связь с монолитом — всё-таки модули прежде всего для него.
+        </p>
+        <div class="img-single-c img-single-c__etimology">
+            <img src="img/modulite-etimology.png" alt="modulite-etimology" width="861">
+        </div>
+        <p>
+            <b>Модулит — это модуль внутри монолита.</b>
+            Можно говорить и "модуль", считаем это синонимами.
+            А в плагине всегда пишется modulite, чтобы однозначно определять контекст.
+        </p>
+    </div>
+</div>
+
+<div class="chapter orange">
+    <div class="chapter_inner" style="padding-bottom: 25px;">
+        <h2 class="title text-c">Как начать использовать Modulite?</h2>
+
+        <p>
+            Специально для старта мы создали отдельную репу —
+            <a href="https://github.com/VKCOM/modulite-example-project"
+               class="a-white"><b>modulite-example-project</b></a>.<br>
+            Это PHP-проектик, который содержит несколько ошибок. Они видны и в IDE, и в PHPStan, и в KPHP.<br>
+            Открыть, разобраться, в чём ошибки, починить — в общем, исправить косяки Месси и Адама.
+        </p>
+        <p>
+            Ну либо пойти сразу фигачить реальный код :)
+        </p>
+        <p>
+            Не забудьте плагин только поставить в IDE.<br>
+            Подробнее тут:
+            <a href="install.html" class="a-white"><b>Установка</b></a>
+        </p>
+    </div>
+</div>
+
+<footer>
+    <div class="footer__inner">
+        <div class="footer__menu">
+            <h3>Ссылки</h3>
+            <ul>
+                <li>
+                    <a href="https://vkcom.github.io/modulite/">Главная</a>
+                </li>
+                <li>
+                    <a href="install.html">Установка</a>
+                </li>
+                <li>
+                    <a href="https://github.com/VKCOM/modulite-phpstan">Плагин для PHPStan</a>
+                </li>
+                <li>
+                    <a href="https://github.com/VKCOM/modulite" target="_blank">Github</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer__copyright">
+            <a href="https://github.com/VKCOM/kphp" target="_blank">KPHP team</a> from VK.com © 2022
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
