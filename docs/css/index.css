@@ -618,3 +618,11 @@ footer .footer__copyright a, footer .footer__copyright a:hover {
     margin-bottom: 50px;
 }
 
+.jb-ban-panel {
+    margin: 50px 0 30px;
+    padding: 20px 30px 20px;
+    background: #c84d4d;
+    color: white;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px
+}
