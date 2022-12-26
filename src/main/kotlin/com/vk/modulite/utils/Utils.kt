@@ -135,11 +135,15 @@ fun VirtualFile.fromVendor(): Boolean {
 }
 
 fun VirtualFile.fromTests(): Boolean {
-    return path.contains("/tests/")
+    return path.contains("/tests/") || path.contains("/Tests/")
 }
 
 fun VirtualFile.fromKphpPolyfills(): Boolean {
     return path.contains("/kphp-polyfills/")
+}
+
+fun VirtualFile.fromPackages(): Boolean {
+    return path.contains("/packages/")
 }
 
 inline fun <reified T : PsiElement> PsiElement.childOfType(): T? {

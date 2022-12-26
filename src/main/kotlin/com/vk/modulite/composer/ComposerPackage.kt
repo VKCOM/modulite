@@ -44,19 +44,15 @@ data class ComposerPackage(
     override fun toString() = name
 
     companion object {
-        fun fromPsiFile(file: JsonFile): ComposerPackage? {
+        fun fromPsiFile(file: JsonFile): ComposerPackage {
             val values = file.getPropertiesValues()
             var name = ""
             var description = ""
-            var isPackage = false
             var exportList = emptyList<SymbolName>()
             var namespace = ""
             var moduliteEnabled = false
             values.forEach {
                 when (it.name) {
-                    "type" -> {
-                        isPackage = it.value?.text?.unquote() == "library"
-                    }
                     "name" -> {
                         name = it.value?.text?.unquote() ?: ""
                     }
@@ -86,9 +82,7 @@ data class ComposerPackage(
                     }
                 }
             }
-            if (!isPackage) {
-                return null
-            }
+
             return ComposerPackage(
                 "#$name",
                 description,

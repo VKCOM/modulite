@@ -24,9 +24,9 @@ import com.vk.modulite.psi.PhpRecursiveElementVisitor
 import com.vk.modulite.psi.extensions.files.*
 import com.vk.modulite.psi.extensions.php.safeFqn
 import com.vk.modulite.psi.extensions.php.symbolName
+import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
-import com.vk.modulite.utils.fromVendor
 
 class ModuliteDepsDiff(
     private val project: Project,
@@ -366,8 +366,8 @@ class ModuliteDependenciesCollector(val project: Project) {
                     // Если ссылка ссылается на символ из этих папок, то нам не
                     // нужно добавлять их в зависимости модуля, так как это не
                     // пользовательский код.
-                    if (containingFile.fromStubs() || containingFile.fromVendor() || containingFile.fromTests()) {
-                        LOG.warn("${reference.fqn} from stubs/vendor/tests")
+                    if (containingFile.fromStubs() || containingFile.fromKphpPolyfills() || containingFile.fromTests()) {
+                        LOG.warn("${reference.fqn} from stubs/kphp-polyfill/tests")
                         return true
                     }
 

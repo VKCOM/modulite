@@ -17,7 +17,6 @@ import com.vk.modulite.psi.extensions.files.containingModulite
 import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
-import com.vk.modulite.utils.fromVendor
 import com.vk.modulite.utils.registerModuliteProblem
 
 class InternalSymbolUsageInspection : LocalInspectionTool() {
@@ -132,7 +131,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
 
                 val filteredReferences = references.filter {
                     val file = it.containingFile.virtualFile
-                    !file.fromTests() && !file.fromVendor() && !file.fromStubs() && it !is PhpNamespace
+                    !file.fromTests() && !file.fromStubs() && it !is PhpNamespace
                 }
 
                 val problemPsiElement = problemElement ?: reference

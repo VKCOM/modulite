@@ -8,19 +8,19 @@ import com.intellij.util.io.KeyDescriptor
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
 import com.vk.modulite.composer.ComposerPackage
-import gnu.trove.THashMap
+import com.vk.modulite.utils.fromKphpPolyfills
+import com.vk.modulite.utils.fromPackages
+import com.vk.modulite.utils.fromVendor
 import java.io.DataInput
 import java.io.DataOutput
 
 class ComposerFilesIndex : FileBasedIndexExtension<String, ComposerPackage>() {
     override fun getIndexer(): DataIndexer<String, ComposerPackage, FileContent> {
         return DataIndexer { inputData ->
-            val map = THashMap<String, ComposerPackage>()
+            val map = hashMapOf<String, ComposerPackage>()
 
             val model = ComposerPackage.fromPsiFile(inputData.psiFile as JsonFile)
-            if (model != null) {
-                map[model.name] = model
-            }
+            map[model.name] = model
 
             map
         }
@@ -65,7 +65,23 @@ class ComposerFilesIndex : FileBasedIndexExtension<String, ComposerPackage>() {
         }
     }
 
-    override fun getInputFilter() = FileBasedIndex.InputFilter { file -> file.name == "composer.json" }
+    override fun getInputFilter(): FileBasedIndex.InputFilter {
+        return FileBasedIndex.InputFilter { file ->
+            if (file.name != "composer.json") {
+                return@InputFilter false
+            }
+
+            // Перенести проверку в логику
+            if (file.fromKphpPolyfills()) {
+                return@InputFilter false
+            }
+
+            // Не оптимальный вариант.
+            // На самом деле это защита, он индексирования composer текущего проекта.
+            return@InputFilter file.fromVendor() || file.fromPackages()
+        }
+    }
+
     override fun getName() = KEY
     override fun getKeyDescriptor(): KeyDescriptor<String> = EnumeratorStringDescriptor.INSTANCE
     override fun dependsOnFileContent() = true
