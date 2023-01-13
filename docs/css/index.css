@@ -323,17 +323,18 @@ footer .footer__copyright a, footer .footer__copyright a:hover {
 }
 
 .first-page {
-    min-height: max(100vh + 50px, 700px);
+    min-height: 560px;
     box-sizing: border-box;
     font-size: 1.75em;
     text-align: center;
-    color: #19191C;
+    color: #fff;
+    background-color: #6059f7;
     margin-top: -56px;
     position: relative;
 }
 
 .first-page .first-page__inner {
-    padding-top: 140px;
+    padding-top: 120px;
     max-width: 924px;
     margin-right: auto;
     margin-left: auto;
@@ -350,7 +351,7 @@ footer .footer__copyright a, footer .footer__copyright a:hover {
 }
 
 .first-page .first-page__vk_logo {
-    margin-top: 90px;
+    margin-top: 30px;
     font-size: 0;
     vertical-align: top;
 }
@@ -398,12 +399,12 @@ footer .footer__copyright a, footer .footer__copyright a:hover {
 }
 
 .first-page .first-page__download-button {
-    color: #fff;
+    color: #19191C;
     display: inline-block;
     line-height: 48px;
     font-size: 12pt;
     font-weight: 300;
-    background: rgb(39, 40, 44);
+    background: #fff;
     padding: 0 40px;
     border-radius: 24px;
     margin-bottom: 20px;
@@ -417,7 +418,7 @@ footer .footer__copyright a, footer .footer__copyright a:hover {
 }
 
 .first-page .first-page__download-button:hover {
-    background-color: rgba(59, 62, 67, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .chapter {
