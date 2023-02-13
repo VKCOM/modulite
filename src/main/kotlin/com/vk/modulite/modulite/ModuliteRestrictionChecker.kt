@@ -12,7 +12,6 @@ import com.vk.modulite.psi.extensions.files.containingModulite
 import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
-import com.vk.modulite.utils.fromVendor
 
 object ModuliteRestrictionChecker {
     enum class ViolationTypes {
@@ -112,7 +111,7 @@ object ModuliteRestrictionChecker {
 
         // Не проверяем использования символов, которые определены в
         // стабах или являются сторонними.
-        if (file.fromStubs() || file.fromVendor() || file.fromKphpPolyfills()) {
+        if (file.fromStubs() || file.fromKphpPolyfills()) {
             return result(ViolationTypes.Ok)
         }
 
