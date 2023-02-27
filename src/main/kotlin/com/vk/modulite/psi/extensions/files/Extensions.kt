@@ -19,7 +19,7 @@ import com.vk.modulite.services.ModuliteIndex
 
 fun VirtualFile.containingModulite(project: Project): Modulite? {
     if (name == ".modulite.yaml") {
-        return ModuliteIndex.getInstance(project).getModulite(this)
+        return ModuliteIndex.getInstance(project).getModuliteNormal(this)
     }
 
     return containingModulite(project, ModuliteIndex.getInstance(project).getModulites())
@@ -27,7 +27,7 @@ fun VirtualFile.containingModulite(project: Project): Modulite? {
 
 fun VirtualFile.containingModulite(project: Project, modulites: List<Modulite>): Modulite? {
     if (name == ".modulite.yaml") {
-        return ModuliteIndex.getInstance(project).getModulite(this)
+        return ModuliteIndex.getInstance(project).getModuliteNormal(this)
     }
 
     val containsModulites = modulites.filter { it.contains(this) }

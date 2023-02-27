@@ -50,6 +50,9 @@ class InconsistentNestingInspection : ConfigInspectionBase() {
                     }
 
                     current = current.actualParent()
+                    if (current?.name == "<composer_root>") {
+                        current = null
+                    }
                 }
 
                 if (current != null) {

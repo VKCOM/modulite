@@ -44,6 +44,11 @@ abstract class ModuliteBase {
     }
 
     fun isExport(element: PhpNamedElement, reference: PhpReference? = null): Boolean {
+        // Пустой export в 'composer пакетах' обозначает, что все символы общедоступные
+        if (this.name == "<composer_root>" && this.exportList.isEmpty()) {
+            return true
+        }
+
         val name = element.symbolName(reference)
         if (name.isClassMember()) {
             val isInternal = forceInternalList.any { internal ->

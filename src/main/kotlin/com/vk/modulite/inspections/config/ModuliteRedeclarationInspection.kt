@@ -17,7 +17,8 @@ class ModuliteRedeclarationInspection : ConfigInspectionBase() {
             }
 
             val name = element.text.unquote()
-            val currentModulite = ModuliteIndex.getInstance(element.project).getModulite(name) ?: return
+            val virtualFile = element.containingFile.virtualFile
+            val currentModulite = ModuliteIndex.getInstance(element.project).getModuliteNormal(virtualFile) ?: return
 
             val modulites = ModuliteIndex.getInstance(element.project).getModulites()
             val sameModulites = modulites.filter {

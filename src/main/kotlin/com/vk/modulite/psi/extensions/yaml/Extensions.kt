@@ -12,7 +12,7 @@ import org.jetbrains.yaml.psi.YAMLQuotedText
 
 fun YAMLPsiElement.containingModulite(): Modulite? {
     val virtualFile = containingFile.virtualFile ?: return null
-    return ModuliteIndex.getInstance(project).getModulite(virtualFile)
+    return ModuliteIndex.getInstance(project).getModuliteNormal(virtualFile)
 }
 
 fun YAMLQuotedText.resolveSymbolName(): SymbolName? {

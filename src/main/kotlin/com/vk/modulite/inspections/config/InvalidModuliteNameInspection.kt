@@ -40,8 +40,23 @@ class InvalidModuliteNameInspection : ConfigInspectionBase() {
                 }
 
                 val moduliteName = element.text.unquote()
+
                 val missingAt = !moduliteName.startsWith("@")
                 val containSpaces = moduliteName.contains(" ")
+                val isComposerRoot = moduliteName == "<composer_root>"
+
+                if (isComposerRoot) {
+                    val composerFile = element.containingFile?.virtualFile?.parent?.findChild("composer.json")
+                    if (composerFile == null) {
+                        holder.registerModuliteProblem(
+                            element,
+                            "TODO: ошибка, ошибка",
+                            ProblemHighlightType.GENERIC_ERROR
+                        )
+                    }
+
+                    return
+                }
 
                 if (missingAt) {
                     holder.registerModuliteProblem(

@@ -372,15 +372,19 @@ class ModuliteDependenciesCollector(val project: Project) {
                         return true
                     }
 
+                    val composerPackage = containingFile.containingComposerPackage(project, composerPackages)
+                    if (composerPackage != null) {
+                        // Если мы в composer модуле, то пропускаем резолв как composer
+                        val initiatorModulite = moduliteConfig?.containingModulite(project)
+                        if (initiatorModulite?.containingPackage != composerPackage) {
+                            addSymbol(composerPackage.symbolName())
+                            return collapseModuleSymbols
+                        }
+                    }
+
                     val modulite = containingFile.containingModulite(project, modulites)
                     if (modulite != null) {
                         addSymbol(modulite.symbolName())
-                        return collapseModuleSymbols
-                    }
-
-                    val composerPackage = containingFile.containingComposerPackage(project, composerPackages)
-                    if (composerPackage != null) {
-                        addSymbol(composerPackage.symbolName())
                         return collapseModuleSymbols
                     }
 

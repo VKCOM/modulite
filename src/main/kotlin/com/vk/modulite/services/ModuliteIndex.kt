@@ -2,6 +2,7 @@ package com.vk.modulite.services
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootModificationTracker
 import com.intellij.openapi.vfs.VirtualFile
@@ -16,11 +17,13 @@ import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.psi.extensions.files.psiFile
 import com.vk.modulite.psi.extensions.yaml.moduliteName
 import org.jetbrains.yaml.psi.YAMLFile
+import java.util.*
 
 @Service
 class ModuliteIndex(private var project: Project) {
     companion object {
         fun getInstance(project: Project) = project.service<ModuliteIndex>()
+        private val LOG = logger<ModuliteIndex>()
     }
 
     class CollectModulesProcessor(private val project: Project, private val mySearchFile: VirtualFile) : Processor<String> {
@@ -76,6 +79,7 @@ class ModuliteIndex(private var project: Project) {
         return containingFiles.firstOrNull()
     }
 
+    @Deprecated("Не использовать")
     fun getModulite(name: String): Modulite? {
         val allScope = GlobalSearchScope.allScope(project)
         val modulites = FileBasedIndex.getInstance().getValues(ModuliteFilesIndex.KEY, name, allScope)
@@ -101,17 +105,29 @@ class ModuliteIndex(private var project: Project) {
 //        }
     }
 
-    fun getModulite(file: VirtualFile): Modulite? {
+    private fun getModuliteNormal(name: String, file: VirtualFile): Modulite? {
+        val allScope = GlobalSearchScope.fileScope(project, file)
+        val modulites = FileBasedIndex.getInstance().getValues(ModuliteFilesIndex.KEY, name, allScope)
+
+        if (modulites.size > 1) {
+            LOG.error("ОЛО!! блять")
+        }
+
+        return modulites.firstOrNull()
+            .also { modulitePostProcess(it) }
+    }
+
+
+    fun getModuliteNormal(file: VirtualFile): Modulite? {
         val psiFile = file.psiFile<YAMLFile>(project)
         if (psiFile != null) {
             val name = psiFile.moduliteName() ?: ""
             if (name.isNotEmpty()) {
-                return getModulite(name)
+                return getModuliteNormal(name, file)
             }
         }
 
-        val processor = CollectModulesProcessor(project, file)
-        FileBasedIndex.getInstance().processAllKeys(ModuliteFilesIndex.KEY, processor, project)
-        return processor.result.also { modulitePostProcess(it) }
+        LOG.error("Что-то пошло не так!!!")
+        return null
     }
 }

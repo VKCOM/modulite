@@ -23,6 +23,9 @@ import org.jetbrains.yaml.psi.impl.YamlScalarTextEvaluator
 open class ModuliteNamePsi(node: ASTNode) : YAMLScalarImpl(node), YAMLQuotedText, PsiNamedElement, PsiReference {
     private val textPsi = YAMLQuotedTextImpl(node)
 
+//  Вот так тоже не получится, по какой-то причине у textPsi может отсутствовать containingFile, ЛОЛ
+//    private val virtualFile = textPsi.containingFile.virtualFile
+
     fun modulite() = ModuliteIndex.getInstance(project).getModulite(name)
 
     fun symbolName() = SymbolName(name, fromYaml = true)
@@ -67,6 +70,9 @@ open class ModuliteNamePsi(node: ASTNode) : YAMLScalarImpl(node), YAMLQuotedText
 
     private fun moduliteExists(name: String) = ModuliteIndex.getInstance(element.project).getModulite(name) != null
 
+    // ВОТ тут что-то не так
+    // Я пока ХЗ
+    // Он считает, что @utils из composer и проекта один и тот-же
     override fun getReferences(): Array<PsiReference> {
         val text = text
         if (!text.contains('/')) {

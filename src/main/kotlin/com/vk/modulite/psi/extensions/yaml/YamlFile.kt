@@ -81,8 +81,8 @@ fun YAMLFile.moduliteNamePsi(): ModuliteNamePsi? {
  * @return модуль представляемый файлом.
  */
 fun YAMLFile.relatedModulite(): Modulite? {
-    val name = moduliteName() ?: return null
-    return ModuliteIndex.getInstance(project).getModulite(name)
+    val virtualFile = this.virtualFile
+    return ModuliteIndex.getInstance(project).getModuliteNormal(virtualFile)
 }
 
 /**
