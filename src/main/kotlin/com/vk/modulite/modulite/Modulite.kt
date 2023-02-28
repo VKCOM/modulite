@@ -102,6 +102,10 @@ data class Modulite(
         return parent.isExportChild(this)
     }
 
+    fun isComposerRoot(): Boolean {
+        return name == "<composer_root>"
+    }
+
     /**
      * Проверяет что модуль может быть использован из переданного глобального контекста.
      *

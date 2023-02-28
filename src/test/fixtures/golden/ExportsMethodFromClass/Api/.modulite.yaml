@@ -1,0 +1,5 @@
+name: "@api"
+namespace: "Api\\"
+
+require:
+  - "@core"

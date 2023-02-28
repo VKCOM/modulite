@@ -32,11 +32,12 @@ class WrongRequireInspection : ConfigInspectionBase() {
                 val (canUse, reason) = ModuliteRequireRestrictionChecker.canUse(currentModulite, requiredModulite)
                 if (!canUse) {
                     val text = when (reason) {
-                        ViolationTypes.Ok -> return
+                        ViolationTypes.Ok          -> return
                         ViolationTypes.RequireSelf -> {
                             "Can't require itself"
                         }
-                        ViolationTypes.NotPublic -> {
+
+                        ViolationTypes.NotPublic   -> {
                             val parentRequiredModulite = requiredModulite.parent() ?: return
                             "restricted to use $requiredModulite, it's internal in $parentRequiredModulite"
                         }

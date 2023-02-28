@@ -1,0 +1,5 @@
+name: "@core"
+namespace: "\\Core\\"
+
+export:
+  - "Logger::debug()"

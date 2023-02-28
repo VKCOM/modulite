@@ -17,6 +17,7 @@ class GoldenTests : ModuliteInspectionTestBase() {
     fun `test allow internal nested modulite for global`() = runFixture("golden/AllowInternalModuliteForGlobal")
     fun `test inherit classes and traits`()                = runFixture("golden/InheritAndTraits")
     fun `test inherit static field and class const`()      = runFixture("golden/InheritFieldAndConst")
+    fun `test exports method from class`()                 = runFixture("golden/ExportsMethodFromClass")
 
     // packages
     fun `test simple packages`()        = runFixture("golden/Packages/SimplePackages")

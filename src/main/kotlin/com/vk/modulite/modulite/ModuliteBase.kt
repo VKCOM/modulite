@@ -6,8 +6,10 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiFile
+import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReference
+import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
 import com.vk.modulite.composer.ComposerPackage
@@ -57,15 +59,25 @@ abstract class ModuliteBase {
             // Если он есть в списке internal, то он не публичен
             if (isInternal) return false
 
-            // В ином случае нам нужно проверить публичен ли класс
+            // В ином случае нам нужно проверить публичен ли его класс или он сам
             val className = name.className()
             return exportList.any { public ->
-                className.equals(public, this)
+                className.equals(public, this) || name.equals(public, this)
             }
         }
 
-        return exportList.any { export ->
+        val isExported = exportList.any { export ->
             name.equals(export, this)
         }
+        if (isExported) return true
+
+        if (name.kind == SymbolName.Kind.Class) {
+            val methodDeclaration = reference?.parent as? MethodReference ?: return false
+            val methodElement = methodDeclaration.resolve() as? MethodImpl ?: return false
+
+            return isExport(methodElement, methodDeclaration)
+        }
+
+        return false
     }
 }

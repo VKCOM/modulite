@@ -40,6 +40,7 @@ class WrongNamespaceInspection : LocalInspectionTool() {
                 if (file.mainNamespaceName == null) return
                 if (file.mainNamespaceName.isNotEmpty()) return
                 if (modulite.namespace.isGlobal()) return
+                if (modulite.isComposerRoot()) return
 
                 val groupStatement = file.getFirstChild()
                 val phpOpeningTag = PhpPsiUtil.getChildOfType(groupStatement, PhpTokenTypes.PHP_OPENING_TAG) ?: return
