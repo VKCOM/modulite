@@ -33,11 +33,16 @@ abstract class ModuliteBase {
 
     fun configFile(): VirtualFile? {
         val application = ApplicationManager.getApplication()
-        if (application.isUnitTestMode) {
-            return VirtualFileManager.getInstance().findFileByUrl("temp://$path")
+        val filePath = if (application.isUnitTestMode) {
+            VirtualFileManager.getInstance().findFileByUrl("temp://$path")
+        } else {
+            LocalFileSystem.getInstance().findFileByPath(path)
         }
 
-        return LocalFileSystem.getInstance().findFileByPath(path)
+        // Если это симлинка, то вернём путь до оригинального файла
+        // Это нужно для пакетов, которые лежат в текущем проекте
+        // vendor/vendor_name/project_name -> packages/vendor_name/project_name
+        return filePath?.canonicalFile
     }
 
     protected inline fun <reified T : PsiFile> configPsiFileImpl(): T? {
@@ -72,6 +77,7 @@ abstract class ModuliteBase {
         if (isExported) return true
 
         if (name.kind == SymbolName.Kind.Class) {
+            // TODO: добавить описание
             val methodDeclaration = reference?.parent as? MethodReference ?: return false
             val methodElement = methodDeclaration.resolve() as? MethodImpl ?: return false
 

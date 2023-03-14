@@ -17,7 +17,6 @@ import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.psi.extensions.files.psiFile
 import com.vk.modulite.psi.extensions.yaml.moduliteName
 import org.jetbrains.yaml.psi.YAMLFile
-import java.util.*
 
 @Service
 class ModuliteIndex(private var project: Project) {
@@ -47,6 +46,7 @@ class ModuliteIndex(private var project: Project) {
         }
     }
 
+    @Deprecated("Не использовать")
     fun getModulites(): List<Modulite> {
         val cached = CachedValuesManager.getManager(project).createCachedValue {
             val value = getModulitesImpl()
@@ -79,7 +79,7 @@ class ModuliteIndex(private var project: Project) {
         return containingFiles.firstOrNull()
     }
 
-    @Deprecated("Не использовать")
+    @Deprecated("Не использовать", ReplaceWith("this.getModuliteNormal()"))
     fun getModulite(name: String): Modulite? {
         val allScope = GlobalSearchScope.allScope(project)
         val modulites = FileBasedIndex.getInstance().getValues(ModuliteFilesIndex.KEY, name, allScope)
@@ -117,7 +117,7 @@ class ModuliteIndex(private var project: Project) {
             .also { modulitePostProcess(it) }
     }
 
-
+    // Правильная функция получения модуля основываясь на его пути, а не на имени
     fun getModuliteNormal(file: VirtualFile): Modulite? {
         val psiFile = file.psiFile<YAMLFile>(project)
         if (psiFile != null) {

@@ -51,7 +51,7 @@ data class Modulite(
     /**
      * @return folded name like @.../name if parent is not null
      */
-    fun foldedName() = if (parent() != null)
+    fun foldedName() = if (actualParent() != null)
         "@…/" + name.split('/').last()
     else
         name
@@ -59,6 +59,7 @@ data class Modulite(
     /**
      * @return the parent module, or null if the module has no parent.
      */
+    @Deprecated("Не используй, работает не на путях", replaceWith = ReplaceWith("this.actualParent()"))
     fun parent(): Modulite? {
         val parts = name.split("/")
         if (parts.size < 2) return null
@@ -98,7 +99,7 @@ data class Modulite(
      * If the module has no parent, returns false.
      */
     fun isExportedFromParent(): Boolean {
-        val parent = parent() ?: return false
+        val parent = actualParent() ?: return false
         return parent.isExportChild(this)
     }
 
@@ -122,7 +123,7 @@ data class Modulite(
             return true
         }
 
-        val parent = parent() ?: return true
+        val parent = actualParent() ?: return true
         return parent.isExportModulite(this, context)
     }
 
@@ -169,7 +170,7 @@ data class Modulite(
             return true
         }
 
-        val parent = other.parent() ?: return true
+        val parent = other.actualParent() ?: return true
 
         // Проверяем что родительский модуль экспортирует проверяемый модуль.
         // Или он разрешен для текущего модуля в allow-internal-access.
@@ -221,7 +222,7 @@ data class Modulite(
      * Checks if the [other] module is a direct child of the current module.
      */
     fun isDirectChild(other: Modulite): Boolean {
-        return this == other.parent()
+        return this == other.actualParent()
     }
 
     /**
@@ -387,7 +388,7 @@ data class Modulite(
             return false
         }
 
-        val parent = parent() ?: return false
+        val parent = actualParent() ?: return false
 
         // Проверяем что родитель экспортирует текущий модуль.
         return parent.isExportModulite(this, context)
