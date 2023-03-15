@@ -372,10 +372,10 @@ class ModuliteDependenciesCollector(val project: Project) {
                         return true
                     }
 
+                    val initiatorModulite = moduliteConfig?.containingModulite(project) // Модулит, который инициировал запуск
                     val composerPackage = containingFile.containingComposerPackage(project, composerPackages)
                     if (composerPackage != null) {
                         // Если мы в composer модуле, то пропускаем резолв как composer
-                        val initiatorModulite = moduliteConfig?.containingModulite(project)
                         if (initiatorModulite?.containingPackage != composerPackage) {
                             addSymbol(composerPackage.symbolName())
                             return collapseModuleSymbols
@@ -384,7 +384,10 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                     val modulite = containingFile.containingModulite(project, modulites)
                     if (modulite != null) {
-                        addSymbol(modulite.symbolName())
+                        // Для 'composer пакетов', в качестве зависимостей могут быть только внешние зависимости
+                        if (initiatorModulite?.isComposerRoot() == false) {
+                            addSymbol(modulite.symbolName())
+                        }
                         return collapseModuleSymbols
                     }
 
