@@ -10,7 +10,7 @@ import com.intellij.util.indexing.FileBasedIndex
 import com.vk.modulite.composer.ComposerPackage
 import com.vk.modulite.index.ComposerFilesIndex
 
-@Service
+@Service(Service.Level.PROJECT)
 class ComposerPackagesIndex(private var project: Project) {
     companion object {
         fun getInstance(project: Project) = project.service<ComposerPackagesIndex>()

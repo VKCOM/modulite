@@ -9,7 +9,7 @@ import com.intellij.psi.search.searches.ReferencesSearch
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReference
 
-@Service
+@Service(Service.Level.PROJECT)
 class FindUsagesService(val project: Project) {
     companion object {
         fun getInstance(project: Project) = project.service<FindUsagesService>()

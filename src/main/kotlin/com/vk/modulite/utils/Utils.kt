@@ -191,7 +191,7 @@ fun InspectionManager.createModuliteProblemDescriptor(
     descriptionTemplate: @InspectionMessage String,
     highlightType: ProblemHighlightType,
     onTheFly: Boolean,
-    vararg fixes: LocalQuickFix?,
+    vararg fixes: LocalQuickFix,
 ) = createProblemDescriptor(
     psiElement,
     rangeInElement,
@@ -205,7 +205,7 @@ fun ProblemsHolder.registerModuliteProblem(
     psiElement: PsiElement,
     descriptionTemplate: @InspectionMessage String,
     highlightType: ProblemHighlightType,
-    vararg fixes: LocalQuickFix?,
+    vararg fixes: LocalQuickFix,
 ) {
     registerProblem(
         psiElement,
