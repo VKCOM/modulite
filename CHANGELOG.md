@@ -2,11 +2,11 @@
 
 ## [Unreleased]
 
-## 1.1.2 — 01.08.2022
+## 1.1.2 — 14.08.2023
 
 - Adapt code for PhpStorm 2023.1
 
-## 1.1.1 - 14.12.2023
+## 1.1.1 - 14.12.2022
 
 - Adapt code for PhpStorm 2022.3
 
