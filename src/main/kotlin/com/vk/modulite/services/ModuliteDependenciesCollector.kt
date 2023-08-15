@@ -5,13 +5,26 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.ContentIteratorEx
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.util.containers.TreeNodeProcessingResult
 import com.jetbrains.php.lang.PhpLangUtil
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.PhpFile
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.ClassConstantReference
+import com.jetbrains.php.lang.psi.elements.ClassReference
+import com.jetbrains.php.lang.psi.elements.ConstantReference
+import com.jetbrains.php.lang.psi.elements.FieldReference
+import com.jetbrains.php.lang.psi.elements.FunctionReference
+import com.jetbrains.php.lang.psi.elements.Global
+import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.NewExpression
+import com.jetbrains.php.lang.psi.elements.PhpNamedElement
+import com.jetbrains.php.lang.psi.elements.PhpNamespace
+import com.jetbrains.php.lang.psi.elements.PhpNamespaceReference
+import com.jetbrains.php.lang.psi.elements.PhpReference
+import com.jetbrains.php.lang.psi.elements.PhpUse
+import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
 import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
 import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
@@ -129,7 +142,7 @@ data class ModuliteDeps(
     fun isEmpty() = symbols.isEmpty()
 }
 
-@Service
+@Service(Service.Level.PROJECT)
 @Suppress("UnstableApiUsage")
 class ModuliteDependenciesCollector(val project: Project) {
     companion object {
@@ -206,10 +219,10 @@ class ModuliteDependenciesCollector(val project: Project) {
             ProgressManager.checkCanceled()
 
             if (isInnerModulite(file, moduliteConfig)) {
-                return@forEachFilesEx ContentIteratorEx.Status.SKIP_CHILDREN
+                return@forEachFilesEx TreeNodeProcessingResult.SKIP_CHILDREN
             }
 
-            val psiFile = file.psiFile<PhpFile>(project) ?: return@forEachFilesEx ContentIteratorEx.Status.CONTINUE
+            val psiFile = file.psiFile<PhpFile>(project) ?: return@forEachFilesEx TreeNodeProcessingResult.CONTINUE
 
             psiFile.accept(object : PhpRecursiveElementVisitor() {
                 override fun visitPhpClassReference(reference: ClassReference) {
@@ -387,7 +400,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                 }
             })
 
-            ContentIteratorEx.Status.CONTINUE
+            TreeNodeProcessingResult.CONTINUE
         }
 
         return ModuliteDeps(project, null, symbols.toList())

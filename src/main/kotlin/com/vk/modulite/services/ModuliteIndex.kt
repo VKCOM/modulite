@@ -17,7 +17,7 @@ import com.vk.modulite.psi.extensions.files.psiFile
 import com.vk.modulite.psi.extensions.yaml.moduliteName
 import org.jetbrains.yaml.psi.YAMLFile
 
-@Service
+@Service(Service.Level.PROJECT)
 class ModuliteIndex(private var project: Project) {
     companion object {
         fun getInstance(project: Project) = project.service<ModuliteIndex>()
