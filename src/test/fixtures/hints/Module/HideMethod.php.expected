@@ -2,6 +2,6 @@
 
 namespace Module\HideMethod;
 
-<# [exported from   @module   []] #>class Some {
-  <# [internal in   @module   []] #>public static function foo() {}
+/*<# [exported from   @module   []] #>*/class Some {
+  /*<# [internal in   @module   []] #>*/public static function foo() {}
 }

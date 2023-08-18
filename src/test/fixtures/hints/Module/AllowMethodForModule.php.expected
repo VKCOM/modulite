@@ -2,6 +2,6 @@
 
 namespace Module\InternMethod;
 
-<# [internal in   @module   []] #>class Some {
-  <# [internal in   @module   [(visible for   @module2  )]] #>public static function foo() {}
+/*<# [internal in   @module   []] #>*/class Some {
+  /*<# [internal in   @module   [(visible for   @module2  )]] #>*/public static function foo() {}
 }

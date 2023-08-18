@@ -2,8 +2,8 @@
 
 namespace Module\HideMethod;
 
-<# [exported from   @module   []] #>class Some {
-  <# [exported from   @module   []] #>public static function publicStatic() {}
+/*<# [exported from   @module   []] #>*/class Some {
+  /*<# [exported from   @module   []] #>*/public static function publicStatic() {}
 
   public function publicNotStatic() {}
 
