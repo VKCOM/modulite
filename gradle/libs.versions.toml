@@ -1,0 +1,14 @@
+[versions]
+# libraries
+
+# plugins
+kotlin = "1.9.0"
+changelog = "2.1.2"
+gradleIntelliJPlugin = "1.15.0"
+
+[libraries]
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
