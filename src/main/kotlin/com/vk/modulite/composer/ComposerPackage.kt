@@ -9,6 +9,7 @@ import com.vk.modulite.SymbolName
 import com.vk.modulite.modulite.ModuliteBase
 import com.vk.modulite.psi.extensions.json.composerPackageNamePsi
 import com.vk.modulite.psi.extensions.json.getPropertiesValues
+import com.vk.modulite.utils.normalizedPath
 import com.vk.modulite.utils.unquote
 import java.io.File
 
@@ -26,8 +27,8 @@ data class ComposerPackage(
     override val forceInternalList: List<SymbolName> = emptyList()
 
     fun contains(file: VirtualFile): Boolean {
-        val moduliteFolder = File(path).parent
-        return file.path.startsWith(moduliteFolder + File.separator)
+        val moduliteFolder = File(path).parent.normalizedPath()
+        return file.path.startsWith("$moduliteFolder/")
     }
 
     fun getPackageDir(): VirtualFile? {

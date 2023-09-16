@@ -41,6 +41,7 @@ import com.vk.modulite.psi.extensions.files.psiFile
 import com.vk.modulite.psi.extensions.yaml.*
 import com.vk.modulite.services.ModuliteIndex
 import com.vk.modulite.utils.YamlUtils.getTopLevelKey
+import com.vk.modulite.utils.normalizedPath
 import junit.framework.TestCase.*
 import org.jetbrains.yaml.psi.YAMLFile
 import org.jetbrains.yaml.psi.YAMLPsiElement
@@ -448,7 +449,7 @@ class DirContext(val folder: String, val ctx: StepContext) {
 @TestDslMarker
 class StepContext(val name: String, val ctx: IntegrationTestContext) {
     fun filename(filename: String): String {
-        return File(ctx.subFolder, filename).path
+        return File(ctx.subFolder, filename).path.normalizedPath()
     }
 
     fun realAbsolutePath(filename: String): String {
@@ -569,7 +570,7 @@ class IntegrationTestContext {
         val walker = testDataFolder.walk()
         files = walker
             .filter { it.isFile && it.name != ".DS_Store" }
-            .map { it.path.removePrefix(this.rootFolder) }
+            .map { it.path.normalizedPath().removePrefix(this.rootFolder) }
             .toList()
 
         fixture.configureByFiles(*files.toTypedArray())

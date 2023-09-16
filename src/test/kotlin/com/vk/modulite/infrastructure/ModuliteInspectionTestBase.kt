@@ -6,6 +6,7 @@ import com.intellij.util.applyIf
 import com.vk.modulite.inspections.InternalSymbolUsageInspection
 import com.vk.modulite.inspections.config.ModuliteRedeclarationInspection
 import com.vk.modulite.inspections.config.WrongRequireInspection
+import com.vk.modulite.utils.normalizedPath
 import java.io.File
 
 abstract class ModuliteInspectionTestBase : BasePlatformTestCase() {
@@ -139,7 +140,7 @@ abstract class ModuliteInspectionTestBase : BasePlatformTestCase() {
         val walker = genTestDataFolder.walk()
         val files = walker
             .filter { it.isFile && (it.extension == "php" || it.extension == "yaml" || it.extension == "qf" || it.extension == "json") }
-            .map { it.path.removePrefix(GEN_TEST_DATA_PATH) }
+            .map { it.path.normalizedPath().removePrefix(GEN_TEST_DATA_PATH) }
             .toList().toTypedArray()
 
         myFixture.configureByFiles(*files)

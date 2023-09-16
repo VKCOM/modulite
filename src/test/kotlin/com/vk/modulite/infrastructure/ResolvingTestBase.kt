@@ -5,6 +5,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.vk.modulite.utils.YamlUtils
+import com.vk.modulite.utils.normalizedPath
 import org.jetbrains.yaml.psi.YAMLQuotedText
 import org.jetbrains.yaml.psi.YamlRecursivePsiElementVisitor
 import java.io.File
@@ -25,7 +26,7 @@ abstract class ResolvingTestBase : BasePlatformTestCase() {
         val walker = genTestDataFolder.walk()
         val files = walker
             .filter { it.isFile && (it.extension == "php" || it.extension == "yaml") }
-            .map { it.path.removePrefix(TEST_DATA_PATH) }
+            .map { it.path.normalizedPath().removePrefix(TEST_DATA_PATH) }
             .toList().toTypedArray()
 
         myFixture.configureByFiles(*files)
