@@ -14,4 +14,9 @@ class KphpGoldenTests : ModuliteInspectionTestBase() {
     // fun `test 007_composer_ok`()         = runFixture("kphp_golden/007_composer_ok")
     fun `test 008_mod_generics`()        = runFixture("kphp_golden/008_mod_generics")
     fun `test 009_mod_magic_m`()        = runFixture("kphp_golden/009_mod_magic_m")
+    fun `test 010_mod_unreachable`()        = runFixture("kphp_golden/010_mod_unreachable")
+    fun `test 011_late_static_bindings`()        = runFixture("kphp_golden/011_late_static_bindings")
+    fun `test 012_package_not_required_in_derived_class`()        = runFixture("kphp_golden/012_package_not_required_in_derived_class")
+    fun `test 013_inheritance_calling_class_inside_parent`()        = runFixture("kphp_golden/013_inheritance_calling_class_inside_parent")
+
 }
