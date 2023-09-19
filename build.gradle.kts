@@ -78,6 +78,7 @@ tasks {
         test {
             resources {
                 setSrcDirs(project.files("src/test/fixtures"))
+                setSrcDirs(project.files("src/test/resources"))
             }
         }
     }

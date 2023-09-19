@@ -1,0 +1,19 @@
+MessagesLogger100.php: extra (10:13/9): 'createLog' ([modulite] restricted to call Logs100\BaseLog100::createLog(), it's not required by @messages100) [HighlightInfoTypeImpl[severity=ERROR, key=ERRORS_ATTRIBUTES]]
+MessagesLogger100.php: extra (14:20/9): 'logAction' ([modulite] restricted to call Logs100\BaseLog100::logAction(), it's not required by @messages100) [HighlightInfoTypeImpl[severity=ERROR, key=ERRORS_ATTRIBUTES]]
+ expected:<... void {
+    parent::[createLog();
+  }
+
+  public static function log(): bool {
+    return parent::logAction]();
+  }
+}
+> but was:<... void {
+    parent::[<error descr="[modulite] restricted to call Logs100\BaseLog100::createLog(), it's not required by @messages100">createLog</error>();
+  }
+
+  public static function log(): bool {
+    return parent::<error descr="[modulite] restricted to call Logs100\BaseLog100::logAction(), it's not required by @messages100">logAction</error>]();
+  }
+}
+>

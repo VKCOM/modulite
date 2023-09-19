@@ -1,0 +1,13 @@
+name: "@messages100"
+description: ""
+namespace: "Messages100\\"
+
+export:
+  - "MessagesLogger100"
+
+force-internal:
+
+require:
+  - "\\Logs100\\BaseLog100"
+
+allow-internal-access:
