@@ -11,20 +11,7 @@ import com.intellij.util.containers.TreeNodeProcessingResult
 import com.jetbrains.php.lang.PhpLangUtil
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.PhpFile
-import com.jetbrains.php.lang.psi.elements.ClassConstantReference
-import com.jetbrains.php.lang.psi.elements.ClassReference
-import com.jetbrains.php.lang.psi.elements.ConstantReference
-import com.jetbrains.php.lang.psi.elements.FieldReference
-import com.jetbrains.php.lang.psi.elements.FunctionReference
-import com.jetbrains.php.lang.psi.elements.Global
-import com.jetbrains.php.lang.psi.elements.MethodReference
-import com.jetbrains.php.lang.psi.elements.NewExpression
-import com.jetbrains.php.lang.psi.elements.PhpNamedElement
-import com.jetbrains.php.lang.psi.elements.PhpNamespace
-import com.jetbrains.php.lang.psi.elements.PhpNamespaceReference
-import com.jetbrains.php.lang.psi.elements.PhpReference
-import com.jetbrains.php.lang.psi.elements.PhpUse
-import com.jetbrains.php.lang.psi.elements.Variable
+import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
 import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
 import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
@@ -40,6 +27,7 @@ import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
+import java.util.*
 
 class ModuliteDepsDiff(
     private val project: Project,
@@ -200,6 +188,7 @@ class ModuliteDependenciesCollector(val project: Project) {
         )
     }
 
+    //  тут запускается наш сборщик
     fun collect(
         dir: VirtualFile,
         ownSymbols: List<SymbolName>? = null,
@@ -227,12 +216,16 @@ class ModuliteDependenciesCollector(val project: Project) {
             psiFile.accept(object : PhpRecursiveElementVisitor() {
                 override fun visitPhpClassReference(reference: ClassReference) {
                     when (reference.context) {
-                        is PhpUse, is MethodReference, is ClassConstantReference -> {
+                        is PhpUse -> {
+                            handleTraitReference(reference)
+                        }
+
+                        is MethodReference, is ClassConstantReference -> {
                             return
                         }
                     }
 
-                    handleReference(reference)
+                     handleReference(reference)
                 }
 
                 override fun visitPhpFunctionCall(reference: FunctionReference) {
@@ -292,14 +285,62 @@ class ModuliteDependenciesCollector(val project: Project) {
                     }
                 }
 
-                private fun handleReference(reference: PhpReference?, traverseFurther: Boolean = true) {
-                    if (reference == null) return
+                private fun referenceValidator(reference: PhpReference?): MutableCollection<out PhpNamedElement>? {
+                    if (reference == null) return null
 
                     val references = reference.resolveGlobal(false)
                     if (references.isEmpty()) {
-                        LOG.warn("Unknown reference '${reference.safeFqn()}'")
-                        return
+                        LOG.warn("Неизвестная ссылка '${reference.safeFqn()}'")
+                        return null
                     }
+
+                    return references
+                }
+
+                private fun handleTraitReference(reference: PhpReference?, traverseFurther: Boolean = true) {
+                    val references = referenceValidator(reference) ?: return
+
+                    val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
+                    var traitsClasses: Array<PhpClass> = arrayOf()
+
+                    references.forEach { elem ->
+                        val instance = elem as PhpClass
+                        stack.push(instance) // Добавляем текущий instance в стек
+                        while (stack.isNotEmpty()) {
+                            val currentInstance = stack.pop() // Получаем текущий instance из стека
+
+                            if (currentInstance.hasTraitUses()) {
+                                val traitsUses = currentInstance.traits
+                                traitsClasses += traitsUses
+
+                                traitsUses.forEach { it ->
+                                    val instanceNesting: Array<PhpClass>? = it.traits
+
+                                    instanceNesting?.forEach { nestedInstance ->
+                                        stack.push(nestedInstance) // Добавляем вложенный instance в стек
+                                    }
+
+                                    if (instanceNesting != null) {
+                                        traitsClasses += instanceNesting
+                                    }
+                                }
+                            }
+                        }
+                        val traitsNames = traitsClasses.mapNotNull { processElement(it, reference) }
+                        addSymbols(traitsNames)
+                        val methodsNames = instance.methods.mapNotNull { processElement(it, reference) }
+                        addSymbols(methodsNames)
+                    }
+
+                    val names = references.mapNotNull { processElement(it, reference) }
+                    addSymbols(names)
+                    if (traverseFurther) {
+                        super.visitPhpElement(reference)
+                    }
+                }
+
+                private fun handleReference(reference: PhpReference?, traverseFurther: Boolean = true) {
+                    val references = referenceValidator(reference)?:return
 
                     val names = references.mapNotNull { processElement(it, reference) }
                     addSymbols(names)
@@ -349,7 +390,10 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                 private fun addSymbol(name: SymbolName) {
                     // TODO: simplify?
-                    if (name.kind != SymbolName.Kind.Modulite && (ownSymbolsSet.contains(name) || ownSymbolsSet.contains(name.className()))) {
+                    if (name.kind != SymbolName.Kind.Modulite && (ownSymbolsSet.contains(name) || ownSymbolsSet.contains(
+                            name.className()
+                        ))
+                    ) {
                         return
                     }
 
