@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.impl.PhpUseImpl
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 import com.vk.modulite.SymbolName
 import com.vk.modulite.composer.ComposerPackage
@@ -120,6 +121,13 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
 
             override fun visitPhpDocType(type: PhpDocType) {
                 checkReferenceUsage(type)
+            }
+
+            override fun visitPhpUse(expression: PhpUse?) {
+                val instance = expression as PhpUseImpl
+                if (instance.isTraitImport) {
+                    instance.targetReference?.let { checkReferenceUsage(it) }
+                }
             }
 
             private fun checkReferenceUsage(reference: PhpReference, problemElement: PsiElement? = reference) {

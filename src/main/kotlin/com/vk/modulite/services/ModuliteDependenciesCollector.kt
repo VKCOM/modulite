@@ -15,6 +15,7 @@ import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
 import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
 import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
+import com.jetbrains.php.lang.psi.elements.impl.PhpUseImpl
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
 import com.vk.modulite.actions.dialogs.DepsRegenerationResultDialog
@@ -217,7 +218,14 @@ class ModuliteDependenciesCollector(val project: Project) {
                 override fun visitPhpClassReference(reference: ClassReference) {
                     when (reference.context) {
                         is PhpUse -> {
-                            handleTraitReference(reference)
+                            val useInstance = reference.context as PhpUseImpl
+                            if(useInstance.isTraitImport){
+                                handleTraitReference(reference)
+                            }else{
+                                return
+                            }
+
+
                         }
 
                         is MethodReference, is ClassConstantReference -> {
