@@ -72,6 +72,11 @@ class YamlInspectionsTest : ModuliteInspectionTestBase() {
         runFixture("inspections/WrongForceInternal")
     }
 
+    fun `test unknown composer package`() {
+        myFixture.enableInspections(UnknownComposerPackageInspection())
+        runFixture("inspections/UnknownPackage")
+    }
+
     fun `test other yaml file with no inspections`() {
         myFixture.enableInspections(UnknownSymbolInspection())
         myFixture.enableInspections(UnknownModuliteInspection())

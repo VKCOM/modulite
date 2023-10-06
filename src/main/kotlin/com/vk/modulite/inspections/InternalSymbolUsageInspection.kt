@@ -19,6 +19,7 @@ import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
 import com.vk.modulite.utils.registerModuliteProblem
+import java.util.*
 
 class InternalSymbolUsageInspection : LocalInspectionTool() {
     companion object {
@@ -126,16 +127,92 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             override fun visitPhpUse(expression: PhpUse?) {
                 val instance = expression as PhpUseImpl
                 if (instance.isTraitImport) {
-                    instance.targetReference?.let { checkReferenceUsage(it) }
+                    instance.targetReference?.let { checkTraitReferenceUsage(it) }
+                }
+            }
+
+
+            private fun referenceValidator(reference: PhpReference?): MutableCollection<out PhpNamedElement>? {
+                if (reference == null) return null
+
+                val references = reference.resolveGlobal(false)
+                if (references.isEmpty()) {
+//                    LOG.warn("Unknown reference for symbol '${reference.safeFqn()}'")
+                    return null
+                }
+
+                return references
+            }
+
+            private fun checkTraitReferenceUsage(reference: PhpReference, problemElement: PsiElement? = reference){
+                val references = referenceValidator(reference) ?: return
+
+                val filteredReferences = references.filter {
+                    val file = it.containingFile.virtualFile
+                    !file.fromTests() && !file.fromStubs() && it !is PhpNamespace
+                }
+
+                val problemPsiElement = problemElement ?: reference
+                val context = ModuliteRestrictionChecker.createContext(reference)
+
+                val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
+                var traitsClasses: Array<PhpClass> = arrayOf()
+
+                filteredReferences.forEach { elem ->
+                    val instance = elem as PhpClass
+                    stack.push(instance) // Добавляем текущий instance в стек
+                    while (stack.isNotEmpty()) {
+                        val currentInstance = stack.pop() // Получаем текущий instance из стека
+
+                        if (currentInstance.hasTraitUses()) {
+                            val traitsUses = currentInstance.traits
+                            traitsClasses += traitsUses
+
+                            traitsUses.forEach { it ->
+                                val instanceNesting: Array<PhpClass>? = it.traits
+
+                                instanceNesting?.forEach { nestedInstance ->
+                                    stack.push(nestedInstance) // Добавляем вложенный instance в стек
+                                }
+
+                                if (instanceNesting != null) {
+                                    traitsClasses += instanceNesting
+                                }
+                            }
+                        }
+                    }
+                    val traitsNames = traitsClasses
+                    val methodsNames: MutableCollection<Method> = instance.methods
+                    traitsNames.forEach { element->
+                        val (can, reason) = ModuliteRestrictionChecker.canUse(context, element, reference)
+                        if (!can) {
+                            holder.addProblem(
+                                reason,
+                                element,
+                                reference,
+                                context,
+                                problemPsiElement
+                            )
+                        }
+                    }
+                    methodsNames.forEach {element->
+                        val (can, reason) = ModuliteRestrictionChecker.canUse(context, element, reference)
+                        if (!can) {
+                            holder.addProblem(
+                                reason,
+                                element,
+                                reference,
+                                context,
+                                problemPsiElement
+                            )
+                        }
+
+                    }
                 }
             }
 
             private fun checkReferenceUsage(reference: PhpReference, problemElement: PsiElement? = reference) {
-                val references = reference.resolveGlobal(false)
-                if (references.isEmpty()) {
-//                    LOG.warn("Unknown reference for symbol '${reference.safeFqn()}'")
-                    return
-                }
+                val references = referenceValidator(reference) ?: return
 
                 val filteredReferences = references.filter {
                     val file = it.containingFile.virtualFile
@@ -157,6 +234,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                         )
                     }
                 }
+
             }
         }
     }
