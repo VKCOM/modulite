@@ -14,6 +14,7 @@ import gnu.trove.THashMap
 import org.jetbrains.yaml.psi.YAMLFile
 import java.io.DataInput
 import java.io.DataOutput
+import java.nio.file.Paths
 
 class ModuliteFilesIndex : FileBasedIndexExtension<String, Modulite>() {
     override fun getIndexer(): DataIndexer<String, Modulite, FileContent> {
@@ -39,7 +40,7 @@ class ModuliteFilesIndex : FileBasedIndexExtension<String, Modulite>() {
             override fun save(out: DataOutput, value: Modulite) {
                 stringer.save(out, value.name)
                 stringer.save(out, value.description)
-                stringer.save(out, value.path)
+                stringer.save(out, value.path.toString())
                 stringer.save(out, value.namespace.toString())
 
                 serializeSymbolNameList(out, value.exportList)
@@ -91,7 +92,7 @@ class ModuliteFilesIndex : FileBasedIndexExtension<String, Modulite>() {
 
                 return Modulite(
                     name, description,
-                    path, Namespace(namespace),
+                    Paths.get(path), Namespace(namespace),
                     ModuliteRequires(symbols),
                     public,
                     internal,

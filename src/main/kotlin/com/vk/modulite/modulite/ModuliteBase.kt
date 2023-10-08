@@ -13,6 +13,7 @@ import com.vk.modulite.SymbolName
 import com.vk.modulite.composer.ComposerPackage
 import com.vk.modulite.psi.extensions.files.psiFile
 import com.vk.modulite.psi.extensions.php.symbolName
+import java.nio.file.Path
 
 /**
  * Base class for [Modulite] ans [ComposerPackage].
@@ -22,7 +23,7 @@ abstract class ModuliteBase {
 
     abstract val name: String
     abstract val description: String
-    abstract val path: String
+    abstract val path: Path
     abstract val namespace: Namespace
     abstract val exportList: List<SymbolName>
     abstract val forceInternalList: List<SymbolName>
@@ -35,7 +36,7 @@ abstract class ModuliteBase {
             return VirtualFileManager.getInstance().findFileByUrl("temp://$path")
         }
 
-        return LocalFileSystem.getInstance().findFileByPath(path)
+        return LocalFileSystem.getInstance().findFileByPath(path.toString())
     }
 
     protected inline fun <reified T : PsiFile> configPsiFileImpl(): T? {

@@ -35,7 +35,7 @@ fun VirtualFile.containingModulite(project: Project, modulites: List<Modulite>):
     var deepestModulite: Modulite? = null
 
     containsModulites.forEach {
-        if (it.path.length > (deepestModulite?.path?.length ?: 0)) {
+        if (it.path.toString().length > (deepestModulite?.path?.toString()?.length ?: 0)) {
             deepestModulite = it
         }
     }

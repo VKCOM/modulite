@@ -13,6 +13,7 @@ import com.vk.modulite.utils.fromPackages
 import com.vk.modulite.utils.fromVendor
 import java.io.DataInput
 import java.io.DataOutput
+import java.nio.file.Paths
 
 class ComposerFilesIndex : FileBasedIndexExtension<String, ComposerPackage>() {
     override fun getIndexer(): DataIndexer<String, ComposerPackage, FileContent> {
@@ -33,7 +34,7 @@ class ComposerFilesIndex : FileBasedIndexExtension<String, ComposerPackage>() {
             override fun save(out: DataOutput, value: ComposerPackage) {
                 stringer.save(out, value.name)
                 stringer.save(out, value.description)
-                stringer.save(out, value.path)
+                stringer.save(out, value.path.toString())
                 stringer.save(out, value.namespace.toString())
                 out.writeBoolean(value.moduliteEnabled)
                 serializeSymbolNameList(out, value.exportList)
@@ -51,7 +52,7 @@ class ComposerFilesIndex : FileBasedIndexExtension<String, ComposerPackage>() {
                 val namespace = stringer.read(input)
                 val moduliteEnabled = input.readBoolean()
                 val exportList = deserializeSymbolNameList(input)
-                return ComposerPackage(name, description, path, Namespace(namespace), exportList, moduliteEnabled)
+                return ComposerPackage(name, description, Paths.get(path), Namespace(namespace), exportList, moduliteEnabled)
             }
 
             private fun deserializeSymbolNameList(input: DataInput): List<SymbolName> {

@@ -11,11 +11,13 @@ import com.vk.modulite.psi.extensions.json.composerPackageNamePsi
 import com.vk.modulite.psi.extensions.json.getPropertiesValues
 import com.vk.modulite.utils.unquote
 import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
 
 data class ComposerPackage(
     override val name: String,
     override val description: String,
-    override val path: String,
+    override val path: Path,
     override val namespace: Namespace,
     override val exportList: List<SymbolName>,
     val moduliteEnabled: Boolean,
@@ -26,7 +28,7 @@ data class ComposerPackage(
     override val forceInternalList: List<SymbolName> = emptyList()
 
     fun contains(file: VirtualFile): Boolean {
-        val moduliteFolder = File(path).parent
+        val moduliteFolder = path.parent.toString()
         return file.path.startsWith(moduliteFolder + File.separator)
     }
 
@@ -86,7 +88,7 @@ data class ComposerPackage(
             return ComposerPackage(
                 "#$name",
                 description,
-                file.virtualFile.path,
+                Paths.get(file.virtualFile.path),
                 Namespace(namespace),
                 exportList,
                 moduliteEnabled,

@@ -19,7 +19,6 @@ import com.intellij.psi.search.scope.packageSet.NamedScopeManager
 import com.intellij.util.SlowOperations
 import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.notifications.ModuliteWarningNotification
-import java.io.File
 
 abstract class UsagesBaseFinder {
     companion object {
@@ -109,8 +108,8 @@ abstract class UsagesBaseFinder {
             { name },
             AllIcons.Ide.LocalScope,
             object : FilteredPackageSet("${name}_files") {
-                private val moduliteFolder = File(modulite.path).parent
-                private val excludedFolders = children.map { File(it.path).parent }
+                private val moduliteFolder = modulite.path.parent.toString()
+                private val excludedFolders = children.map { it.path.parent.toString() }
 
                 override fun contains(file: VirtualFile, project: Project): Boolean {
                     val contains = file.path.startsWith(moduliteFolder)

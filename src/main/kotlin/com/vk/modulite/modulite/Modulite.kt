@@ -25,6 +25,8 @@ import org.jetbrains.yaml.psi.YAMLKeyValue
 import org.jetbrains.yaml.psi.YAMLMapping
 import org.jetbrains.yaml.psi.YAMLSequence
 import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * Class representing any modulite in the code.
@@ -32,7 +34,7 @@ import java.io.File
 data class Modulite(
     override var name: String,
     override val description: String,
-    override val path: String,
+    override val path: Path,
     override val namespace: Namespace,
     val requires: ModuliteRequires,
     override val exportList: List<SymbolName>,
@@ -269,7 +271,7 @@ data class Modulite(
     }
 
     fun contains(file: VirtualFile): Boolean {
-        val moduleFolder = File(path).parent
+        val moduleFolder = path.parent.toString()
 
         // TODO: fix this somehow
         if (ApplicationManager.getApplication().isUnitTestMode) {
@@ -465,7 +467,7 @@ data class Modulite(
 
             return Modulite(
                 name, description,
-                file.virtualFile.path,
+                Paths.get(file.virtualFile.path),
                 namespace,
                 ModuliteRequires(requiresList),
                 exportList,
