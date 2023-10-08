@@ -9,6 +9,7 @@ import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpReference
 import com.vk.modulite.utils.unquote
 import org.jetbrains.yaml.psi.YAMLQuotedText
+import java.nio.file.Paths
 
 object Utils {
     fun CodeInsightTestFixture.openFile(file: String): VirtualFile {
@@ -84,5 +85,9 @@ object Utils {
                 throw RuntimeException(e)
             }
         }
+    }
+
+    fun String.normalizedPath(): String {
+        return Paths.get(this).toString()
     }
 }

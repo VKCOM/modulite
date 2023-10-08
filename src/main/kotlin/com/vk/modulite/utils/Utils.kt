@@ -100,10 +100,6 @@ fun String.normalizedFqn(): String {
     return replace("\\\\", "\\")
 }
 
-fun String.normalizedPath(): String {
-    return replace("\\", "/")
-}
-
 fun String.toKebabCase(): String {
     // If "RPC" for example, then we want "rpc", not "r-p-c"
     val onlyUpperCaseCharacters = all { it.isUpperCase() }
