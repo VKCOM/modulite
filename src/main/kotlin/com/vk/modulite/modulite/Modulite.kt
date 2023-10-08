@@ -271,16 +271,16 @@ data class Modulite(
     }
 
     fun contains(file: VirtualFile): Boolean {
-        val moduleFolder = path.parent.toString()
+        val moduleFolder = path.parent
 
         // TODO: fix this somehow
         if (ApplicationManager.getApplication().isUnitTestMode) {
-            val path = file.path
-            val folder = moduleFolder.removeSuffix("/hints/Module")
+            val path = Paths.get(file.path).toString()
+            val folder = moduleFolder.toString().removeSuffix("/hints/Module")
             return path == folder || path.startsWith("$folder${File.separator}")
         }
 
-        return file.path == moduleFolder || file.path.startsWith("$moduleFolder${File.separator}")
+        return Paths.get(file.path) == moduleFolder || Paths.get(file.path).startsWith("$moduleFolder${File.separator}")
     }
 
     fun contains(file: PsiFile) = contains(file.virtualFile)

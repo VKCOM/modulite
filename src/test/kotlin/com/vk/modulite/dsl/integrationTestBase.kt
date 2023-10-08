@@ -30,6 +30,7 @@ import com.vk.modulite.infrastructure.Utils.checkHighlighting
 import com.vk.modulite.infrastructure.Utils.findElementByName
 import com.vk.modulite.infrastructure.Utils.findQuotedTextByValue
 import com.vk.modulite.infrastructure.Utils.findReferenceByName
+import com.vk.modulite.infrastructure.Utils.normalizedPath
 import com.vk.modulite.infrastructure.Utils.waitWithEventsDispatching
 import com.vk.modulite.inspections.InternalSymbolUsageInspection
 import com.vk.modulite.inspections.intentions.AllowInternalAccessEmptyInspection
@@ -448,7 +449,7 @@ class DirContext(val folder: String, val ctx: StepContext) {
 @TestDslMarker
 class StepContext(val name: String, val ctx: IntegrationTestContext) {
     fun filename(filename: String): String {
-        return File(ctx.subFolder, filename).path
+        return File(ctx.subFolder, filename).toUnixPath()
     }
 
     fun realAbsolutePath(filename: String): String {
@@ -545,6 +546,10 @@ class StepContext(val name: String, val ctx: IntegrationTestContext) {
     fun checkHighlights() {
         ctx.fixture.checkHighlighting(ctx.files)
     }
+
+    private fun File.toUnixPath(): String {
+        return this.path.replace('\\', '/')
+    }
 }
 
 @TestDslMarker
@@ -569,7 +574,7 @@ class IntegrationTestContext {
         val walker = testDataFolder.walk()
         files = walker
             .filter { it.isFile && it.name != ".DS_Store" }
-            .map { it.path.removePrefix(this.rootFolder) }
+            .map { it.path.removePrefix(this.rootFolder.normalizedPath()) }
             .toList()
 
         fixture.configureByFiles(*files.toTypedArray())
