@@ -1,0 +1,3 @@
+<?php
+
+\Photos\Photo::printPhotoLikes();
