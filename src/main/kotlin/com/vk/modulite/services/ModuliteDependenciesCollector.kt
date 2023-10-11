@@ -224,8 +224,6 @@ class ModuliteDependenciesCollector(val project: Project) {
                             }else{
                                 return
                             }
-
-
                         }
 
                         is MethodReference, is ClassConstantReference -> {
@@ -316,7 +314,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                         stack.push(instance) // Добавляем текущий instance в стек
                         while (stack.isNotEmpty()) {
                             val currentInstance = stack.pop() // Получаем текущий instance из стека
-
+                            traitsClasses+= currentInstance
                             if (currentInstance.hasTraitUses()) {
                                 val traitsUses = currentInstance.traits
                                 traitsClasses += traitsUses

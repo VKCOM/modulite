@@ -5,8 +5,11 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
+import com.jetbrains.php.lang.PhpLangUtil
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
+import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
 import com.jetbrains.php.lang.psi.elements.impl.PhpUseImpl
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 import com.vk.modulite.SymbolName
@@ -28,12 +31,13 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
 
     class AddSymbolToRequiresQuickFix(
         private val contextModulite: Modulite,
-        private val symbol: SymbolName,
+        private val symbols: List<SymbolName>
     ) : LocalQuickFix {
+
         override fun getFamilyName() = "Add symbol to requires"
 
         override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
-            contextModulite.addDependencies(symbol)
+            contextModulite.addDependencies(symbols)
         }
     }
 
@@ -49,7 +53,17 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             return
         }
     }
+    private fun referenceValidator(reference: PhpReference?): MutableCollection<out PhpNamedElement>? {
+        if (reference == null) return null
 
+        val references = reference.resolveGlobal(false)
+        if (references.isEmpty()) {
+//                    LOG.warn("Unknown reference for symbol '${reference.safeFqn()}'")
+            return null
+        }
+
+        return references
+    }
     class AddComposerPackageToRequiresQuickFix(
         private val contextModulite: Modulite,
         private val referencePackage: ComposerPackage,
@@ -131,19 +145,6 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                 }
             }
 
-
-            private fun referenceValidator(reference: PhpReference?): MutableCollection<out PhpNamedElement>? {
-                if (reference == null) return null
-
-                val references = reference.resolveGlobal(false)
-                if (references.isEmpty()) {
-//                    LOG.warn("Unknown reference for symbol '${reference.safeFqn()}'")
-                    return null
-                }
-
-                return references
-            }
-
             private fun checkTraitReferenceUsage(reference: PhpReference, problemElement: PsiElement? = reference){
                 val references = referenceValidator(reference) ?: return
 
@@ -155,58 +156,18 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                 val problemPsiElement = problemElement ?: reference
                 val context = ModuliteRestrictionChecker.createContext(reference)
 
-                val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
-                var traitsClasses: Array<PhpClass> = arrayOf()
-
                 filteredReferences.forEach { elem ->
                     val instance = elem as PhpClass
-                    stack.push(instance) // Добавляем текущий instance в стек
-                    while (stack.isNotEmpty()) {
-                        val currentInstance = stack.pop() // Получаем текущий instance из стека
 
-                        if (currentInstance.hasTraitUses()) {
-                            val traitsUses = currentInstance.traits
-                            traitsClasses += traitsUses
-
-                            traitsUses.forEach { it ->
-                                val instanceNesting: Array<PhpClass>? = it.traits
-
-                                instanceNesting?.forEach { nestedInstance ->
-                                    stack.push(nestedInstance) // Добавляем вложенный instance в стек
-                                }
-
-                                if (instanceNesting != null) {
-                                    traitsClasses += instanceNesting
-                                }
-                            }
-                        }
-                    }
-                    val traitsNames = traitsClasses
-                    val methodsNames: MutableCollection<Method> = instance.methods
-                    traitsNames.forEach { element->
-                        val (can, reason) = ModuliteRestrictionChecker.canUse(context, element, reference)
-                        if (!can) {
-                            holder.addProblem(
-                                reason,
-                                element,
-                                reference,
-                                context,
-                                problemPsiElement
-                            )
-                        }
-                    }
-                    methodsNames.forEach {element->
-                        val (can, reason) = ModuliteRestrictionChecker.canUse(context, element, reference)
-                        if (!can) {
-                            holder.addProblem(
-                                reason,
-                                element,
-                                reference,
-                                context,
-                                problemPsiElement
-                            )
-                        }
-
+                    val (can, reason) = ModuliteRestrictionChecker.canUse(context, instance, reference)
+                    if (!can) {
+                        holder.addProblem(
+                            reason,
+                            instance,
+                            reference,
+                            context,
+                            problemPsiElement
+                        )
                     }
                 }
             }
@@ -237,6 +198,33 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
 
             }
         }
+    }
+
+    private fun processElement(element: PhpNamedElement, reference: PhpReference? = null): SymbolName? {
+
+        if (element is MethodImpl) {
+            // У магических методов символ - его класс
+            if (PhpLangUtil.isMagicMethod(element.name)) {
+                val containingClass = element.containingClass
+                if (containingClass != null) {
+                    return containingClass.symbolName(reference)
+                }
+            }
+
+            // Не статические методы добавлять не надо
+            if (!element.isStatic) {
+                return null
+            }
+        }
+
+        // Если у функции нет имени, то это лямбда. Значит мы её пропускаем
+        if (element is FunctionImpl) {
+            if (element.name.isEmpty()) {
+                return null
+            }
+        }
+
+        return element.symbolName(reference, forNotRequired = true)
     }
 
     private fun ProblemsHolder.addProblem(
@@ -277,8 +265,17 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                     """
                         restricted to $readableName, $refModulite is not required by ${context.modulite}
                     """.trimIndent()
-                } else {
-                    quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, symbol))
+                } else if(symbolElement is PhpClass && symbolElement.isTrait){
+                    val (traits,methods) = checkTraitReferenceUsage(reference)
+
+                    quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, traits+methods))
+
+                    """
+                        restricted to $readableName, it's not required by ${context.modulite}
+                    """.trimIndent()
+                }
+                    else {
+                    quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, listOf(symbol)))
 
                     """
                         restricted to $readableName, it's not required by ${context.modulite}
@@ -302,5 +299,51 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             ProblemHighlightType.GENERIC_ERROR,
             *quickFixes.toTypedArray()
         )
+    }
+
+    private fun checkTraitReferenceUsage(reference: PhpReference)
+            :Pair<List<SymbolName>, List<SymbolName>>{
+        val traitsClasses: MutableList<PhpClass> = arrayListOf()
+        val methodsNames: MutableCollection<Method> = arrayListOf()
+
+        val references = referenceValidator(reference) ?: return Pair(listOf<SymbolName>(),listOf<SymbolName>())
+
+        val filteredReferences = references.filter {
+            val file = it.containingFile.virtualFile
+            !file.fromTests() && !file.fromStubs() && it !is PhpNamespace
+        }
+
+        val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
+
+        filteredReferences.forEach { elem ->
+            val instance = elem as PhpClass
+            stack.push(instance) // Добавляем текущий instance в стек
+            while (stack.isNotEmpty()) {
+                val currentInstance = stack.pop() // Получаем текущий instance из стека
+                traitsClasses+=currentInstance
+                if (currentInstance.hasTraitUses()) {
+                    val traitsUses = currentInstance.traits
+                    traitsClasses += traitsUses
+
+                    traitsUses.forEach { it ->
+                        val instanceNesting: Array<PhpClass>? = it.traits
+
+                        instanceNesting?.forEach { nestedInstance ->
+                            stack.push(nestedInstance) // Добавляем вложенный instance в стек
+                        }
+
+                        if (instanceNesting != null) {
+                            traitsClasses += instanceNesting
+                        }
+                    }
+                }
+            }
+            methodsNames += instance.methods
+        }
+
+        val traitsSymbolsName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
+        val traitsSymbolName = methodsNames.mapNotNull { processElement(it, reference) }
+
+        return Pair(traitsSymbolsName,traitsSymbolName)
     }
 }
