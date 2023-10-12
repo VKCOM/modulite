@@ -266,7 +266,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                         restricted to $readableName, $refModulite is not required by ${context.modulite}
                     """.trimIndent()
                 } else if(symbolElement is PhpClass && symbolElement.isTrait){
-                    val (traits,methods) = checkTraitReferenceUsage(reference)
+                    val (traits,methods) = collectTraitReferenceUsage(reference)
 
                     quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, traits+methods))
 
@@ -301,7 +301,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
         )
     }
 
-    private fun checkTraitReferenceUsage(reference: PhpReference)
+    private fun collectTraitReferenceUsage(reference: PhpReference)
             :Pair<List<SymbolName>, List<SymbolName>>{
         val traitsClasses: MutableList<PhpClass> = arrayListOf()
         val methodsNames: MutableCollection<Method> = arrayListOf()

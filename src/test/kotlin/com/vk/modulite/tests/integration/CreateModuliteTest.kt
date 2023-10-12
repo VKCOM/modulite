@@ -153,5 +153,24 @@ class CreateModuliteTest : IntegrationTestBase() {
         }
     }
 
+    fun `test traits one nesting required `  () = integrationTest("traitsOneNesting"){
+        step("create modulite") {
+            createModuliteFromSource( "Photos") {
+                makeAllExported()
+            }
+        }
+
+        step("check modulite config") {
+            yaml("Photos/.modulite.yaml") {
+                check(".expected")
+            }
+        }
+
+        step("check highlights") {
+            enableInspections(InternalSymbolUsageInspection())
+            checkHighlights()
+        }
+    }
+
     override fun getTestDataPath() = "src/test/fixtures/integration/CreateModulite"
 }
