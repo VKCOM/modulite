@@ -1,6 +1,6 @@
 <?php
 
-namespace Feed006;
+namespace Feed101;
 
 class PrivClass {
     public function myMethod() {

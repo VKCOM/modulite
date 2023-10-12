@@ -1,6 +1,6 @@
 <?php
 
-namespace Feed006;
+namespace Feed101;
 
 trait PrivTrait {
     function showThisClass() {
