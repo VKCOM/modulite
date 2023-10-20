@@ -16,15 +16,8 @@ require:
   - "\\Engines\\LikesEngineTrait"
   - "\\Engines\\MusicEngineTrait"
   - "\\Engines\\VideosEngineTrait"
-  - "\\Engines\\FriendsEngineTrait::friendList()"
-  - "\\Engines\\FriendsEngineTrait::printFriendList()"
-  - "\\Engines\\LikesEngineTrait::print()"
-  - "\\Engines\\LikesEngineTrait::printTweetsLikes()"
-  - "\\Engines\\MusicEngineTrait::musicList()"
-  - "\\Engines\\MusicEngineTrait::musicListPrint()"
   - "\\Engines\\TestEngine::tester()"
-  - "\\Engines\\VideosEngineTrait::printVideosList()"
-  - "\\Engines\\VideosEngineTrait::videosList()"
+  - "\\ExternalEngines\\Tweets::printTweetsLikesCountByUser()"
 
 # Granting partial access to internal symbols, "as an exception".
 allow-internal-access:

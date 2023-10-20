@@ -140,35 +140,9 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
 
             override fun visitPhpUse(expression: PhpUse?) {
                 val instance = expression as PhpUseImpl
+
                 if (instance.isTraitImport) {
-                    instance.targetReference?.let { checkTraitReferenceUsage(it) }
-                }
-            }
-
-            private fun checkTraitReferenceUsage(reference: PhpReference, problemElement: PsiElement? = reference){
-                val references = referenceValidator(reference) ?: return
-
-                val filteredReferences = references.filter {
-                    val file = it.containingFile.virtualFile
-                    !file.fromTests() && !file.fromStubs() && it !is PhpNamespace
-                }
-
-                val problemPsiElement = problemElement ?: reference
-                val context = ModuliteRestrictionChecker.createContext(reference)
-
-                filteredReferences.forEach { elem ->
-                    val instance = elem as PhpClass
-
-                    val (can, reason) = ModuliteRestrictionChecker.canUse(context, instance, reference)
-                    if (!can) {
-                        holder.addProblem(
-                            reason,
-                            instance,
-                            reference,
-                            context,
-                            problemPsiElement
-                        )
-                    }
+                   instance.targetReference?.let { checkReferenceUsage(it) }
                 }
             }
 
@@ -266,9 +240,8 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                         restricted to $readableName, $refModulite is not required by ${context.modulite}
                     """.trimIndent()
                 } else if(symbolElement is PhpClass && symbolElement.isTrait){
-                    val (traits,methods) = collectTraitReferenceUsage(reference)
-
-                    quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, traits+methods))
+                    val (classes,methods) = collectTraitReferenceUsage(reference)
+                    quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, classes+methods))
 
                     """
                         restricted to $readableName, it's not required by ${context.modulite}
@@ -301,12 +274,52 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
         )
     }
 
+    private fun collectElements(element: PsiElement): Pair<MutableList<PhpClass>, MutableList<MethodImpl>> {
+        val classesToRequire: MutableList<PhpClass> = mutableListOf()
+        val methodsToRequire: MutableList<MethodImpl> = mutableListOf()
+
+        var child = element.firstChild
+
+        while (child != null) {
+            when (child) {
+                is Method -> methodsToRequire.add(child as MethodImpl)
+                is PhpClass -> classesToRequire.add(child)
+                is MethodReference -> {
+// Извлечь информацию о вызываемом методе
+                    val resolvedMethod = child.resolve()
+                    if (resolvedMethod is Method) {
+                        methodsToRequire.add(resolvedMethod as MethodImpl)
+                    }
+                }
+
+                is NewExpression -> {
+                    val classReference = child.classReference
+                    val resolvedClass = classReference?.resolve()
+                    if (resolvedClass is PhpClass) {
+                        classesToRequire.add(resolvedClass)
+                    }
+                }
+
+                else -> {
+// Рекурсивный вызов для дочерних элементов
+                    val (nestedClasses, nestedMethods) = collectElements(child)
+                    classesToRequire.addAll(nestedClasses)
+                    methodsToRequire.addAll(nestedMethods)
+                }
+            }
+
+            child = child.nextSibling
+        }
+
+        return Pair(classesToRequire, methodsToRequire)
+    }
+
     private fun collectTraitReferenceUsage(reference: PhpReference)
-            :Pair<List<SymbolName>, List<SymbolName>>{
+            : Pair<List<SymbolName>, List<SymbolName>> {
         val traitsClasses: MutableList<PhpClass> = arrayListOf()
         val methodsNames: MutableCollection<Method> = arrayListOf()
 
-        val references = referenceValidator(reference) ?: return Pair(listOf<SymbolName>(),listOf<SymbolName>())
+        val references = referenceValidator(reference) ?: return Pair(listOf<SymbolName>(), listOf<SymbolName>())
 
         val filteredReferences = references.filter {
             val file = it.containingFile.virtualFile
@@ -320,7 +333,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             stack.push(instance) // Добавляем текущий instance в стек
             while (stack.isNotEmpty()) {
                 val currentInstance = stack.pop() // Получаем текущий instance из стека
-                traitsClasses+=currentInstance
+                traitsClasses += currentInstance
                 if (currentInstance.hasTraitUses()) {
                     val traitsUses = currentInstance.traits
                     traitsClasses += traitsUses
@@ -341,9 +354,16 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             methodsNames += instance.methods
         }
 
-        val traitsSymbolsName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
-        val traitsSymbolName = methodsNames.mapNotNull { processElement(it, reference) }
+        val requireMethods: MutableList<MethodImpl> = mutableListOf()
+        methodsNames.forEach { it ->
+            val (classes, methods) = collectElements(it)
+            traitsClasses.addAll(classes)
+            requireMethods.addAll(methods)
+        }
 
-        return Pair(traitsSymbolsName,traitsSymbolName)
+        val traitsSymbolsName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
+        val traitsSymbolName = requireMethods.distinct().mapNotNull { processElement(it, reference) }
+
+        return Pair(traitsSymbolsName, traitsSymbolName)
     }
 }

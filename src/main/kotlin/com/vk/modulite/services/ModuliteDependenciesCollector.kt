@@ -28,7 +28,6 @@ import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
-import java.util.*
 
 class ModuliteDepsDiff(
     private val project: Project,
@@ -306,40 +305,11 @@ class ModuliteDependenciesCollector(val project: Project) {
                 private fun handleTraitReference(reference: PhpReference?, traverseFurther: Boolean = true) {
                     val references = referenceValidator(reference) ?: return
 
-                    val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
-                    var traitsClasses: Array<PhpClass> = arrayOf()
-
                     references.forEach { elem ->
                         val instance = elem as PhpClass
-                        stack.push(instance) // Добавляем текущий instance в стек
-                        while (stack.isNotEmpty()) {
-                            val currentInstance = stack.pop() // Получаем текущий instance из стека
-                            traitsClasses+= currentInstance
-                            if (currentInstance.hasTraitUses()) {
-                                val traitsUses = currentInstance.traits
-                                traitsClasses += traitsUses
-
-                                traitsUses.forEach { it ->
-                                    val instanceNesting: Array<PhpClass>? = it.traits
-
-                                    instanceNesting?.forEach { nestedInstance ->
-                                        stack.push(nestedInstance) // Добавляем вложенный instance в стек
-                                    }
-
-                                    if (instanceNesting != null) {
-                                        traitsClasses += instanceNesting
-                                    }
-                                }
-                            }
-                        }
-                        val traitsNames = traitsClasses.mapNotNull { processElement(it, reference) }
-                        addSymbols(traitsNames)
-                        val methodsNames = instance.methods.mapNotNull { processElement(it, reference) }
-                        addSymbols(methodsNames)
+                        visitPhpClass(instance)
                     }
 
-                    val names = references.mapNotNull { processElement(it, reference) }
-                    addSymbols(names)
                     if (traverseFurther) {
                         super.visitPhpElement(reference)
                     }
