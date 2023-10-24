@@ -1,8 +1,9 @@
 name: "@feed"
-namespace: "\\Feed101"
+namespace: "\\Feed006"
 
 export:
   - "PubFeed"
+  - "PrivTrait"
 
 force-internal:
 

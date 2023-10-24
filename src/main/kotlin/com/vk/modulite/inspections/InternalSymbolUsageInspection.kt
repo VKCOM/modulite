@@ -15,6 +15,7 @@ import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 import com.vk.modulite.SymbolName
 import com.vk.modulite.composer.ComposerPackage
 import com.vk.modulite.modulite.Modulite
+import com.vk.modulite.modulite.ModuliteRequires
 import com.vk.modulite.modulite.ModuliteRestrictionChecker
 import com.vk.modulite.psi.extensions.files.containingComposerPackage
 import com.vk.modulite.psi.extensions.files.containingModulite
@@ -240,7 +241,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                         restricted to $readableName, $refModulite is not required by ${context.modulite}
                     """.trimIndent()
                 } else if(symbolElement is PhpClass && symbolElement.isTrait){
-                    val (classes,methods) = collectTraitReferenceUsage(reference)
+                    val (classes,methods) = collectTraitReferenceUsage(reference,context.modulite?.requires )
                     quickFixes.add(AddSymbolToRequiresQuickFix(context.modulite!!, classes+methods))
 
                     """
@@ -265,7 +266,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                 """.trimIndent()
             }
         }
-
+context.modulite?.requires
         registerModuliteProblem(
             problemElement,
             text,
@@ -314,7 +315,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
         return Pair(classesToRequire, methodsToRequire)
     }
 
-    private fun collectTraitReferenceUsage(reference: PhpReference)
+    private fun collectTraitReferenceUsage(reference: PhpReference, moduliteRequires : ModuliteRequires? = null)
             : Pair<List<SymbolName>, List<SymbolName>> {
         val traitsClasses: MutableList<PhpClass> = arrayListOf()
         val methodsNames: MutableCollection<Method> = arrayListOf()
@@ -361,9 +362,15 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             requireMethods.addAll(methods)
         }
 
-        val traitsSymbolsName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
-        val traitsSymbolName = requireMethods.distinct().mapNotNull { processElement(it, reference) }
+        val traitsClassName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
+        val traitsMethodsName = requireMethods.distinct().mapNotNull { processElement(it, reference) }
 
-        return Pair(traitsSymbolsName, traitsSymbolName)
+        moduliteRequires?.symbols?.let { currentModuleSymbols ->
+            val filteredMethods = traitsMethodsName.filterNot { it in currentModuleSymbols }
+            val filteredClasses = traitsClassName.filterNot { it in currentModuleSymbols }
+            return Pair(filteredClasses, filteredMethods)
+        }
+
+        return Pair(traitsClassName, traitsMethodsName)
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Feed101;
+namespace Feed006;
 
 class PubFeed {
     /**
