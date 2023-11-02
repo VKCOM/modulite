@@ -28,6 +28,7 @@ import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
+import java.util.*
 
 class ModuliteDepsDiff(
     private val project: Project,
@@ -291,7 +292,8 @@ class ModuliteDependenciesCollector(val project: Project) {
                 }
 
                 private fun referenceValidator(reference: PhpReference?): MutableCollection<out PhpNamedElement>? {
-                    if (reference == null) return null
+                    if (reference == null)
+                        return null
 
                     val references = reference.resolveGlobal(false)
                     if (references.isEmpty()) {
@@ -302,13 +304,92 @@ class ModuliteDependenciesCollector(val project: Project) {
                     return references
                 }
 
+                private fun collectTraitElements(element: PsiElement): Pair<MutableList<PhpClass>, MutableList<MethodImpl>> {
+                    val classesToRequire: MutableList<PhpClass> = mutableListOf()
+                    val methodsToRequire: MutableList<MethodImpl> = mutableListOf()
+
+                    var child = element.firstChild
+
+                    while (child != null) {
+                        when (child) {
+                            is Method -> methodsToRequire.add(child as MethodImpl)
+                            is PhpClass -> classesToRequire.add(child)
+                            is MethodReference -> {
+// Извлечь информацию о вызываемом методе
+                                val resolvedMethod = child.resolve()
+                                if (resolvedMethod is Method) {
+                                    methodsToRequire.add(resolvedMethod as MethodImpl)
+                                }
+                            }
+
+                            is NewExpression -> {
+                                val classReference = child.classReference
+                                val resolvedClass = classReference?.resolve()
+                                if (resolvedClass is PhpClass) {
+                                    classesToRequire.add(resolvedClass)
+                                }
+                            }
+
+                            else -> {
+// Рекурсивный вызов для дочерних элементов
+                                val (nestedClasses, nestedMethods) = collectTraitElements(child)
+                                classesToRequire.addAll(nestedClasses)
+                                methodsToRequire.addAll(nestedMethods)
+                            }
+                        }
+
+                        child = child.nextSibling
+                    }
+
+                    return Pair(classesToRequire, methodsToRequire)
+                }
+
                 private fun handleTraitReference(reference: PhpReference?, traverseFurther: Boolean = true) {
                     val references = referenceValidator(reference) ?: return
 
+                    val traitsClasses: MutableList<PhpClass> = arrayListOf()
+                    val methodsNames: MutableCollection<Method> = arrayListOf()
+
+                    val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
+
                     references.forEach { elem ->
                         val instance = elem as PhpClass
-                        visitPhpClass(instance)
+                        stack.push(instance) // Добавляем текущий instance в стек
+                        while (stack.isNotEmpty()) {
+                            val currentInstance = stack.pop() // Получаем текущий instance из стека
+                            traitsClasses += currentInstance
+                            if (currentInstance.hasTraitUses()) {
+                                val traitsUses = currentInstance.traits
+                                traitsClasses += traitsUses
+
+                                traitsUses.forEach { it ->
+                                    val instanceNesting: Array<PhpClass>? = it.traits
+
+                                    instanceNesting?.forEach { nestedInstance ->
+                                        stack.push(nestedInstance) // Добавляем вложенный instance в стек
+                                    }
+
+                                    if (instanceNesting != null) {
+                                        traitsClasses += instanceNesting
+                                    }
+                                }
+                            }
+                        }
+                        methodsNames += instance.methods
                     }
+
+                    val requireMethods: MutableList<MethodImpl> = mutableListOf()
+                    methodsNames.forEach { it ->
+                        val (classes, methods) = collectTraitElements(it)
+                        traitsClasses.addAll(classes)
+                        requireMethods.addAll(methods)
+                    }
+
+                    val traitsClassName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
+                    val traitsMethodsName = requireMethods.distinct().mapNotNull { processElement(it, reference) }
+
+                    addSymbols(traitsClassName)
+                    addSymbols(traitsMethodsName)
 
                     if (traverseFurther) {
                         super.visitPhpElement(reference)
@@ -366,10 +447,7 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                 private fun addSymbol(name: SymbolName) {
                     // TODO: simplify?
-                    if (name.kind != SymbolName.Kind.Modulite && (ownSymbolsSet.contains(name) || ownSymbolsSet.contains(
-                            name.className()
-                        ))
-                    ) {
+                    if (name.kind != SymbolName.Kind.Modulite && (ownSymbolsSet.contains(name) || ownSymbolsSet.contains(name.className()))) {
                         return
                     }
 

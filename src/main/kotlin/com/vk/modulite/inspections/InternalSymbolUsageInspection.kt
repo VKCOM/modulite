@@ -275,7 +275,7 @@ context.modulite?.requires
         )
     }
 
-    private fun collectElements(element: PsiElement): Pair<MutableList<PhpClass>, MutableList<MethodImpl>> {
+    private fun collectTraitElements(element: PsiElement): Pair<MutableList<PhpClass>, MutableList<MethodImpl>> {
         val classesToRequire: MutableList<PhpClass> = mutableListOf()
         val methodsToRequire: MutableList<MethodImpl> = mutableListOf()
 
@@ -303,7 +303,7 @@ context.modulite?.requires
 
                 else -> {
 // Рекурсивный вызов для дочерних элементов
-                    val (nestedClasses, nestedMethods) = collectElements(child)
+                    val (nestedClasses, nestedMethods) = collectTraitElements(child)
                     classesToRequire.addAll(nestedClasses)
                     methodsToRequire.addAll(nestedMethods)
                 }
@@ -357,7 +357,7 @@ context.modulite?.requires
 
         val requireMethods: MutableList<MethodImpl> = mutableListOf()
         methodsNames.forEach { it ->
-            val (classes, methods) = collectElements(it)
+            val (classes, methods) = collectTraitElements(it)
             traitsClasses.addAll(classes)
             requireMethods.addAll(methods)
         }
