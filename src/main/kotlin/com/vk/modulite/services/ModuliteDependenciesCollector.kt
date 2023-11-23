@@ -30,6 +30,7 @@ import com.jetbrains.php.lang.psi.elements.PhpUse
 import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
 import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
+import com.jetbrains.php.lang.psi.elements.impl.FunctionReferenceImpl
 import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
 import com.jetbrains.php.lang.psi.elements.impl.MethodReferenceImpl
 import com.vk.modulite.Namespace
@@ -376,18 +377,14 @@ class ModuliteDependenciesCollector(val project: Project) {
                                 if (child.isEquivalentTo(targetReference)) {
                                     return true
                                 }
-                                if(child.isInterface){
+                                if (child.isInterface) {
                                     child.methods.forEach { method ->
-                                        val d = method.returnType
-                                        val c = getReturnType(method)
-                                        val t =method.type
-                                        val v = targetReference.type
-                                        if(c == v){
+                                        if (method.type == targetReference.type) {
                                             return true
                                         }
                                         println()
                                     }
-                                }else{
+                                } else {
                                     child.methods.forEach { method ->
                                         if (method.isEquivalentTo(targetReference)) {
                                             return true
@@ -399,18 +396,18 @@ class ModuliteDependenciesCollector(val project: Project) {
                             is MethodReferenceImpl -> {
                                 val value = child.resolve()
                                 if (value != null) {
-                                    if(value.isEquivalentTo(targetReference)){
+                                    if (value.isEquivalentTo(targetReference)) {
                                         return true
                                     }
                                 }
-                            /*    if (child.isEquivalentTo(targetReference)) {
-                                    return true
-                                }*/
                             }
 
-                            is FunctionImpl -> {
-                                if (child.isEquivalentTo(targetReference)) {
-                                    return true
+                            is FunctionReferenceImpl -> {
+                                val value = child.resolve()
+                                if (value != null) {
+                                    if (value.isEquivalentTo(targetReference)) {
+                                        return true
+                                    }
                                 }
                             }
                         }
@@ -451,7 +448,6 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                     val modulite = containingFile.containingModulite(project, modulites)
                     if (modulite != null) {
-                        // val d = file
                         if (reference.context?.containingModulite() == dir.containingModulite(project)) {
                             println()
                             addSymbol(modulite.symbolName())
@@ -465,9 +461,6 @@ class ModuliteDependenciesCollector(val project: Project) {
                                 return collapseModuleSymbols
                             }
                         }
-                        /*  val d = file.psiFile<PhpFile>(project)
-                           addSymbol(modulite.symbolName())
-                           return collapseModuleSymbols*/
                     }
 
                     val composerPackage = containingFile.containingComposerPackage(project, composerPackages)
