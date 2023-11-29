@@ -50,8 +50,8 @@ class ManageModuliteExportsDialog(
             row("Exported Symbols:") {}
             row {
                 cell(symbolsTree.component())
-                    .horizontalAlign(HorizontalAlign.FILL)
-                    .verticalAlign(VerticalAlign.FILL)
+                    .align(AlignX.FILL)
+                    .align(AlignY.FILL)
             }
                 .topGap(TopGap.NONE)
         }
