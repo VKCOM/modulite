@@ -132,7 +132,7 @@ class ModuliteWizardDialog(
         mainPanel = panel {
             row("Name:") {
                 textField()
-                    .align(AlignX.FILL)
+                    .horizontalAlign(HorizontalAlign.FILL)
                     .bindText(model::name)
                     .errorOnApply("Name should have at least one character") {
                         it.text.isEmpty()
@@ -157,13 +157,13 @@ class ModuliteWizardDialog(
 
             row("Description:") {
                 expandableTextField()
-                    .align(AlignX.FILL)
+                    .horizontalAlign(HorizontalAlign.FILL)
                     .bindText(model::description)
             }
 
             row("Folder:") {
                 textField()
-                    .align(AlignX.FILL)
+                    .horizontalAlign(HorizontalAlign.FILL)
                     .bindText(model::folder)
                     .enabled(!model.fromSource)
                     .comment("A folder to place the new modulite.")
@@ -197,7 +197,7 @@ class ModuliteWizardDialog(
 
             row("Namespace:") {
                 expandableTextField()
-                    .align(AlignX.FILL)
+                    .horizontalAlign(HorizontalAlign.FILL)
                     .bindText({
                         val ns = model.namespace.toString()
                         ns.applyIf(ns != "\\") {
@@ -232,13 +232,14 @@ class ModuliteWizardDialog(
             group("Exported Symbols", indent = false) {
                 row {
                     cell(symbolsTree.component())
-                        .align(AlignX.FILL)
-                        .align(AlignY.BOTTOM)
+                        .horizontalAlign(HorizontalAlign.FILL)
+                        .verticalAlign(VerticalAlign.FILL)
                         .comment("Selected symbols will be public, the rest will be internal and will not be available outside of the modulite.", 90)
-                }
+                }.resizableRow()
             }
                 .visible(model.fromSource)
                 .topGap(TopGap.NONE)
+                .resizableRow()
         }
 
         mainPanel.reset()
