@@ -9,8 +9,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.CheckedTreeNode
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.dsl.builder.*
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
-import com.intellij.ui.dsl.gridLayout.VerticalAlign
 import com.intellij.util.applyIf
 import com.intellij.util.ui.JBDimension
 import com.jetbrains.rd.framework.base.deepClonePolymorphic
@@ -132,7 +130,7 @@ class ModuliteWizardDialog(
         mainPanel = panel {
             row("Name:") {
                 textField()
-                    .horizontalAlign(HorizontalAlign.FILL)
+                    .align(AlignX.FILL)
                     .bindText(model::name)
                     .errorOnApply("Name should have at least one character") {
                         it.text.isEmpty()
@@ -157,13 +155,13 @@ class ModuliteWizardDialog(
 
             row("Description:") {
                 expandableTextField()
-                    .horizontalAlign(HorizontalAlign.FILL)
+                    .align(AlignX.FILL)
                     .bindText(model::description)
             }
 
             row("Folder:") {
                 textField()
-                    .horizontalAlign(HorizontalAlign.FILL)
+                    .align(AlignX.FILL)
                     .bindText(model::folder)
                     .enabled(!model.fromSource)
                     .comment("A folder to place the new modulite.")
@@ -197,7 +195,7 @@ class ModuliteWizardDialog(
 
             row("Namespace:") {
                 expandableTextField()
-                    .horizontalAlign(HorizontalAlign.FILL)
+                    .align(AlignX.FILL)
                     .bindText({
                         val ns = model.namespace.toString()
                         ns.applyIf(ns != "\\") {
@@ -232,8 +230,8 @@ class ModuliteWizardDialog(
             group("Exported Symbols", indent = false) {
                 row {
                     cell(symbolsTree.component())
-                        .horizontalAlign(HorizontalAlign.FILL)
-                        .verticalAlign(VerticalAlign.FILL)
+                        .align(AlignX.FILL)
+                        .align(AlignY.FILL)
                         .comment("Selected symbols will be public, the rest will be internal and will not be available outside of the modulite.", 90)
                 }.resizableRow()
             }
