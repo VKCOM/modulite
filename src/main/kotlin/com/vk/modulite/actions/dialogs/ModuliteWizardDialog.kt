@@ -235,10 +235,11 @@ class ModuliteWizardDialog(
                         .horizontalAlign(HorizontalAlign.FILL)
                         .verticalAlign(VerticalAlign.FILL)
                         .comment("Selected symbols will be public, the rest will be internal and will not be available outside of the modulite.", 90)
-                }
+                }.resizableRow()
             }
                 .visible(model.fromSource)
                 .topGap(TopGap.NONE)
+                .resizableRow()
         }
 
         mainPanel.reset()
