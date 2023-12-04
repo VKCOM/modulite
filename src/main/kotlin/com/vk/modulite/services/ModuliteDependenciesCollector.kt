@@ -217,8 +217,6 @@ class ModuliteDependenciesCollector(val project: Project) {
 
             psiFile.accept(object : PhpRecursiveElementVisitor() {
                 override fun visitPhpClassReference(reference: ClassReference) {
-                /*    reference as PhpClass
-                    reference.isInterface*/
                     when (reference.context) {
                         is PhpUse, is MethodReference, is ClassConstantReference -> {
                             return
