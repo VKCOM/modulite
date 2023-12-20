@@ -71,7 +71,7 @@ abstract class BaseInlayHintsCollector(val project: Project, editor: Editor) : F
     }
 
     private fun singleModuliteNamePresentation(name: String, nameToShow: String): InlayPresentation {
-        val textPresentation = factory.text(nameToShow)
+        val textPresentation = factory.smallTextWithoutBackground(nameToShow)
         val onClickPresentation = factory.referenceOnHover(textPresentation) { _, _ ->
             val file = ModuliteIndex.getInstance(project).getModulite(name)?.configFile()
                 ?: return@referenceOnHover
