@@ -1,0 +1,22 @@
+name: "@photos"
+description: ""
+namespace: "Photos\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "Photo"
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "#vk/uncommon"
+#   ^^^^^^^^^^^^^^
+#   error: Unknown composer package '#vk/uncommon'
+  - "\\Engines\\TestEngine::tester()"
+
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:
