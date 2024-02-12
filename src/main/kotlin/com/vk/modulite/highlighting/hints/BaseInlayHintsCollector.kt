@@ -71,6 +71,7 @@ abstract class BaseInlayHintsCollector(val project: Project, editor: Editor) : F
     }
 
     private fun singleModuliteNamePresentation(name: String, nameToShow: String): InlayPresentation {
+        // TODO: here should be text, but with behavior of smallTextWithoutBackground (no padding/top and etc)
         val textPresentation = factory.smallTextWithoutBackground(nameToShow)
         val onClickPresentation = factory.referenceOnHover(textPresentation) { _, _ ->
             val file = ModuliteIndex.getInstance(project).getModulite(name)?.configFile()
