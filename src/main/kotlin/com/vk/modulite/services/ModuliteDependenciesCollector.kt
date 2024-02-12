@@ -227,7 +227,9 @@ class ModuliteDependenciesCollector(val project: Project) {
                 }
 
                 override fun visitPhpMethodReference(reference: MethodReference) {
-                    currentClassMethodOwner = reference.classReference as ClassReferenceImpl
+                    if (reference.classReference is ClassReferenceImpl) {
+                        currentClassMethodOwner = reference.classReference as ClassReferenceImpl
+                    }
                     handleReference(reference)
                 }
 
