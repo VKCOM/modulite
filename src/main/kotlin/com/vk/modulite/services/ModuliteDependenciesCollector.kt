@@ -13,12 +13,7 @@ import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.Function
-import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
-import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
-import com.jetbrains.php.lang.psi.elements.impl.FunctionReferenceImpl
-import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
-import com.jetbrains.php.lang.psi.elements.impl.MethodReferenceImpl
-import com.jetbrains.php.lang.psi.elements.impl.VariableImpl
+import com.jetbrains.php.lang.psi.elements.impl.*
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
@@ -200,6 +195,7 @@ class ModuliteDependenciesCollector(val project: Project) {
         val ownSymbolsSet = ownSymbols?.toSet() ?: ModuliteSymbolsCollector.getInstance(project).collect(dir).toSet()
 
         val symbols = mutableSetOf<SymbolName>()
+        lateinit var currentClassMethodOwner : ClassReferenceImpl
 
         val modulites = ModuliteIndex.getInstance(project).getModulites()
         val composerPackages = ComposerPackagesIndex.getInstance(project).getPackages()
@@ -231,6 +227,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                 }
 
                 override fun visitPhpMethodReference(reference: MethodReference) {
+                    currentClassMethodOwner = reference.classReference as ClassReferenceImpl
                     handleReference(reference)
                 }
 
@@ -509,7 +506,18 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                     val composerPackage = containingFile.containingComposerPackage(project, composerPackages)
                     if (composerPackage != null) {
-                        addSymbol(composerPackage.symbolName())
+
+                        if (reference is MethodImpl) {
+                            val methodOwner = currentClassMethodOwner//
+                            val methodSignature = methodOwner.fqn?.let { SymbolName(it + "::${reference.name}()") }
+
+                            if (methodSignature != null) {
+                                addSymbol(methodSignature)
+                            }
+                        } else {
+                            addSymbol(composerPackage.symbolName())
+                            return collapseModuleSymbols
+                        }
                         return collapseModuleSymbols
                     }
 
