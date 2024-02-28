@@ -18,6 +18,7 @@ import com.vk.modulite.psi.extensions.yaml.moduliteNamePsi
 import com.vk.modulite.psi.extensions.yaml.replaceDependencies
 import com.vk.modulite.services.*
 import com.vk.modulite.utils.normalizedFqn
+import com.vk.modulite.utils.normalizedPath
 import com.vk.modulite.utils.unquote
 import org.jetbrains.yaml.YAMLUtil
 import org.jetbrains.yaml.psi.YAMLFile
@@ -269,16 +270,16 @@ data class Modulite(
     }
 
     fun contains(file: VirtualFile): Boolean {
-        val moduleFolder = File(path).parent
+        val moduleFolder = File(path).parent.normalizedPath()
 
         // TODO: fix this somehow
         if (ApplicationManager.getApplication().isUnitTestMode) {
             val path = file.path
             val folder = moduleFolder.removeSuffix("/hints/Module")
-            return path == folder || path.startsWith("$folder${File.separator}")
+            return path == folder || path.startsWith("$folder/")
         }
 
-        return file.path == moduleFolder || file.path.startsWith("$moduleFolder${File.separator}")
+        return file.path == moduleFolder || file.path.startsWith("$moduleFolder/")
     }
 
     fun contains(file: PsiFile) = contains(file.virtualFile)
