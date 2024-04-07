@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+# 1.1.5 - 09.04.2024
+
+- Adapt code for PhpStorm 2024.1
+
 ## 1.1.4 — 14.02.2024
 
 - Adapt code for PhpStorm 2023.3
