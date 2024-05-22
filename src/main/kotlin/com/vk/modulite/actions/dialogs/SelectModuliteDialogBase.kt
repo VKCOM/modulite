@@ -6,9 +6,9 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.ColoredListCellRenderer
 import com.intellij.ui.SimpleTextAttributes
-import com.intellij.ui.dsl.builder.bindItemNullable
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.bindItem
 import com.intellij.ui.dsl.builder.panel
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.services.ModuliteIndex
 import java.awt.Dimension
@@ -63,8 +63,8 @@ abstract class SelectModuliteDialogBase(
             }
             row {
                 comboBox(modulites, renderer)
-                    .bindItemNullable(model::modulite)
-                    .horizontalAlign(HorizontalAlign.FILL)
+                    .bindItem(model::modulite)
+                    .align(AlignX.FILL)
             }
         }.apply {
             preferredSize = Dimension(400, 0)

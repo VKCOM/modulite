@@ -165,7 +165,7 @@ class YamlInlayHintsCollector(
             val count = currentCountByKind[symbolName.kind] ?: 0
             val kindName = symbolName.kindReadableName(many = count > 1)
             val simpleInsetPresentation = factory.inset(
-                factory.smallText("$count $kindName"),
+                factory.smallTextWithoutBackground("$count $kindName"),
                 spaceWidth * 2, 2, 9, 2
             )
 
@@ -215,7 +215,7 @@ class YamlInlayHintsCollector(
 
     private fun addTextHintWithAction(text: String, element: PsiElement, action: () -> Unit) {
         val simpleInsetPresentation = factory.inset(
-            factory.smallText(text), 0, 2, 7, 2
+            factory.smallTextWithoutBackground(text), 0, 2, 7, 2
         )
 
         val onClickPresentation = factory.referenceOnHover(simpleInsetPresentation) { _, _ ->

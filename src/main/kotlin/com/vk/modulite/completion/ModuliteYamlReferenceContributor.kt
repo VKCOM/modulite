@@ -11,6 +11,8 @@ import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.documentation.PhpDocLinkResolver
 import com.jetbrains.php.lang.psi.PhpPsiUtil
+import com.jetbrains.php.lang.psi.elements.Function
+import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpNamespace
 import com.vk.modulite.Namespace
@@ -171,7 +173,7 @@ class ModuliteYamlReferenceContributor : PsiReferenceContributor() {
 
             if (lastSlashIndex != 0) {
                 val namespace = PhpPsiUtil.getParentByCondition<PsiElement>(
-                    this, true, PhpNamespace.INSTANCEOF
+                    this, true, PhpNamespace.INSTANCEOF, null
                 ) as PhpNamespace?
 
                 if (namespace != null && lastSlashIndex != -1) {
@@ -302,7 +304,9 @@ class ModuliteYamlReferenceContributor : PsiReferenceContributor() {
             val start = text.slice(1 until rangeInElement.startOffset)
             val end = text.slice(rangeInElement.endOffset until text.length)
 
-            val textNode = YamlUtils.createQuotedText(myElement.project, start + newElementName + end)
+            val newName = if (myResult is Method || myResult is Function) "$newElementName()" else newElementName
+
+            val textNode = YamlUtils.createQuotedText(myElement.project, start + newName + end)
             return myElement.replace(textNode)
         }
 

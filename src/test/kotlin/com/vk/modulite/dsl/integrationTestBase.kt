@@ -2,6 +2,7 @@ package com.vk.modulite.dsl
 
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.ide.IdeEventQueue
+import com.intellij.openapi.application.impl.NonBlockingReadActionImpl
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -223,6 +224,7 @@ open class ElementContextBase(val element: PsiElement, val ctx: BaseFileContext)
         }
 
         val usages = runInEdtAndGet {
+            NonBlockingReadActionImpl.waitForAsyncTaskCompletion();
             val startMillis = System.currentTimeMillis()
             var view: UsageView?
             var viewWasInitialized = false

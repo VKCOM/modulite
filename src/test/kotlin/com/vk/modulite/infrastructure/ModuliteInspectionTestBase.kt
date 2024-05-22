@@ -140,7 +140,7 @@ abstract class ModuliteInspectionTestBase : BasePlatformTestCase() {
         val files = walker
             .filter { it.isFile && (it.extension == "php" || it.extension == "yaml" || it.extension == "qf" || it.extension == "json") }
             .map { it.path.removePrefix(GEN_TEST_DATA_PATH) }
-            .toList().toTypedArray()
+            .toList().sorted().toTypedArray()
 
         myFixture.configureByFiles(*files)
 
