@@ -353,12 +353,25 @@ class ModuliteDependenciesCollector(val project: Project) {
                 }
 
                 private fun isPrimitiveType(phpType: PhpType): Boolean {
-                    val primitiveTypes = setOf("int", "integer", "string", "?string", "bool", "boolean", "float", "double", "void", "null", "mixed[]", "mixed")
+                    val primitiveTypes = setOf(
+                        "int",
+                        "integer",
+                        "string",
+                        "?string",
+                        "bool",
+                        "boolean",
+                        "float",
+                        "double",
+                        "void",
+                        "null",
+                        "mixed[]",
+                        "mixed"
+                    )
                     return primitiveTypes.contains(phpType.toString())
                 }
 
                 private fun areTypesEquivalentIgnoringNullable(type1: PhpType, type2: PhpType): Boolean {
-                    if(isPrimitiveType(type1) || isPrimitiveType(type2)){
+                    if (isPrimitiveType(type1) || isPrimitiveType(type2)) {
                         return false
                     }
                     // Проверяем, совпадают ли основные типы
@@ -391,10 +404,10 @@ class ModuliteDependenciesCollector(val project: Project) {
                                             }
                                         }
                                     }
-                                }else{
-                                    val implInterfaces =  child.implementedInterfaces
+                                } else {
+                                    val implInterfaces = child.implementedInterfaces
                                     implInterfaces.forEach { t ->
-                                        if(t.isEquivalentTo(targetReference)){
+                                        if (t.isEquivalentTo(targetReference)) {
                                             return true
                                         }
                                     }
@@ -508,7 +521,6 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                     val composerPackage = containingFile.containingComposerPackage(project, composerPackages)
                     if (composerPackage != null) {
-
                         if (reference is MethodImpl) {
                             val methodOwner = currentClassMethodOwner//
                             val methodSignature = methodOwner.fqn?.let { SymbolName(it + "::${reference.name}()") }
