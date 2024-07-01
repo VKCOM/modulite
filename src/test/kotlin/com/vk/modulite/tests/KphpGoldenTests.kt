@@ -20,5 +20,6 @@ class KphpGoldenTests : ModuliteInspectionTestBase() {
     // На потом
     //fun `test 007_composer_ok`()          = runFixture("kphp_golden/007_composer_ok")
 
-    fun `test 100_wrong_static_bindings`()  = runFixture("kphp_golden/100_wrong_static_bindings")
+    fun `test 100_wrong_static_bindings`()      = runFixture("kphp_golden/100_wrong_static_bindings")
+    fun `test 101_trait_not_required`()         = runFixture("kphp_golden/101_trait_not_required")
 }
