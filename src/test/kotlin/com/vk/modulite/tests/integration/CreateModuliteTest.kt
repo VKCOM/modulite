@@ -169,5 +169,26 @@ class CreateModuliteTest : IntegrationTestBase() {
         }
     }
 
+    fun `test module dependencies with colon colon`() = integrationTest("ClassRequireWithColonColon") {
+        step("create modulite") {
+            createModuliteFromSource("mod_a") {
+                makeAllExported()
+            }
+            createModuliteFromSource("mod_b") {
+                makeAllExported()
+            }
+        }
+
+        step("check yaml generation") {
+            yaml("mod_a/.modulite.yaml") {
+                check(".expected")
+            }
+
+            yaml("mod_b/.modulite.yaml") {
+                check(".expected")
+            }
+        }
+    }
+
     override fun getTestDataPath() = "src/test/fixtures/integration/CreateModulite"
 }
