@@ -134,7 +134,7 @@ class CreateModuliteTest : IntegrationTestBase() {
         }
     }
 
-    fun `test module dependencies when interface has realisation`() = integrationTest("InterfaceDependencies"){
+    fun `test module dependencies when interface has realisation`() = integrationTest("InterfaceDependencies") {
         step("create modulite") {
             createModuliteFromSource("MainFolder") {
                 makeAllExported()

@@ -214,7 +214,13 @@ class ModuliteDependenciesCollector(val project: Project) {
             psiFile.accept(object : PhpRecursiveElementVisitor() {
                 override fun visitPhpClassReference(reference: ClassReference) {
                     when (reference.context) {
-                        is PhpUse, is MethodReference, is ClassConstantReference -> {
+                        is PhpUse -> {
+                            if (reference is ClassReferenceImpl) {
+                                handleReference(reference)
+                            }
+                        }
+
+                        is MethodReference, is ClassConstantReference -> {
                             return
                         }
                     }
@@ -415,54 +421,48 @@ class ModuliteDependenciesCollector(val project: Project) {
                             }
 
                             is MethodReferenceImpl -> {
-                                val value = child.resolve()
-                                if (value != null) {
-                                    if (value.isEquivalentTo(targetReference)) {
-                                        return true
-                                    }
-                                    if (value is Method) {
-                                        if (areTypesEquivalentIgnoringNullable(value.type, targetReference.type)) {
-                                            val potentialInterface = value.context as PhpClass
-                                            if (potentialInterface.isInterface) {
-                                                return false
-                                            }
-                                            if (value.context == targetReference.context) {
-                                                return true
-                                            }
+                                val value = child.resolve() ?: return false
+                                if (value.isEquivalentTo(targetReference)) {
+                                    return true
+                                }
+                                if (value is Method) {
+                                    if (areTypesEquivalentIgnoringNullable(value.type, targetReference.type)) {
+                                        val potentialInterface = value.context as PhpClass
+                                        if (potentialInterface.isInterface) {
+                                            return false
                                         }
+                                        if (value.context == targetReference.context) {
+                                            return true
+                                        }
+                                    }
 
-                                        value.parameters.forEach { param ->
-                                            if (areTypesEquivalentIgnoringNullable(param.type, targetReference.type)) {
-                                                return true
-                                            }
+                                    value.parameters.forEach { param ->
+                                        if (areTypesEquivalentIgnoringNullable(param.type, targetReference.type)) {
+                                            return true
                                         }
                                     }
                                 }
                             }
 
                             is FunctionReferenceImpl -> {
-                                val value = child.resolve()
-                                if (value != null) {
-                                    if (value.isEquivalentTo(targetReference)) {
-                                        return true
-                                    }
-                                    if (value is Function) {
-                                        value.parameters.forEach { param ->
-                                            if (areTypesEquivalentIgnoringNullable(param.type, targetReference.type)) {
-                                                return true
-                                            }
+                                val value = child.resolve() ?: return false
+                                if (value.isEquivalentTo(targetReference)) {
+                                    return true
+                                }
+                                if (value is Function) {
+                                    value.parameters.forEach { param ->
+                                        if (areTypesEquivalentIgnoringNullable(param.type, targetReference.type)) {
+                                            return true
                                         }
                                     }
                                 }
                             }
 
                             is VariableImpl -> {
-                                val value = child.resolve()
-                                if (value != null) {
-                                    if (value is Variable) {
-                                        if (areTypesEquivalentIgnoringNullable(value.type, targetReference.type)) {
-                                            return true
-                                        }
+                                val value = child.resolve() ?: return false
+                                if (value is Variable) {
+                                    if (areTypesEquivalentIgnoringNullable(value.type, targetReference.type)) {
+                                        return true
                                     }
                                 }
                             }
@@ -504,7 +504,6 @@ class ModuliteDependenciesCollector(val project: Project) {
                     val modulite = containingFile.containingModulite(project, modulites)
                     if (modulite != null) {
                         if (reference.context?.containingModulite() == dir.containingModulite(project)) {
-                            println()
                             addSymbol(modulite.symbolName())
                             return collapseModuleSymbols
                         }
@@ -515,6 +514,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                                 addSymbol(modulite.symbolName())
                                 return collapseModuleSymbols
                             }
+                            addSymbol(modulite.symbolName())
                         }
                         return collapseModuleSymbols
                     }
