@@ -231,7 +231,7 @@ It's done in the following way. At a root folder, near `composer.json`, place a 
 * **force-internal** also works
 * **require** leave blank, it's filled from "requires" of *composer.json*
 
-**Important**: You should write **name** = "<composer_root>" as is. You should not replace <composer_root> with your package name from composer.
+**Important**: You should write **name** = "<composer_root>" as is. You should not replace "<composer_root>" with your package name from composer.
 <img src="docs/img/code-modulite-at-composer-root.png" alt="code-modulite-at-composer-root" width="800">
 
 
