@@ -11,23 +11,11 @@ import com.intellij.util.containers.TreeNodeProcessingResult
 import com.jetbrains.php.lang.PhpLangUtil
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.PhpFile
-import com.jetbrains.php.lang.psi.elements.ClassConstantReference
-import com.jetbrains.php.lang.psi.elements.ClassReference
-import com.jetbrains.php.lang.psi.elements.ConstantReference
-import com.jetbrains.php.lang.psi.elements.FieldReference
-import com.jetbrains.php.lang.psi.elements.FunctionReference
-import com.jetbrains.php.lang.psi.elements.Global
-import com.jetbrains.php.lang.psi.elements.MethodReference
-import com.jetbrains.php.lang.psi.elements.NewExpression
-import com.jetbrains.php.lang.psi.elements.PhpNamedElement
-import com.jetbrains.php.lang.psi.elements.PhpNamespace
-import com.jetbrains.php.lang.psi.elements.PhpNamespaceReference
-import com.jetbrains.php.lang.psi.elements.PhpReference
-import com.jetbrains.php.lang.psi.elements.PhpUse
-import com.jetbrains.php.lang.psi.elements.Variable
+import com.jetbrains.php.lang.psi.elements.*
 import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
 import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
 import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
+import com.jetbrains.php.lang.psi.elements.impl.PhpUseImpl
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
 import com.vk.modulite.actions.dialogs.DepsRegenerationResultDialog
@@ -40,6 +28,7 @@ import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
+import java.util.*
 
 class ModuliteDepsDiff(
     private val project: Project,
@@ -200,6 +189,7 @@ class ModuliteDependenciesCollector(val project: Project) {
         )
     }
 
+    //  тут запускается наш сборщик
     fun collect(
         dir: VirtualFile,
         ownSymbols: List<SymbolName>? = null,
@@ -227,12 +217,21 @@ class ModuliteDependenciesCollector(val project: Project) {
             psiFile.accept(object : PhpRecursiveElementVisitor() {
                 override fun visitPhpClassReference(reference: ClassReference) {
                     when (reference.context) {
-                        is PhpUse, is MethodReference, is ClassConstantReference -> {
+                        is PhpUse -> {
+                            val useInstance = reference.context as PhpUseImpl
+                            if(useInstance.isTraitImport){
+                                handleTraitReference(reference)
+                            }else{
+                                return
+                            }
+                        }
+
+                        is MethodReference, is ClassConstantReference -> {
                             return
                         }
                     }
 
-                    handleReference(reference)
+                     handleReference(reference)
                 }
 
                 override fun visitPhpFunctionCall(reference: FunctionReference) {
@@ -292,14 +291,113 @@ class ModuliteDependenciesCollector(val project: Project) {
                     }
                 }
 
-                private fun handleReference(reference: PhpReference?, traverseFurther: Boolean = true) {
-                    if (reference == null) return
+                private fun referenceValidator(reference: PhpReference?): MutableCollection<out PhpNamedElement>? {
+                    if (reference == null)
+                        return null
 
                     val references = reference.resolveGlobal(false)
                     if (references.isEmpty()) {
-                        LOG.warn("Unknown reference '${reference.safeFqn()}'")
-                        return
+                        LOG.warn("Неизвестная ссылка '${reference.safeFqn()}'")
+                        return null
                     }
+
+                    return references
+                }
+
+                private fun collectTraitElements(element: PsiElement): Pair<MutableList<PhpClass>, MutableList<MethodImpl>> {
+                    val classesToRequire: MutableList<PhpClass> = mutableListOf()
+                    val methodsToRequire: MutableList<MethodImpl> = mutableListOf()
+
+                    var child = element.firstChild
+
+                    while (child != null) {
+                        when (child) {
+                            is Method -> methodsToRequire.add(child as MethodImpl)
+                            is PhpClass -> classesToRequire.add(child)
+                            is MethodReference -> {
+// Извлечь информацию о вызываемом методе
+                                val resolvedMethod = child.resolve()
+                                if (resolvedMethod is Method) {
+                                    methodsToRequire.add(resolvedMethod as MethodImpl)
+                                }
+                            }
+
+                            is NewExpression -> {
+                                val classReference = child.classReference
+                                val resolvedClass = classReference?.resolve()
+                                if (resolvedClass is PhpClass) {
+                                    classesToRequire.add(resolvedClass)
+                                }
+                            }
+
+                            else -> {
+// Рекурсивный вызов для дочерних элементов
+                                val (nestedClasses, nestedMethods) = collectTraitElements(child)
+                                classesToRequire.addAll(nestedClasses)
+                                methodsToRequire.addAll(nestedMethods)
+                            }
+                        }
+
+                        child = child.nextSibling
+                    }
+
+                    return Pair(classesToRequire, methodsToRequire)
+                }
+
+                private fun handleTraitReference(reference: PhpReference?, traverseFurther: Boolean = true) {
+                    val references = referenceValidator(reference) ?: return
+
+                    val traitsClasses: MutableList<PhpClass> = arrayListOf()
+                    val methodsNames: MutableCollection<Method> = arrayListOf()
+
+                    val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
+
+                    references.forEach { elem ->
+                        val instance = elem as PhpClass
+                        stack.push(instance) // Добавляем текущий instance в стек
+                        while (stack.isNotEmpty()) {
+                            val currentInstance = stack.pop() // Получаем текущий instance из стека
+                            traitsClasses += currentInstance
+                            if (currentInstance.hasTraitUses()) {
+                                val traitsUses = currentInstance.traits
+                                traitsClasses += traitsUses
+
+                                traitsUses.forEach { it ->
+                                    val instanceNesting: Array<PhpClass>? = it.traits
+
+                                    instanceNesting?.forEach { nestedInstance ->
+                                        stack.push(nestedInstance) // Добавляем вложенный instance в стек
+                                    }
+
+                                    if (instanceNesting != null) {
+                                        traitsClasses += instanceNesting
+                                    }
+                                }
+                            }
+                        }
+                        methodsNames += instance.methods
+                    }
+
+                    val requireMethods: MutableList<MethodImpl> = mutableListOf()
+                    methodsNames.forEach { it ->
+                        val (classes, methods) = collectTraitElements(it)
+                        traitsClasses.addAll(classes)
+                        requireMethods.addAll(methods)
+                    }
+
+                    val traitsClassName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
+                    val traitsMethodsName = requireMethods.distinct().mapNotNull { processElement(it, reference) }
+
+                    addSymbols(traitsClassName)
+                    addSymbols(traitsMethodsName)
+
+                    if (traverseFurther) {
+                        super.visitPhpElement(reference)
+                    }
+                }
+
+                private fun handleReference(reference: PhpReference?, traverseFurther: Boolean = true) {
+                    val references = referenceValidator(reference)?:return
 
                     val names = references.mapNotNull { processElement(it, reference) }
                     addSymbols(names)

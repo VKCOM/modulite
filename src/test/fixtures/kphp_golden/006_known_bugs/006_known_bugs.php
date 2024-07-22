@@ -5,7 +5,6 @@ KPHP_ENABLE_MODULITE=1
 require_once 'kphp_tester_include.php';
 #endif
 
-// using internal trait works, because cloning trait methods works long before initing modulites in KPHP
 class MMM006 {
     use Feed006\PrivTrait;
 }
