@@ -14,6 +14,7 @@ import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.modulite.ModuliteRestrictionChecker
 import com.vk.modulite.psi.extensions.files.containingComposerPackage
 import com.vk.modulite.psi.extensions.files.containingModulite
+import com.vk.modulite.psi.extensions.php.resolveElement
 import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
@@ -123,7 +124,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             }
 
             private fun checkReferenceUsage(reference: PhpReference, problemElement: PsiElement? = reference) {
-                val references = reference.resolveGlobal(false)
+                val references = reference.resolveElement()
                 if (references.isEmpty()) {
 //                    LOG.warn("Unknown reference for symbol '${reference.safeFqn()}'")
                     return
