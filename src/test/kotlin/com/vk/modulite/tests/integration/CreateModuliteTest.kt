@@ -134,5 +134,61 @@ class CreateModuliteTest : IntegrationTestBase() {
         }
     }
 
+    fun `test module dependencies when interface has realisation`() = integrationTest("InterfaceDependencies") {
+        step("create modulite") {
+            createModuliteFromSource("MainFolder") {
+                makeAllExported()
+            }
+            createModuliteFromSource("MainFolder/Interfaces") {
+                makeAllExported()
+            }
+            createModuliteFromSource("MainFolder/Impl") {
+                makeAllExported()
+            }
+            createModuliteFromSource("MainFolder/Impl1") {
+                makeAllExported()
+            }
+        }
+
+        step("check new modulite config") {
+            yaml("MainFolder/.modulite.yaml") {
+                check(".expected")
+            }
+
+            yaml("MainFolder/Interfaces/.modulite.yaml") {
+                check(".expected")
+            }
+
+            yaml("MainFolder/Impl/.modulite.yaml") {
+                check(".expected")
+            }
+
+            yaml("MainFolder/Impl1/.modulite.yaml") {
+                check(".expected")
+            }
+        }
+    }
+
+    fun `test module dependencies with colon colon`() = integrationTest("ClassRequireWithColonColon") {
+        step("create modulite") {
+            createModuliteFromSource("mod_a") {
+                makeAllExported()
+            }
+            createModuliteFromSource("mod_b") {
+                makeAllExported()
+            }
+        }
+
+        step("check yaml generation") {
+            yaml("mod_a/.modulite.yaml") {
+                check(".expected")
+            }
+
+            yaml("mod_b/.modulite.yaml") {
+                check(".expected")
+            }
+        }
+    }
+
     override fun getTestDataPath() = "src/test/fixtures/integration/CreateModulite"
 }
