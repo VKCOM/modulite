@@ -192,6 +192,12 @@ class ModuliteDependenciesCollector(val project: Project) {
             .joinToString("\\")
         )
     }
+    data class TraitData(
+        val traitsClasses: MutableSet<PhpClass>,
+        val requireMethods: MutableSet<MethodImpl>,
+        val requireConstants: MutableSet<PhpDefineImpl>,
+        val functionsToRequire: MutableSet<FunctionImpl>,
+    )
 
     //  тут запускается наш сборщик
     fun collect(
@@ -308,7 +314,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                     return references
                 }
 
-                private fun collectTraitElements(element: PsiElement): Triple<MutableSet<PhpClass>, MutableSet<MethodImpl>, MutableSet<PhpDefineImpl>> {
+                private fun collectTraitElements(element: PsiElement): TraitData {
                     val classesToRequire: MutableSet<PhpClass> = mutableSetOf()
                     val methodsToRequire: MutableSet<MethodImpl> = mutableSetOf()
                     val constantsToRequire: MutableSet<PhpDefineImpl> = mutableSetOf()
@@ -320,36 +326,12 @@ class ModuliteDependenciesCollector(val project: Project) {
                         when (child) {
                             is Method -> methodsToRequire.add(child as MethodImpl)
                             is PhpClass -> classesToRequire.add(child)
+
                             is MethodReference -> {
-// Извлечь информацию о вызываемом методе
                                 val resolvedMethod = child.resolve()
                                 if (resolvedMethod is Method) {
                                     methodsToRequire.add(resolvedMethod as MethodImpl)
-                                    if (!PhpType.isScalar(resolvedMethod.type, project)) {
-                                        val type = resolvedMethod.type.toString().substringAfterLast('\\')
-                                        val klass = PhpIndex.getInstance(project).getClassByName(type)
-                                        if (klass != null) {
-                                            classesToRequire.add(klass)
-                                        }
-                                    }
-
-                                    resolvedMethod.parameters.forEach { it ->
-                                        if (!PhpType.isScalar(it.type, project)) {
-                                            val type = it.type.toString().substringAfterLast('\\')
-                                            if (type.last() == ']') {
-                                                val t = type.dropLast(2)
-                                                val klass = PhpIndex.getInstance(project).getClassByName(t)
-                                                if (klass != null) {
-                                                    classesToRequire.add(klass)
-                                                }
-                                            } else {
-                                                val klass = PhpIndex.getInstance(project).getClassByName(type)
-                                                if (klass != null) {
-                                                    classesToRequire.add(klass)
-                                                }
-                                            }
-                                        }
-                                    }
+                                    processParameters(resolvedMethod.parameters, classesToRequire)
                                 }
                             }
 
@@ -366,38 +348,108 @@ class ModuliteDependenciesCollector(val project: Project) {
                                 if (resolvedClass is PhpClass) {
                                     classesToRequire.add(resolvedClass)
                                 }
+                                processArguments(
+                                    child.parameters,
+                                    classesToRequire,
+                                    methodsToRequire,
+                                    constantsToRequire,
+                                    functionsToRequire
+                                )
                             }
 
                             is FunctionReference -> {
                                 val resolvedFunction = child.resolve()
-                                if(resolvedFunction is FunctionImpl){
+                                if (resolvedFunction is FunctionImpl) {
                                     functionsToRequire.add(resolvedFunction)
+                                    processParameters(resolvedFunction.parameters, classesToRequire)
                                 }
                             }
 
+                            is ParameterList -> {
+                                processArguments(
+                                    child.parameters,
+                                    classesToRequire,
+                                    methodsToRequire,
+                                    constantsToRequire,
+                                    functionsToRequire
+                                )
+                            }
+
                             else -> {
-// Рекурсивный вызов для дочерних элементов
-                                val (nestedClasses, nestedMethods, nestedConstants) = collectTraitElements(child)
+                                val (nestedClasses, nestedMethods, nestedConstants, nestedFunctions) = collectTraitElements(
+                                    child
+                                )
                                 classesToRequire.addAll(nestedClasses)
                                 methodsToRequire.addAll(nestedMethods)
                                 constantsToRequire.addAll(nestedConstants)
+                                functionsToRequire.addAll(nestedFunctions)
                             }
                         }
 
                         child = child.nextSibling
                     }
 
-                    return Triple(classesToRequire, methodsToRequire, constantsToRequire)
+                    return TraitData(classesToRequire, methodsToRequire, constantsToRequire, functionsToRequire)
+                }
+
+                private fun processParameters(parameters: Array<Parameter>, classesToRequire: MutableSet<PhpClass>) {
+                    parameters.forEach { parameter ->
+                        if (!PhpType.isScalar(parameter.type, project)) {
+                            val type = parameter.type.toString().substringAfterLast('\\')
+                            if (type.last() == ']') {
+                                val klass = PhpIndex.getInstance(project).getClassByName(type.dropLast(2))
+                                if (klass != null) {
+                                    classesToRequire.add(klass)
+                                }
+                            } else {
+                                val klass = PhpIndex.getInstance(project).getClassByName(type)
+                                if (klass != null) {
+                                    classesToRequire.add(klass)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                private fun processArguments(
+                    arguments: Array<PsiElement>,
+                    classesToRequire: MutableSet<PhpClass>,
+                    methodsToRequire: MutableSet<MethodImpl>,
+                    constantsToRequire: MutableSet<PhpDefineImpl>,
+                    functionsToRequire: MutableSet<FunctionImpl>
+                ) {
+                    arguments.forEach { argument ->
+                        if (argument is FunctionReference) {
+                            val resolvedFunction = argument.resolve()
+                            if (resolvedFunction is FunctionImpl) {
+                                functionsToRequire.add(resolvedFunction)
+                            }
+                        } else if (argument is NewExpression) {
+                            val classReference = argument.classReference
+                            val resolvedClass = classReference?.resolve()
+                            if (resolvedClass is PhpClass) {
+                                classesToRequire.add(resolvedClass)
+                            }
+                            processArguments(
+                                argument.parameters,
+                                classesToRequire,
+                                methodsToRequire,
+                                constantsToRequire,
+                                functionsToRequire
+                            )
+                        } else {
+                            val (nestedClasses, nestedMethods, nestedConstants, nestedFunctions) = collectTraitElements(
+                                argument
+                            )
+                            classesToRequire.addAll(nestedClasses)
+                            methodsToRequire.addAll(nestedMethods)
+                            constantsToRequire.addAll(nestedConstants)
+                            functionsToRequire.addAll(nestedFunctions)
+                        }
+                    }
                 }
 
                 private fun handleTraitReference(reference: PhpReference?, traverseFurther: Boolean = true) {
-                    data class TraitData(
-                        val traitsClasses: MutableList<PhpClass>,
-                        val requireMethods: MutableList<MethodImpl>,
-                        val requireConstants: MutableList<PhpDefineImpl>,
-                        val functionsToRequire: MutableSet<FunctionImpl>,
-                    )
-
                     val references = referenceValidator(reference) ?: return
 
                     val traitsClasses: MutableList<PhpClass> = arrayListOf()
@@ -433,20 +485,24 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                     val requireMethods: MutableList<MethodImpl> = mutableListOf()
                     val requireConstants: MutableList<PhpDefineImpl> = mutableListOf()
+                    val requireFunctions: MutableList<FunctionImpl> = mutableListOf()
                     methodsNames.forEach { it ->
-                        val (classes, methods, constants) = collectTraitElements(it)
+                        val (classes, methods, constants, functions) = collectTraitElements(it)
                         traitsClasses.addAll(classes)
                         requireMethods.addAll(methods)
                         requireConstants.addAll(constants)
+                        requireFunctions.addAll(functions)
                     }
 
                     val traitsClassName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
                     val traitsMethodsName = requireMethods.distinct().mapNotNull { processElement(it, reference) }
                     val traitsConstantsName = requireConstants.distinct().mapNotNull { processElement(it, reference) }
+                    val traitsFunctionsName = requireFunctions.distinct().mapNotNull { processElement(it, reference) }
 
                     addSymbols(traitsClassName)
                     addSymbols(traitsMethodsName)
                     addSymbols(traitsConstantsName)
+                    addSymbols(traitsFunctionsName)
 
                     if (traverseFurther) {
                         super.visitPhpElement(reference)
