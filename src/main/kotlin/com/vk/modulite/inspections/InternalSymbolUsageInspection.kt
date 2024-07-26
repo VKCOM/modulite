@@ -275,48 +275,98 @@ context.modulite?.requires
         )
     }
 
-    private fun collectTraitElements(element: PsiElement): Pair<MutableList<PhpClass>, MutableList<MethodImpl>> {
-        val classesToRequire: MutableList<PhpClass> = mutableListOf()
-        val methodsToRequire: MutableList<MethodImpl> = mutableListOf()
+    private fun collectTraitReferenceUsage(reference: PhpReference, moduliteRequires: ModuliteRequires? = null)
+            : Pair<List<SymbolName>, List<SymbolName>> {
+        data class TraitData(
+            val traitsClasses: MutableSet<PhpClass>,
+            val requireMethods: MutableSet<MethodImpl>,
+        )
 
-        var child = element.firstChild
+        fun collectTraitElements(element: PsiElement): TraitData {
+            fun processArguments(
+                arguments: Array<PsiElement>,
+                classesToRequire: MutableSet<PhpClass>,
+                methodsToRequire: MutableSet<MethodImpl>,
+            ) {
+                arguments.forEach { argument ->
+                    when (argument) {
+                        is NewExpression -> {
+                            argument.classReference?.resolve()?.let { resolvedClass ->
+                                if (resolvedClass is PhpClass) {
+                                    classesToRequire.add(resolvedClass)
+                                }
+                            }
+                            processArguments(
+                                argument.parameters,
+                                classesToRequire,
+                                methodsToRequire,
+                            )
+                        }
 
-        while (child != null) {
-            when (child) {
-                is Method -> methodsToRequire.add(child as MethodImpl)
-                is PhpClass -> classesToRequire.add(child)
-                is MethodReference -> {
-// Извлечь информацию о вызываемом методе
-                    val resolvedMethod = child.resolve()
-                    if (resolvedMethod is Method) {
-                        methodsToRequire.add(resolvedMethod as MethodImpl)
+                        else -> {
+                            val (nestedClasses, nestedMethods) = collectTraitElements(
+                                argument
+                            )
+                            classesToRequire.addAll(nestedClasses)
+                            methodsToRequire.addAll(nestedMethods)
+                        }
                     }
-                }
-
-                is NewExpression -> {
-                    val classReference = child.classReference
-                    val resolvedClass = classReference?.resolve()
-                    if (resolvedClass is PhpClass) {
-                        classesToRequire.add(resolvedClass)
-                    }
-                }
-
-                else -> {
-// Рекурсивный вызов для дочерних элементов
-                    val (nestedClasses, nestedMethods) = collectTraitElements(child)
-                    classesToRequire.addAll(nestedClasses)
-                    methodsToRequire.addAll(nestedMethods)
                 }
             }
 
-            child = child.nextSibling
+            val classesToRequire: MutableSet<PhpClass> = mutableSetOf()
+            val methodsToRequire: MutableSet<MethodImpl> = mutableSetOf()
+
+            var child = element.firstChild
+
+            while (child != null) {
+                when (child) {
+                    is Method -> methodsToRequire.add(child as MethodImpl)
+                    is PhpClass -> classesToRequire.add(child)
+
+                    is MethodReference -> {
+                        val resolvedMethod = child.resolve()
+                        if (resolvedMethod is Method) {
+                            methodsToRequire.add(resolvedMethod as MethodImpl)
+                        }
+                    }
+
+                    is NewExpression -> {
+                        val classReference = child.classReference
+                        val resolvedClass = classReference?.resolve()
+                        if (resolvedClass is PhpClass) {
+                            classesToRequire.add(resolvedClass)
+                        }
+                        processArguments(
+                            child.parameters,
+                            classesToRequire,
+                            methodsToRequire,
+                        )
+                    }
+
+                    is ParameterList -> {
+                        processArguments(
+                            child.parameters,
+                            classesToRequire,
+                            methodsToRequire,
+                        )
+                    }
+
+                    else -> {
+                        val (nestedClasses, nestedMethods) = collectTraitElements(
+                            child
+                        )
+                        classesToRequire.addAll(nestedClasses)
+                        methodsToRequire.addAll(nestedMethods)
+                    }
+                }
+
+                child = child.nextSibling
+            }
+
+            return TraitData(classesToRequire, methodsToRequire)
         }
 
-        return Pair(classesToRequire, methodsToRequire)
-    }
-
-    private fun collectTraitReferenceUsage(reference: PhpReference, moduliteRequires : ModuliteRequires? = null)
-            : Pair<List<SymbolName>, List<SymbolName>> {
         val traitsClasses: MutableList<PhpClass> = arrayListOf()
         val methodsNames: MutableCollection<Method> = arrayListOf()
 
