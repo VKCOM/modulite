@@ -395,17 +395,12 @@ class ModuliteDependenciesCollector(val project: Project) {
                 private fun processParameters(parameters: Array<Parameter>, classesToRequire: MutableSet<PhpClass>) {
                     parameters.forEach { parameter ->
                         if (!PhpType.isScalar(parameter.type, project)) {
-                            val type = parameter.type.toString().substringAfterLast('\\')
-                            if (type.last() == ']') {
-                                val klass = PhpIndex.getInstance(project).getClassByName(type.dropLast(2))
-                                if (klass != null) {
-                                    classesToRequire.add(klass)
-                                }
-                            } else {
-                                val klass = PhpIndex.getInstance(project).getClassByName(type)
-                                if (klass != null) {
-                                    classesToRequire.add(klass)
-                                }
+                            var type = parameter.type.toString().substringAfterLast('\\')
+                            if (type.endsWith("[]")) {
+                                type = type.dropLast(2)
+                            }
+                            PhpIndex.getInstance(project).getClassByName(type)?.let { klass ->
+                                classesToRequire.add(klass)
                             }
                         }
                     }
@@ -419,32 +414,34 @@ class ModuliteDependenciesCollector(val project: Project) {
                     functionsToRequire: MutableSet<FunctionImpl>
                 ) {
                     arguments.forEach { argument ->
-                        if (argument is FunctionReference) {
-                            val resolvedFunction = argument.resolve()
-                            if (resolvedFunction is FunctionImpl) {
-                                functionsToRequire.add(resolvedFunction)
+                        when (argument) {
+                            is FunctionReference -> {
+                                val resolvedFunction = argument.resolve()
+                                if (resolvedFunction is FunctionImpl) {
+                                    functionsToRequire.add(resolvedFunction)
+                                }
                             }
-                        } else if (argument is NewExpression) {
-                            val classReference = argument.classReference
-                            val resolvedClass = classReference?.resolve()
-                            if (resolvedClass is PhpClass) {
-                                classesToRequire.add(resolvedClass)
+                            is NewExpression -> {
+                                argument.classReference?.resolve()?.let { resolvedClass ->
+                                    if (resolvedClass is PhpClass) {
+                                        classesToRequire.add(resolvedClass)
+                                    }
+                                }
+                                processArguments(
+                                    argument.parameters,
+                                    classesToRequire,
+                                    methodsToRequire,
+                                    constantsToRequire,
+                                    functionsToRequire
+                                )
                             }
-                            processArguments(
-                                argument.parameters,
-                                classesToRequire,
-                                methodsToRequire,
-                                constantsToRequire,
-                                functionsToRequire
-                            )
-                        } else {
-                            val (nestedClasses, nestedMethods, nestedConstants, nestedFunctions) = collectTraitElements(
-                                argument
-                            )
-                            classesToRequire.addAll(nestedClasses)
-                            methodsToRequire.addAll(nestedMethods)
-                            constantsToRequire.addAll(nestedConstants)
-                            functionsToRequire.addAll(nestedFunctions)
+                            else -> {
+                                val (nestedClasses, nestedMethods, nestedConstants, nestedFunctions) = collectTraitElements(argument)
+                                classesToRequire.addAll(nestedClasses)
+                                methodsToRequire.addAll(nestedMethods)
+                                constantsToRequire.addAll(nestedConstants)
+                                functionsToRequire.addAll(nestedFunctions)
+                            }
                         }
                     }
                 }
