@@ -26,7 +26,7 @@ abstract class ResolvingTestBase : BasePlatformTestCase() {
         val files = walker
             .filter { it.isFile && (it.extension == "php" || it.extension == "yaml") }
             .map { it.path.removePrefix(TEST_DATA_PATH) }
-            .toList().toTypedArray()
+            .toList().sorted().toTypedArray()
 
         myFixture.configureByFiles(*files)
 

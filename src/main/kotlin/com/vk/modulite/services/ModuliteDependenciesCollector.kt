@@ -26,6 +26,7 @@ import com.vk.modulite.modulite.Modulite
 import com.vk.modulite.notifications.ModuliteWarningNotification
 import com.vk.modulite.psi.PhpRecursiveElementVisitor
 import com.vk.modulite.psi.extensions.files.*
+import com.vk.modulite.psi.extensions.php.resolveElement
 import com.vk.modulite.psi.extensions.php.safeFqn
 import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromKphpPolyfills
@@ -299,7 +300,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                     if (reference == null)
                         return null
 
-                    val references = reference.resolveGlobal(false)
+                    val references = reference.resolveElement()
                     if (references.isEmpty()) {
                         LOG.warn("Неизвестная ссылка '${reference.safeFqn()}'")
                         return null

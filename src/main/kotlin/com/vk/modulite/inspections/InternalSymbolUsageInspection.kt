@@ -19,6 +19,7 @@ import com.vk.modulite.modulite.ModuliteRequires
 import com.vk.modulite.modulite.ModuliteRestrictionChecker
 import com.vk.modulite.psi.extensions.files.containingComposerPackage
 import com.vk.modulite.psi.extensions.files.containingModulite
+import com.vk.modulite.psi.extensions.php.resolveElement
 import com.vk.modulite.psi.extensions.php.symbolName
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
@@ -139,6 +140,7 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
                 checkReferenceUsage(type)
             }
 
+
             override fun visitPhpUse(expression: PhpUse?) {
                 val instance = expression as PhpUseImpl
 
@@ -148,7 +150,11 @@ class InternalSymbolUsageInspection : LocalInspectionTool() {
             }
 
             private fun checkReferenceUsage(reference: PhpReference, problemElement: PsiElement? = reference) {
-                val references = referenceValidator(reference) ?: return
+                val references = reference.resolveElement()
+                if (references.isEmpty()) {
+//                    LOG.warn("Unknown reference for symbol '${reference.safeFqn()}'")
+                    return
+                }
 
                 val filteredReferences = references.filter {
                     val file = it.containingFile.virtualFile
