@@ -8,8 +8,6 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.CheckedTreeNode
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.dsl.builder.*
-import com.intellij.ui.dsl.gridLayout.HorizontalAlign
-import com.intellij.ui.dsl.gridLayout.VerticalAlign
 import com.intellij.util.ui.JBDimension
 import com.vk.modulite.SymbolName
 import com.vk.modulite.actions.panels.SymbolTreeNode
@@ -50,8 +48,8 @@ class ManageModuliteExportsDialog(
             row("Exported Symbols:") {}
             row {
                 cell(symbolsTree.component())
-                    .horizontalAlign(HorizontalAlign.FILL)
-                    .verticalAlign(VerticalAlign.FILL)
+                    .align(AlignX.FILL)
+                    .align(AlignY.FILL)
             }
                 .topGap(TopGap.NONE)
         }

@@ -137,7 +137,7 @@ class PhpInlayHintsCollector(
             ""
         }
 
-        val visibilityPresentation = factory.text(visibility)
+        val visibilityPresentation = factory.smallTextWithoutBackground(visibility)
         val moduliteNamePresentation = moduliteNamePresentation(moduliteOrPackage.name)
         val partiallyVisibilityPresentation = partiallyVisiblePresentation(partiallyVisibleText)
 

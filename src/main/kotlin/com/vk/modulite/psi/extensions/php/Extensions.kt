@@ -151,3 +151,11 @@ fun PhpReference.safeFqn(): String {
         signature
     }
 }
+
+fun PhpReference.resolveElement(): MutableCollection<out PhpNamedElement> {
+    return if (this is VariableImpl) {
+        this.resolveLocal()
+    } else {
+        this.resolveGlobal(false)
+    }
+}
