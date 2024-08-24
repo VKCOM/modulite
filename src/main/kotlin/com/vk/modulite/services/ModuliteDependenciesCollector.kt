@@ -13,11 +13,7 @@ import com.jetbrains.php.lang.PhpLangUtil
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.elements.*
-import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
-import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
-import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
-import com.jetbrains.php.lang.psi.elements.impl.PhpDefineImpl
-import com.jetbrains.php.lang.psi.elements.impl.PhpUseImpl
+import com.jetbrains.php.lang.psi.elements.impl.*
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
@@ -33,7 +29,6 @@ import com.vk.modulite.utils.fromKphpPolyfills
 import com.vk.modulite.utils.fromStubs
 import com.vk.modulite.utils.fromTests
 import java.util.*
-
 
 class ModuliteDepsDiff(
     private val project: Project,
@@ -223,6 +218,10 @@ class ModuliteDependenciesCollector(val project: Project) {
                 override fun visitPhpClassReference(reference: ClassReference) {
                     when (reference.context) {
                         is PhpUse -> {
+                       /*     if (reference is ClassReferenceImpl) {
+                                handleReference(reference)
+                            }*/
+
                             val useInstance = reference.context as PhpUseImpl
                             if (useInstance.isTraitImport) {
                                 handleTraitReference(reference)
@@ -315,6 +314,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                         val requireMethods: MutableSet<MethodImpl>,
                         val requireConstants: MutableSet<PhpDefineImpl>,
                         val functionsToRequire: MutableSet<FunctionImpl>,
+                    //    val classesToRequire: MutableSet<PhpClass>,
                     )
 
                     fun collectTraitElements(element: PsiElement): TraitData {
@@ -454,47 +454,88 @@ class ModuliteDependenciesCollector(val project: Project) {
                     }
 
                     val references = referenceValidator(reference) ?: return
-
-                    val traitsClasses: MutableList<PhpClass> = arrayListOf()
                     val methodsNames: MutableCollection<Method> = arrayListOf()
 
-                    val stack = LinkedList<PhpClass>() // Создаем стек для хранения вложенных instance
+
+                    val traitsClasses = mutableListOf<PhpClass>()
+                    val requireMethods: MutableList<MethodImpl> = mutableListOf()
+                    val requireConstants: MutableList<PhpDefineImpl> = mutableListOf()
+                    val requireFunctions: MutableList<FunctionImpl> = mutableListOf()
+                    val classesToRequire: MutableList<PhpClass> = mutableListOf()
 
                     references.forEach { elem ->
-                        val instance = elem as PhpClass
+                        val instance = elem as? PhpClass ?: return@forEach
+                        val stack = LinkedList<PhpClass>()
                         stack.push(instance) // Добавляем текущий instance в стек
+
+                        val traitService = TraitIndexService.getInstance(project)
+                        val seenMethods = mutableSetOf<String>() // Для отслеживания методов, которые уже были обработаны
+
                         while (stack.isNotEmpty()) {
                             val currentInstance = stack.pop() // Получаем текущий instance из стека
-                            traitsClasses += currentInstance
-                            if (currentInstance.hasTraitUses()) {
-                                val traitsUses = currentInstance.traits
-                                traitsClasses += traitsUses
+                            if (!traitsClasses.contains(currentInstance)) {
+                                traitsClasses.add(currentInstance)
 
-                                traitsUses.forEach { it ->
-                                    val instanceNesting: Array<PhpClass>? = it.traits
+                                // Получаем файл, содержащий этот класс
+                                val virtualFile = currentInstance.containingFile?.virtualFile ?: continue
 
-                                    instanceNesting?.forEach { nestedInstance ->
-                                        stack.push(nestedInstance) // Добавляем вложенный instance в стек
-                                    }
+                                // Получаем трейты, связанные с этим файлом в порядке их использования
+                                val traitsInOrder = traitService.getTraitsInFileOrder(virtualFile)
 
-                                    if (instanceNesting != null) {
-                                        traitsClasses += instanceNesting
+                                traitsInOrder.forEach { trait ->
+                                    if (!traitsClasses.contains(trait)) {
+                                        traitsClasses.add(trait)
+
+                                        // Рекурсивно обрабатываем вложенные трейты
+                                        val nestingTraits = traitService.getTraitsInFileOrder(trait.containingFile?.virtualFile ?: return@forEach)
+                                        nestingTraits.forEach { nestedTrait ->
+                                            if (!traitsClasses.contains(nestedTrait)) {
+                                                stack.push(nestedTrait)
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                        methodsNames += instance.methods
+
+                        // Обрабатываем методы в порядке их использования, учитывая приоритет
+                        val prioritizedMethods = mutableListOf<MethodImpl>()
+                        traitsClasses.forEach { trait ->
+                            //TODO: something wrong maybe here with priority  (standard method on [0])
+                            trait.methods.forEach { method ->
+                                if (method.name !in seenMethods) {
+                                    seenMethods.add(method.name)
+                                    prioritizedMethods.add(method as MethodImpl)
+                                }
+                            }
+                        }
+
+                        // Используем только приоритетные методы
+                        //TODO: recheck this one
+                        prioritizedMethods.forEach { method ->
+                            val (classes, methods, constants, functions) = collectTraitElements(method)
+
+                            // Добавляем только те трейты и методы, которые используются
+                            traitsClasses.addAll(classes)
+                            requireMethods.addAll(methods)
+                            requireConstants.addAll(constants)
+                            requireFunctions.addAll(functions)
+                        }
                     }
 
-                    val requireMethods: MutableList<MethodImpl> = mutableListOf()
-                    val requireConstants: MutableList<PhpDefineImpl> = mutableListOf()
-                    val requireFunctions: MutableList<FunctionImpl> = mutableListOf()
-                    methodsNames.forEach { it ->
-                        val (classes, methods, constants, functions) = collectTraitElements(it)
-                        traitsClasses.addAll(classes)
-                        requireMethods.addAll(methods)
+                    methodsNames.forEach { trait ->
+                        val (classes, methods, constants, functions) = collectTraitElements(trait)
+
+                        // Добавляем методы с учетом приоритета: если метод уже добавлен, новый игнорируется
+                        methods.forEach { method ->
+                            if (requireMethods.none { it.name == method.name }) {
+                                requireMethods.add(method)
+                            }
+                        }
+
                         requireConstants.addAll(constants)
                         requireFunctions.addAll(functions)
+                        classesToRequire.addAll(classes)
                     }
 
                     val traitsClassName = traitsClasses.distinct().mapNotNull { processElement(it, reference) }
@@ -511,6 +552,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                         super.visitPhpElement(reference)
                     }
                 }
+
 
                 private fun handleReference(reference: PhpReference?, traverseFurther: Boolean = true) {
                     val references = referenceValidator(reference)?:return
