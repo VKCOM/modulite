@@ -21,7 +21,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceImplementation="com.vk.modulite.settings.ModuliteSettings"/>
-    <projectConfigurable parentId="tools" instance="com.vk.modulite.settings.ModuliteSettingsConfigurable"
+    <projectConfigurable parentId="reference.webide.settings.project.settings.php" instance="com.vk.modulite.settings.ModuliteSettingsConfigurable"
                          id="com.vk.modulite.settings.ModuliteSettingsConfigurable"
                          displayName="Modulite"/>
 
