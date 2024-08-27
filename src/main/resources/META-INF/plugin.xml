@@ -20,7 +20,7 @@
   <depends>org.jetbrains.plugins.yaml</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationService serviceImplementation="com.vk.modulite.settings.ModuliteSettingsState"/>
+    <applicationService serviceImplementation="com.vk.modulite.settings.ModuliteSettings"/>
     <projectConfigurable parentId="tools" instance="com.vk.modulite.settings.ModuliteSettingsConfigurable"
                          id="com.vk.modulite.settings.ModuliteSettingsConfigurable"
                          displayName="Modulite"/>

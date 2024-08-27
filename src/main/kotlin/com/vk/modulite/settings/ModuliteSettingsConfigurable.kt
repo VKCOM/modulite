@@ -40,29 +40,29 @@ class ModuliteSettingsConfigurable : Configurable {
     override fun isModified(): Boolean {
         mainPanel.apply()
 
-        val settings = ModuliteSettingsState.getInstance()
-        return model.turnOffIconsOnFolders != settings.turnOffIconsOnFolders ||
-                model.turnOffIconOnYaml != settings.turnOffIconOnYaml
+        val settings = ModuliteSettings.getInstance()
+        return model.turnOffIconsOnFolders != settings.state.turnOffIconsOnFolders ||
+                model.turnOffIconOnYaml != settings.state.turnOffIconOnYaml
     }
 
     override fun apply() {
         mainPanel.apply()
 
-        val settings = ModuliteSettingsState.getInstance()
+        val settings = ModuliteSettings.getInstance()
         with(settings) {
-            turnOffIconsOnFolders = model.turnOffIconsOnFolders
-            turnOffIconOnYaml = model.turnOffIconOnYaml
+            state.turnOffIconsOnFolders = model.turnOffIconsOnFolders
+            state.turnOffIconOnYaml = model.turnOffIconOnYaml
         }
 
     }
 
     override fun reset() {
-        val settings = ModuliteSettingsState.getInstance()
+        val settings = ModuliteSettings.getInstance()
 
 
         with(model) {
-            turnOffIconsOnFolders = settings.turnOffIconsOnFolders
-            turnOffIconOnYaml = settings.turnOffIconOnYaml
+            turnOffIconsOnFolders = settings.state.turnOffIconsOnFolders
+            turnOffIconOnYaml = settings.state.turnOffIconOnYaml
         }
 
         mainPanel.reset()
