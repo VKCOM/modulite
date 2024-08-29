@@ -3,9 +3,14 @@ package com.vk.modulite.projectview
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ProjectViewNodeDecorator
+import com.vk.modulite.settings.ModuliteSettings
 
 class ProjectViewDecorator : ProjectViewNodeDecorator {
     override fun decorate(node: ProjectViewNode<*>, presentation: PresentationData) {
-        presentation.isChanged = ModuliteNodeDecoration.apply(node, presentation)
+        val iconTurnOff = ModuliteSettings.getInstance().state.turnOffIconsOnFolders
+
+        if (!iconTurnOff) {
+            presentation.isChanged = ModuliteNodeDecoration.apply(node, presentation)
+        }
     }
 }
