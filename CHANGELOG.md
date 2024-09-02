@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-# 1.1.5 - 02.05.2024
+## 1.1.6 — 30.08.2024
+
+- Settings menu and turn off option for modulite icons
+- The correct resolve for global variables
+- Documentation fix
+
+## 1.1.5 — 02.05.2024
 
 - Adapt code for PhpStorm 2024.1
 
