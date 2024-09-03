@@ -33,6 +33,7 @@ class InvalidModuliteNameInspection : ConfigInspectionBase() {
     }
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+        val reservedComposer = "<composer_root>"
         return object : YamlPsiElementVisitor() {
             override fun visitQuotedText(element: YAMLQuotedText) {
                 if (!YamlUtils.insideName(element)) {
@@ -40,7 +41,7 @@ class InvalidModuliteNameInspection : ConfigInspectionBase() {
                 }
 
                 val moduliteName = element.text.unquote()
-                val missingAt = !moduliteName.startsWith("@")
+                val missingAt = !moduliteName.startsWith("@") && moduliteName != reservedComposer
                 val containSpaces = moduliteName.contains(" ")
 
                 if (missingAt) {
