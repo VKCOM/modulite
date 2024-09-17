@@ -13,7 +13,7 @@ import com.vk.modulite.services.ModuliteDeps
 import com.vk.modulite.utils.childOfType
 import org.jetbrains.yaml.psi.YAMLFile
 
-open class ConfigListTestBase : BasePlatformTestCase() {
+abstract class ConfigListTestBase : BasePlatformTestCase() {
     protected fun doExportTest(symbol: String, before: List<String>, after: List<String>) =
         doListTest("export", symbol, before, after)
 
