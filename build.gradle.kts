@@ -73,8 +73,6 @@ intellijPlatform {
     }
 
     pluginVerification {
-        freeArgs = listOf("-mute", "TemplateWordInPluginName")
-
         ides {
             recommended()
         }
@@ -88,6 +86,10 @@ changelog {
 }
 
 tasks {
+    test {
+        delete("src/test/fixtures/gen")
+    }
+
     wrapper {
         gradleVersion = providers.gradleProperty("gradleVersion").get()
     }
