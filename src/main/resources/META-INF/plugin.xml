@@ -63,7 +63,7 @@
 
     <localInspection language="yaml" groupName="Modulite plugin" shortName="EmptyValueInListInspection"
                      displayName="Empty value"
-                     enabledByDefault="true" level="WEAK_WARNING"
+                     enabledByDefault="true" level="WEAK WARNING"
                      implementationClass="com.vk.modulite.inspections.config.EmptyValueInListInspection"/>
 
     <localInspection language="yaml" groupName="Modulite plugin" shortName="ModuliteRedeclarationInspection"
@@ -73,7 +73,7 @@
 
     <localInspection language="yaml" groupName="Modulite plugin" shortName="ModuliteUnnecessaryFullyQualifiedNameInspection"
                      displayName="Unnecessary fully qualified name"
-                     enabledByDefault="true" level="WEAK_WARNING"
+                     enabledByDefault="true" level="WEAK WARNING"
                      implementationClass="com.vk.modulite.inspections.config.UnnecessaryFullyQualifiedNameInspection"/>
 
     <localInspection language="yaml" groupName="Modulite plugin" shortName="InvalidModuliteNameInspection"
