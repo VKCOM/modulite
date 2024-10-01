@@ -72,6 +72,14 @@ intellijPlatform {
         }
     }
 
+    sourceSets {
+        test {
+            resources {
+                setSrcDirs(listOf("src/test/fixtures"))
+            }
+        }
+    }
+
     pluginVerification {
         ides {
             recommended()
