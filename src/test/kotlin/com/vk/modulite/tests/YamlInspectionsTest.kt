@@ -52,7 +52,7 @@ class YamlInspectionsTest : ModuliteInspectionTestBase() {
 
     fun `test unnecessary fully qualified name`() {
         myFixture.enableInspections(InconsistentNestingInspection())
-        myFixture.enableInspections(ModuliteUnnecessaryFullyQualifiedNameInspection())
+        myFixture.enableInspections(UnnecessaryFullyQualifiedNameInspection())
         runFixture("inspections/UnnecessaryFullyQualifiedName")
     }
 

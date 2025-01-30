@@ -12,7 +12,7 @@ import com.vk.modulite.utils.unquote
 import org.jetbrains.yaml.psi.YAMLQuotedText
 import org.jetbrains.yaml.psi.YamlPsiElementVisitor
 
-class ModuliteUnnecessaryFullyQualifiedNameInspection : ConfigInspectionBase() {
+class UnnecessaryFullyQualifiedNameInspection : ConfigInspectionBase() {
     class QualifierQuickFix(private val prefix: String) : LocalQuickFix {
         override fun getFamilyName() = "Remove unnecessary qualifier"
 
