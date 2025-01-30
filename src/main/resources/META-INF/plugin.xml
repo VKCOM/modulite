@@ -71,10 +71,10 @@
                      enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.config.ModuliteRedeclarationInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnnecessaryConfigFullyQualifiedName"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="ModuliteUnnecessaryFullyQualifiedNameInspection"
                      displayName="Unnecessary fully qualified name"
                      enabledByDefault="true" level="WARNING"
-                     implementationClass="com.vk.modulite.inspections.config.UnnecessaryFullyQualifiedNameInspection"/>
+                     implementationClass="com.vk.modulite.inspections.config.ModuliteUnnecessaryFullyQualifiedNameInspection"/>
 
     <localInspection language="yaml" groupName="Modulite plugin" shortName="InvalidModuleNameInspection"
                      displayName="Incorrect module name"
