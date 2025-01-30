@@ -1,7 +1,6 @@
 .DS_Store
 .gradle
 .idea
-.intellijPlatform
 .qodana
 build
 src/test/fixtures/gen/
