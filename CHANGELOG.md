@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## 1.1.7 — 16.09.2024
+
+- Adapt code for PhpStorm 2024.2
+
 ## 1.1.6 — 30.08.2024
 
 - Settings menu and turn off option for modulite icons
