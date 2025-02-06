@@ -41,44 +41,44 @@
     <notificationGroup id="Modulite" displayType="BALLOON"/>
 
     <!-- YAML config inspections -->
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="RequireSymbolFromModule"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="RequireSymbolFromModuliteInspection"
                      displayName="Require symbol from module"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.config.RequireSymbolFromModuliteInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownSymbol"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownSymbolInspection"
                      displayName="Unknown symbol"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.config.UnknownSymbolInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownModule"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownModuliteInspection"
                      displayName="Unknown modulite"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.config.UnknownModuliteInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownComposerPackage"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnknownComposerPackageInspection"
                      displayName="Unknown composer package"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.config.UnknownComposerPackageInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="EmptyValue"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="EmptyValueInListInspection"
                      displayName="Empty value"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="WEAK WARNING"
                      implementationClass="com.vk.modulite.inspections.config.EmptyValueInListInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="ModuleRedeclaration"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="ModuliteRedeclarationInspection"
                      displayName="Redeclaration of module"
                      enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.config.ModuliteRedeclarationInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="UnnecessaryConfigFullyQualifiedName"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="ModuliteUnnecessaryFullyQualifiedNameInspection"
                      displayName="Unnecessary fully qualified name"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="WEAK WARNING"
                      implementationClass="com.vk.modulite.inspections.config.UnnecessaryFullyQualifiedNameInspection"/>
 
-    <localInspection language="yaml" groupName="Modulite plugin" shortName="InvalidModuleNameInspection"
+    <localInspection language="yaml" groupName="Modulite plugin" shortName="InvalidModuliteNameInspection"
                      displayName="Incorrect module name"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.config.InvalidModuliteNameInspection"/>
 
     <localInspection language="yaml" groupName="Modulite plugin" shortName="UnescapedBackSlashInNameInspection"
@@ -119,16 +119,16 @@
 
     <localInspection language="PHP" groupName="Modulite plugin" shortName="WrongNamespaceInspection"
                      displayName="Wrong namespace"
-                     enabledByDefault="true" level="WARNING"
+                     enabledByDefault="true" level="ERROR"
                      implementationClass="com.vk.modulite.inspections.WrongNamespaceInspection"/>
 
     <!--  Like intentions (only quick fixes) -->
-    <localInspection language="PHP" groupName="Modulite plugin" shortName="ChangeVisibilityIntention"
+    <localInspection language="PHP" groupName="Modulite plugin" shortName="ChangeVisibilityEmptyInspection"
                      displayName="Change visibility intention"
                      enabledByDefault="true" level="INFORMATION"
                      implementationClass="com.vk.modulite.inspections.intentions.ChangeVisibilityEmptyInspection"/>
 
-    <localInspection language="PHP" groupName="Modulite plugin" shortName="AllowInternalAccessIntention"
+    <localInspection language="PHP" groupName="Modulite plugin" shortName="AllowInternalAccessEmptyInspection"
                      displayName="Allow internal access intention for specific module"
                      enabledByDefault="true" level="INFORMATION"
                      implementationClass="com.vk.modulite.inspections.intentions.AllowInternalAccessEmptyInspection"/>
