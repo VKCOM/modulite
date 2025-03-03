@@ -4,7 +4,7 @@ import com.intellij.testFramework.utils.inlays.InlayHintsProviderTestCase
 import com.vk.modulite.highlighting.hints.PhpInlayTypeHintsProvider
 import java.io.File
 
-open class InlayHintsProviderTestBase : InlayHintsProviderTestCase() {
+abstract class InlayHintsProviderTestBase : InlayHintsProviderTestCase() {
     protected fun runHintTest(testFile: String) {
         val testDataFolder = File(testDataPath, "hints")
         assertTrue(testDataFolder.exists())
