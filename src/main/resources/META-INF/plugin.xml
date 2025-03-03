@@ -154,6 +154,7 @@
 
     <fileBasedIndex implementation="com.vk.modulite.index.ModuliteFilesIndex"/>
     <fileBasedIndex implementation="com.vk.modulite.index.ComposerFilesIndex"/>
+    <fileBasedIndex implementation="com.vk.modulite.index.TraitsIndex"/>
 
     <iconProvider implementation="com.vk.modulite.view.ModuliteIconProvider"/>
 

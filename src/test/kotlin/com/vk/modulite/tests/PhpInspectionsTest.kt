@@ -2,6 +2,7 @@ package com.vk.modulite.tests
 
 import com.vk.modulite.infrastructure.ModuliteInspectionTestBase
 import com.vk.modulite.inspections.ComposerPackageAnnotationUsageInspection
+import com.vk.modulite.inspections.InternalSymbolUsageInspection
 import com.vk.modulite.inspections.WrongNamespaceInspection
 
 class PhpInspectionsTest : ModuliteInspectionTestBase() {
@@ -13,5 +14,10 @@ class PhpInspectionsTest : ModuliteInspectionTestBase() {
     fun `test wrong namespace`() {
         myFixture.enableInspections(WrongNamespaceInspection())
         runFixture("inspections/WrongNamespace")
+    }
+
+    fun `test trait use`() {
+        myFixture.enableInspections(InternalSymbolUsageInspection())
+        runFixture("inspections/RestrictedTraitRequire")
     }
 }
