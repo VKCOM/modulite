@@ -104,6 +104,12 @@ kover {
             }
         }
     }
+
+    currentProject {
+        instrumentation {
+            excludedClasses.add("org.apache.velocity.*")
+        }
+    }
 }
 
 tasks {
