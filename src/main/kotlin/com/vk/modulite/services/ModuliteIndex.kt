@@ -85,11 +85,14 @@ class ModuliteIndex(private var project: Project) {
 
     fun getModulite(name: String, composerPackageName: SymbolName): Modulite? {
         val allScope = GlobalSearchScope.allScope(project)
-        val modulites = FileBasedIndex.getInstance()
+        val modulitesFromIndex = FileBasedIndex.getInstance()
             .getValues(ModuliteFilesIndex.KEY, name, allScope)
+        modulitesFromIndex.forEach(::modulitePostProcess)
+
+        val modulites = modulitesFromIndex
             .filter { it.containingPackage?.symbolName() == composerPackageName }
+
         return modulites.firstOrNull()
-            .also { modulitePostProcess(it) }
     }
 
     private fun modulitePostProcess(it: Modulite?) {
