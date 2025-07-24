@@ -1,6 +1,7 @@
 package com.vk.modulite.actions
 
 import com.intellij.codeInsight.hint.HintManager
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -103,6 +104,10 @@ abstract class SelectionBasedPsiElementAction<T : PsiElement>(
         val selectionStart = selectionModel.selectionStart
         val selectionEnd = selectionModel.selectionEnd
         return PsiTreeUtil.findElementOfClassAtRange(file, selectionStart, selectionEnd, myClass)
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
     }
 
     companion object {

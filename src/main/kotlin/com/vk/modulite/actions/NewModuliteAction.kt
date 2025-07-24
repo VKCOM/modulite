@@ -1,6 +1,7 @@
 package com.vk.modulite.actions
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -15,5 +16,9 @@ class NewModuliteAction : AnAction(
         val project = e.project ?: return
         val folder = e.getData(CommonDataKeys.VIRTUAL_FILE) ?: return
         ModuliteBuilder(project).startBuild(folder, fromSource = false)
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
     }
 }
