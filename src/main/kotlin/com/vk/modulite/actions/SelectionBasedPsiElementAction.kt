@@ -106,9 +106,7 @@ abstract class SelectionBasedPsiElementAction<T : PsiElement>(
         return PsiTreeUtil.findElementOfClassAtRange(file, selectionStart, selectionEnd, myClass)
     }
 
-    override fun getActionUpdateThread(): ActionUpdateThread {
-        return ActionUpdateThread.BGT
-    }
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
 
     companion object {
         private fun getEditor(e: AnActionEvent) = e.getData(CommonDataKeys.EDITOR)

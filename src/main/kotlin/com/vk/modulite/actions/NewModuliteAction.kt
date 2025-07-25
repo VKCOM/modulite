@@ -18,7 +18,5 @@ class NewModuliteAction : AnAction(
         ModuliteBuilder(project).startBuild(folder, fromSource = false)
     }
 
-    override fun getActionUpdateThread(): ActionUpdateThread {
-        return ActionUpdateThread.BGT
-    }
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
 }

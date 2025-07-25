@@ -21,7 +21,5 @@ class RegenerateModuleRequiresAction : AnAction() {
         }
     }
 
-    override fun getActionUpdateThread(): ActionUpdateThread {
-        return ActionUpdateThread.BGT
-    }
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
 }
