@@ -1,5 +1,6 @@
 package com.vk.modulite.actions.usages.yaml
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.util.SlowOperations
@@ -15,10 +16,7 @@ class FindSymbolUsagesInCurrentModuleAction : YamlPsiElementAction<YAMLQuotedTex
     }
 
     override fun update(e: AnActionEvent, element: YAMLQuotedText?) {
-        val modulite =
-            SlowOperations.allowSlowOperations<Modulite?, RuntimeException> {
-                e.getData(CommonDataKeys.VIRTUAL_FILE)?.containingModulite(e.project!!)
-            }
+        val modulite = e.getData(CommonDataKeys.VIRTUAL_FILE)?.containingModulite(e.project!!)
 
         if (element == null || modulite == null) {
             e.presentation.isEnabledAndVisible = false
