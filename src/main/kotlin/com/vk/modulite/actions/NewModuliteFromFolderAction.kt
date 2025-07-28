@@ -1,6 +1,7 @@
 package com.vk.modulite.actions
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -35,4 +36,6 @@ class NewModuliteFromFolderAction : AnAction(
             return
         }
     }
+
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
 }
