@@ -4,7 +4,7 @@
 
 ## 1.1.9 - 31.07.2025
 
-- Fix UninitializedPropertyAccessException in some cases
+- Fix `UninitializedPropertyAccessException` in some cases
 
 ## 1.1.8 - 01.03.2024
 
