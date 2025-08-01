@@ -60,6 +60,7 @@ abstract class UsagesBaseFinder {
             it is DefaultSearchScopeProviders.CustomNamed
         } ?: return
 
+        // TODO: remove `allowSlowOperations`
         val scopes = SlowOperations.allowSlowOperations<List<SearchScope>, RuntimeException> {
             provider.getSearchScopes(
                 element.project,
