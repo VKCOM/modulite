@@ -1,5 +1,6 @@
 package com.vk.modulite.actions.usages.yaml
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiElement
@@ -40,10 +41,7 @@ class FindModuleUsagesInCurrentModuleAction : YamlPsiElementAction<YAMLQuotedTex
     }
 
     override fun update(e: AnActionEvent, element: YAMLQuotedText?) {
-        val module =
-            SlowOperations.allowSlowOperations<Modulite?, RuntimeException> {
-                e.getData(CommonDataKeys.VIRTUAL_FILE)?.containingModulite(e.project!!)
-            }
+        val module = e.getData(CommonDataKeys.VIRTUAL_FILE)?.containingModulite(e.project!!)
 
         if (element == null || module == null) {
             e.presentation.isEnabledAndVisible = false
