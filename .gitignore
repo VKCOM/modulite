@@ -5,3 +5,4 @@
 .qodana
 build
 src/test/fixtures/gen/
+.kotlin
