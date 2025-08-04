@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## 1.1.10 - 04.08.2025
+
+- Adapt code for PhpStorm 2025.1
+
 ## 1.1.9 - 31.07.2025
 
 - Fix `UninitializedPropertyAccessException` in some cases
