@@ -43,6 +43,8 @@ dependencies {
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
 
         testFramework(TestFrameworkType.Platform)
+
+        bundledModules(providers.gradleProperty("bundledModules").map { it.split(",") })
     }
 }
 
