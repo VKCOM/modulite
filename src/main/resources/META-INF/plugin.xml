@@ -133,6 +133,7 @@
                      enabledByDefault="true" level="INFORMATION"
                      implementationClass="com.vk.modulite.inspections.intentions.AllowInternalAccessEmptyInspection"/>
 
+    <internalFileTemplate name=".modulite.yaml"/>
     <!-- Intentions -->
     <intentionAction>
       <className>com.vk.modulite.inspections.intentions.GoToModuliteDefinitionIntention</className>
