@@ -146,12 +146,6 @@
       <descriptionDirectoryName>FindUsagesInModuleIntention</descriptionDirectoryName>
     </intentionAction>
 
-    <projectService serviceImplementation="com.vk.modulite.services.ModuliteIndex"/>
-    <projectService serviceImplementation="com.vk.modulite.services.ComposerPackagesIndex"/>
-    <projectService serviceImplementation="com.vk.modulite.services.ModuliteDependenciesCollector"/>
-    <projectService serviceImplementation="com.vk.modulite.services.ModuliteSymbolsCollector"/>
-    <projectService serviceImplementation="com.vk.modulite.services.FindUsagesService"/>
-
     <fileBasedIndex implementation="com.vk.modulite.index.ModuliteFilesIndex"/>
     <fileBasedIndex implementation="com.vk.modulite.index.ComposerFilesIndex"/>
 
