@@ -317,3 +317,8 @@ class ModuliteYamlReferenceContributor : PsiReferenceContributor() {
         override fun isSoft() = true
     }
 }
+
+fun YAMLPsiElement.references(): Array<PsiReference> {
+    return ModuliteYamlReferenceContributor.PhpPsiReferenceProvider()
+        .getReferencesByElement(this, ProcessingContext())
+}

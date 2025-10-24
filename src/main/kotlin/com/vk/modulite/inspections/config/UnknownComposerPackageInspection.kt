@@ -3,7 +3,7 @@ package com.vk.modulite.inspections.config
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
-import com.vk.modulite.completion.ModuliteYamlReferenceContributor.Companion.references
+import com.vk.modulite.completion.references
 import com.vk.modulite.completion.ModuliteYamlReferenceContributor.UnknownComposerPackageReference
 import com.vk.modulite.utils.registerModuliteProblem
 import com.vk.modulite.utils.unquote

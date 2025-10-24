@@ -7,16 +7,16 @@ class RequiresListTest : ConfigListTestBase() {
     fun `test add to unsorted list`() = doRequiresTest(
         "\\foo()",
         listOf(
-            "\\Foo::\$field",
+            $$"\\Foo::$field",
             "@mod",
-            "\$Global",
+            $$"$Global",
             "\\Foo",
             "\\CONSTANT",
             "\\Foo::CONSTANT",
             "#vk/pack",
             "#vk/pack2",
             "\\VK\\Message\\CONSTANT",
-            "\$Global2",
+            $$"$Global2",
             "\\Foo::method()",
         ),
         listOf(
@@ -25,13 +25,13 @@ class RequiresListTest : ConfigListTestBase() {
             "#vk/pack2",
             "\\Foo",
             "\\Foo::method()",
-            "\\Foo::\$field",
+            $$"\\Foo::$field",
             "\\Foo::CONSTANT",
             "\\foo()",
             "\\CONSTANT",
             "\\VK\\Message\\CONSTANT",
-            "\$Global",
-            "\$Global2",
+            $$"$Global",
+            $$"$Global2",
         ),
     )
 }

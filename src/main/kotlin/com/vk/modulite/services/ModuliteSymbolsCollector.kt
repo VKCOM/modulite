@@ -22,7 +22,6 @@ import com.vk.modulite.psi.extensions.php.symbolName
  * Собирает все символы определенные в текущей папке и всех подпапках.
  */
 @Service(Service.Level.PROJECT)
-@Suppress("UnstableApiUsage")
 class ModuliteSymbolsCollector(val project: Project) {
     companion object {
         fun getInstance(project: Project) = project.service<ModuliteSymbolsCollector>()

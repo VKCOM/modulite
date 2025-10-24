@@ -4,7 +4,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
-import com.vk.modulite.completion.ModuliteYamlReferenceContributor.Companion.references
+import com.vk.modulite.completion.references
 import com.vk.modulite.psi.ModuliteNamePsi
 import com.vk.modulite.utils.createModuliteProblemDescriptor
 import com.vk.modulite.utils.unquote

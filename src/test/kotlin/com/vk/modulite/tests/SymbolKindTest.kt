@@ -14,8 +14,8 @@ class SymbolKindTest : BasePlatformTestCase() {
         compareKind("\\Foo", Kind.Class)
         compareKind("\\VK\\Messages\\Foo", Kind.Class)
 
-        compareKind("Foo::\$field", Kind.Field)
-        compareKind("\\Foo::\$field", Kind.Field)
+        compareKind($$"Foo::$field", Kind.Field)
+        compareKind($$"\\Foo::$field", Kind.Field)
 
         compareKind("Foo::method()", Kind.Method)
         compareKind("\\Foo::method()", Kind.Method)
@@ -26,9 +26,9 @@ class SymbolKindTest : BasePlatformTestCase() {
         compareKind("foo()", Kind.Function)
         compareKind("\\foo()", Kind.Function)
 
-        compareKind("\$GlobalVariable", Kind.GlobalVariable)
-        compareKind("\\\$GlobalVariable", Kind.GlobalVariable)
-        compareKind("\\\\\$GlobalVariable", Kind.GlobalVariable)
+        compareKind($$"$GlobalVariable", Kind.GlobalVariable)
+        compareKind($$"\\$GlobalVariable", Kind.GlobalVariable)
+        compareKind($$"\\\\$GlobalVariable", Kind.GlobalVariable)
 
         compareKind("CONSTANT", Kind.Constant)
         compareKind("\\CONSTANT", Kind.Constant)

@@ -1,10 +1,8 @@
 package com.vk.modulite.actions.usages.yaml
 
-import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.psi.PsiElement
-import com.intellij.util.SlowOperations
 import com.vk.modulite.actions.YamlPsiElementAction
 import com.vk.modulite.actions.panels.ModuliteSymbolDialog
 import com.vk.modulite.actions.usages.base.UsagesBaseFinder
