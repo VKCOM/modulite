@@ -1,0 +1,18 @@
+# Qodana configuration:
+# https://www.jetbrains.com/help/qodana/qodana-yaml.html
+
+version: "1.0"
+linter: jetbrains/qodana-jvm-community:2025.2
+projectJDK: "21"
+profile:
+  name: Project Default
+exclude:
+  - name: All
+    paths:
+      - .qodana
+      - docs
+      - gradlew
+      - gradlew.bat
+      - gradle/wrapper
+      - src/main/resources/icons
+      - src/test/fixtures/
