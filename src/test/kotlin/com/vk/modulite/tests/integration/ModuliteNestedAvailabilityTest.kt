@@ -113,7 +113,7 @@ class ModuliteNestedAvailabilityTest : IntegrationTestBase() {
             modulite("messages/core/impl") canUse modulite("messages/core/impl") shouldBe true
             modulite("messages/core")      canUse modulite("messages/core/impl") shouldBe true
 
-            // Можно использовать несмотря на то что messages/core/impl не экспортируется из
+            // Можно использовать, несмотря на то что messages/core/impl не экспортируется из
             // messages/core, так как есть allow-internal-access и messages/core можно использовать.
             modulite("messages")           canUse modulite("messages/core/impl") shouldBe true
         }
@@ -137,8 +137,8 @@ class ModuliteNestedAvailabilityTest : IntegrationTestBase() {
 
             modulite("messages")           canUse modulite("messages/core") shouldBe true
             modulite("messages")           canUse modulite("messages/core/impl") shouldBe true
-            // Можно использовать несмотря на то что messages/core/impl/deep не экспортируется из
-            // messages/core/impl, так как есть allow-internal-access и messages/core/impl можно использовать
+            // Можно использовать, несмотря на то что messages/core/impl/deep не экспортируется из
+            // messages/core/impl, так как есть allow-internal-access и messages/core/impl можно использовать,
             // так как он экспортируется из messages/core, который является прямым потомком.
             modulite("messages")           canUse modulite("messages/core/impl/deep") shouldBe true
         }

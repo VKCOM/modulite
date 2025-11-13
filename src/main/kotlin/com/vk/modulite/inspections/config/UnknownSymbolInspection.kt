@@ -4,7 +4,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import com.vk.modulite.SymbolName
-import com.vk.modulite.completion.ModuliteYamlReferenceContributor.Companion.references
+import com.vk.modulite.completion.references
 import com.vk.modulite.completion.ModuliteYamlReferenceContributor.PhpUnknownElementReference
 import com.vk.modulite.psi.extensions.yaml.containingModulite
 import com.vk.modulite.utils.YamlUtils.insideDescription

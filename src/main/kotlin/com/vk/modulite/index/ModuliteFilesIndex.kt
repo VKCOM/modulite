@@ -115,7 +115,7 @@ class ModuliteFilesIndex : FileBasedIndexExtension<String, Modulite>() {
                     val type = input.readInt()
                     val text = stringer.read(input)
 
-                    val kind = SymbolName.Kind.values()[type]
+                    val kind = SymbolName.Kind.entries[type]
                     val name = SymbolName(text, kind = kind)
 
                     public.add(name)

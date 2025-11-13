@@ -21,16 +21,16 @@ class ExportListSortTest : ConfigListTestBase() {
     fun `test add to unsorted list`() = doExportTest(
         "\\foo()",
         listOf(
-            "Foo::\$field",
+            $$"Foo::$field",
             "@mod",
-            "\$Global",
+            $$"$Global",
             "Foo",
             "CONSTANT",
             "Foo::CONSTANT",
             "#vk/pack",
             "#vk/pack2",
             "VK\\Message\\CONSTANT",
-            "\$Global2",
+            $$"$Global2",
             "Foo::method()",
         ),
         listOf(
@@ -39,13 +39,13 @@ class ExportListSortTest : ConfigListTestBase() {
             "#vk/pack2",
             "Foo",
             "Foo::method()",
-            "Foo::\$field",
+            $$"Foo::$field",
             "Foo::CONSTANT",
             "foo()",
             "CONSTANT",
             "VK\\Message\\CONSTANT",
-            "\$Global",
-            "\$Global2",
+            $$"$Global",
+            $$"$Global2",
         ),
     )
 
@@ -56,25 +56,25 @@ class ExportListSortTest : ConfigListTestBase() {
             "#vk/pack",
             "#vk/pack2",
             "Foo",
-            "Foo::\$field",
+            $$"Foo::$field",
             "Foo::CONSTANT",
             "CONSTANT",
             "VK\\Message\\CONSTANT",
-            "\$Global",
-            "\$Global2",
+            $$"$Global",
+            $$"$Global2",
         ),
         listOf(
             "@mod",
             "#vk/pack",
             "#vk/pack2",
             "Foo",
-            "Foo::\$field",
+            $$"Foo::$field",
             "Foo::CONSTANT",
             "foo()",
             "CONSTANT",
             "VK\\Message\\CONSTANT",
-            "\$Global",
-            "\$Global2",
+            $$"$Global",
+            $$"$Global2",
         ),
     )
 
@@ -85,25 +85,25 @@ class ExportListSortTest : ConfigListTestBase() {
             "#vk/pack",
             "#vk/pack2",
             "Foo",
-            "Foo::\$field",
+            $$"Foo::$field",
             "Foo::CONSTANT",
             "foo()",
             "VK\\Message\\CONSTANT",
-            "\$Global",
-            "\$Global2",
+            $$"$Global",
+            $$"$Global2",
         ),
         listOf(
             "@mod",
             "#vk/pack",
             "#vk/pack2",
             "Foo",
-            "Foo::\$field",
+            $$"Foo::$field",
             "Foo::CONSTANT",
             "foo()",
             "CONSTANT",
             "VK\\Message\\CONSTANT",
-            "\$Global",
-            "\$Global2",
+            $$"$Global",
+            $$"$Global2",
         ),
     )
 
@@ -116,7 +116,7 @@ class ExportListSortTest : ConfigListTestBase() {
 
     // Add field do nothing for export list
     fun `test add field`() = doExportTest(
-        "Foo::\$field",
+        $$"Foo::$field",
         listOf(),
         listOf(),
     )
@@ -130,7 +130,7 @@ class ExportListSortTest : ConfigListTestBase() {
 
     // Add global variable do nothing for export list
     fun `test add global`() = doExportTest(
-        "\\\$GlobalVariable",
+        $$"\\$GlobalVariable",
         listOf(),
         listOf(),
     )

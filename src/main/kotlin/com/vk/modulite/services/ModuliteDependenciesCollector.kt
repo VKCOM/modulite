@@ -144,7 +144,6 @@ data class ModuliteDeps(
 }
 
 @Service(Service.Level.PROJECT)
-@Suppress("UnstableApiUsage")
 class ModuliteDependenciesCollector(val project: Project) {
     companion object {
         private val LOG = logger<ModuliteDependenciesCollector>()
@@ -363,7 +362,7 @@ class ModuliteDependenciesCollector(val project: Project) {
                     if (reference is Variable) {
                         // Глобальные переменные не могут содержаться в некотором модуле,
                         // они всегда считаются глобальными и обязательным для их использования
-                        // является их запись в require модуля.
+                        // является запись в require модуля.
                         return false
                     }
 

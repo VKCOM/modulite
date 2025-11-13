@@ -224,7 +224,7 @@ open class ElementContextBase(val element: PsiElement, val ctx: BaseFileContext)
         }
 
         val usages = runInEdtAndGet {
-            NonBlockingReadActionImpl.waitForAsyncTaskCompletion();
+            NonBlockingReadActionImpl.waitForAsyncTaskCompletion()
             val startMillis = System.currentTimeMillis()
             var view: UsageView?
             var viewWasInitialized = false

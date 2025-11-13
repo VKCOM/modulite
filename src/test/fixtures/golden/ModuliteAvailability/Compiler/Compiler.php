@@ -18,7 +18,7 @@ class Compiler {
     $lexer->lex($filename);
 
     // Мы не можем использовать InternalImplFlexLexer, так как @compiler1/lexer/impl2
-    // не жкспортирован из @compiler1/lexer.
+    // не экспортирован из @compiler1/lexer.
     $lexer = new InternalImplFlexLexer();
     //           ^^^^^^^^^^^^^^^^^^^^^
     //           error: restricted to use Compiler\Lexer\Impl2\InternalImplFlexLexer, it belongs to @compiler1/lexer/impl2,

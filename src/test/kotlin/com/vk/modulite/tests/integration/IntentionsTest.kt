@@ -67,7 +67,7 @@ class IntentionsTest : IntegrationTestBase() {
         step("invoke intention") {
             php("Module/functions.php") {
                 element("module_func") {
-                    // This intention requires input from the user, so we check it directly.
+                    // This intention requires an input from the user, so we check it directly.
                     // runIntention("Allow internal symbol")
                     allowForModulite("module2")
                 }
