@@ -263,7 +263,7 @@ If you find a bug, it's either a specific bug related to PHPStorm peculiarities,
 
 ## The License
 
-Modulite is distributed under the MIT License, on behalf of VK.com (V Kontakte LLC).
+Modulite is distributed under the MIT License, on behalf of VK LLC.
 
 Made by [KPHP Team](https://github.com/VKCOM/kphp) from VK.
 
