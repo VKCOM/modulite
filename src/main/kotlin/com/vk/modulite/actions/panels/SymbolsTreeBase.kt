@@ -47,9 +47,7 @@ abstract class SymbolsTreeBase(private val symbols: List<SymbolName>) {
 
             override fun isPathEditable(path: TreePath): Boolean = false
 
-            override fun onDoubleClick(node: CheckedTreeNode) {
-                onDoubleClickProxy(node)
-            }
+            override fun onDoubleClick(node: CheckedTreeNode?) = onDoubleClickProxy(node)
 
             override fun getToolTipText(event: MouseEvent): String {
                 val path = tree.getPathForLocation(event.x, event.y) ?: return ""
@@ -119,7 +117,7 @@ abstract class SymbolsTreeBase(private val symbols: List<SymbolName>) {
 
     fun tree() = tree
 
-    abstract fun onDoubleClick(node: CheckedTreeNode)
+    abstract fun onDoubleClick(node: CheckedTreeNode?)
     abstract fun selectionModel(): Int
     abstract fun tooltipAdditionalInfo(node: TooltipNode): String?
 
@@ -157,7 +155,7 @@ abstract class SymbolsTreeBase(private val symbols: List<SymbolName>) {
         }
     }
 
-    private fun onDoubleClickProxy(node: CheckedTreeNode) = onDoubleClick(node)
+    private fun onDoubleClickProxy(node: CheckedTreeNode?) = onDoubleClick(node)
 
     private fun groupByFirst(root: TreeBaseNode, rawNames: List<SymbolName>, names: List<List<String>>) {
         val groups = names.groupBy { it[0] }

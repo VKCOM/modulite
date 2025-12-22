@@ -1,5 +1,9 @@
 # Modulite Changelog
 
+## 1.1.12 - 24.12.2025
+
+- Adapt code for PhpStorm 2025.3
+
 ## 1.1.11 - 06.08.2025
 
 - Adapt code for PhpStorm 2025.2

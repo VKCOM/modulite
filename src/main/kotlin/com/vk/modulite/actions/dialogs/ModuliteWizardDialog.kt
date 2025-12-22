@@ -77,7 +77,11 @@ class ModuliteWizardDialog(
             init()
         }
 
-        override fun onDoubleClick(node: CheckedTreeNode) {
+        override fun onDoubleClick(node: CheckedTreeNode?) {
+            if (node == null) {
+                return
+            }
+
             node.isChecked = !node.isChecked
             tree().repaint()
         }
