@@ -68,7 +68,7 @@ class ManageModuliteExportsDialog(
 
         override fun needCheckboxes() = true
 
-        override fun onDoubleClick(node: CheckedTreeNode) {}
+        override fun onDoubleClick(node: CheckedTreeNode?) {}
 
         override fun borders(): Border = IdeBorderFactory.createBorder()
 

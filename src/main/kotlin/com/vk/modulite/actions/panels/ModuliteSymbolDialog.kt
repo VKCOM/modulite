@@ -44,7 +44,7 @@ class ModuliteSymbolDialog(
             init()
         }
 
-        override fun onDoubleClick(node: CheckedTreeNode) {
+        override fun onDoubleClick(node: CheckedTreeNode?) {
             if (node is SymbolTreeNode) {
                 node.isChecked = true
                 close(OK_EXIT_CODE)

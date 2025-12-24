@@ -82,7 +82,7 @@ class DepsRegenerationResultDialog(
 
         override fun needCheckboxes() = false
 
-        override fun onDoubleClick(node: CheckedTreeNode) {}
+        override fun onDoubleClick(node: CheckedTreeNode?) {}
 
         override fun borders(): Border = IdeBorderFactory.createBorder()
 
