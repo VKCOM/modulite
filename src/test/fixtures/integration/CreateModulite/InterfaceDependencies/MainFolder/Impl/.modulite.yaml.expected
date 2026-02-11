@@ -1,0 +1,18 @@
+name: "@main-folder/impl"
+description: ""
+namespace: "Impl\\"
+
+# "Public API" of the modulite: classes, functions, constants, etc.
+# Symbols not listed here will be internal.
+export:
+  - "ImplTester"
+
+# Class members to exclude, they override "export".
+force-internal:
+
+# Dependencies: other modulites, global classes, defines, etc.
+require:
+  - "@main-folder/interfaces"
+
+# Granting partial access to internal symbols, "as an exception".
+allow-internal-access:

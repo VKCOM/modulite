@@ -11,23 +11,10 @@ import com.intellij.util.containers.TreeNodeProcessingResult
 import com.jetbrains.php.lang.PhpLangUtil
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
 import com.jetbrains.php.lang.psi.PhpFile
-import com.jetbrains.php.lang.psi.elements.ClassConstantReference
-import com.jetbrains.php.lang.psi.elements.ClassReference
-import com.jetbrains.php.lang.psi.elements.ConstantReference
-import com.jetbrains.php.lang.psi.elements.FieldReference
-import com.jetbrains.php.lang.psi.elements.FunctionReference
-import com.jetbrains.php.lang.psi.elements.Global
-import com.jetbrains.php.lang.psi.elements.MethodReference
-import com.jetbrains.php.lang.psi.elements.NewExpression
-import com.jetbrains.php.lang.psi.elements.PhpNamedElement
-import com.jetbrains.php.lang.psi.elements.PhpNamespace
-import com.jetbrains.php.lang.psi.elements.PhpNamespaceReference
-import com.jetbrains.php.lang.psi.elements.PhpReference
-import com.jetbrains.php.lang.psi.elements.PhpUse
-import com.jetbrains.php.lang.psi.elements.Variable
-import com.jetbrains.php.lang.psi.elements.impl.FieldImpl
-import com.jetbrains.php.lang.psi.elements.impl.FunctionImpl
-import com.jetbrains.php.lang.psi.elements.impl.MethodImpl
+import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.Function
+import com.jetbrains.php.lang.psi.elements.impl.*
+import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.vk.modulite.Namespace
 import com.vk.modulite.SymbolName
 import com.vk.modulite.actions.dialogs.DepsRegenerationResultDialog
@@ -208,12 +195,12 @@ class ModuliteDependenciesCollector(val project: Project) {
         val ownSymbolsSet = ownSymbols?.toSet() ?: ModuliteSymbolsCollector.getInstance(project).collect(dir).toSet()
 
         val symbols = mutableSetOf<SymbolName>()
+        lateinit var currentClassMethodOwner : ClassReferenceImpl
 
         val modulites = ModuliteIndex.getInstance(project).getModulites()
         val composerPackages = ComposerPackagesIndex.getInstance(project).getPackages()
 
         val moduliteConfig = dir.findChild(".modulite.yaml")
-
         dir.forEachFilesEx(project) { file ->
             // Проверяем не отменил ои пользователь операцию.
             ProgressManager.checkCanceled()
@@ -227,7 +214,13 @@ class ModuliteDependenciesCollector(val project: Project) {
             psiFile.accept(object : PhpRecursiveElementVisitor() {
                 override fun visitPhpClassReference(reference: ClassReference) {
                     when (reference.context) {
-                        is PhpUse, is MethodReference, is ClassConstantReference -> {
+                        is PhpUse -> {
+                            if (reference is ClassReferenceImpl) {
+                                handleReference(reference)
+                            }
+                        }
+
+                        is MethodReference, is ClassConstantReference -> {
                             return
                         }
                     }
@@ -240,6 +233,9 @@ class ModuliteDependenciesCollector(val project: Project) {
                 }
 
                 override fun visitPhpMethodReference(reference: MethodReference) {
+                    if (reference.classReference is ClassReferenceImpl) {
+                        currentClassMethodOwner = reference.classReference as ClassReferenceImpl
+                    }
                     handleReference(reference)
                 }
 
@@ -358,6 +354,127 @@ class ModuliteDependenciesCollector(val project: Project) {
                     }
                 }
 
+                private fun hasReferenceInPsiTree(targetReference: PhpNamedElement, psiFile: PhpFile?): Boolean {
+                    return psiFile?.let { findReferenceInPsiTree(targetReference, it) } == true
+                }
+
+                private fun isPrimitiveType(phpType: PhpType): Boolean {
+                    val primitiveTypes = setOf(
+                        "int",
+                        "integer",
+                        "string",
+                        "?string",
+                        "bool",
+                        "boolean",
+                        "float",
+                        "double",
+                        "void",
+                        "null",
+                        "mixed[]",
+                        "mixed"
+                    )
+                    return primitiveTypes.contains(phpType.toString())
+                }
+
+                private fun areTypesEquivalentIgnoringNullable(type1: PhpType, type2: PhpType): Boolean {
+                    if (isPrimitiveType(type1) || isPrimitiveType(type2)) {
+                        return false
+                    }
+                    // Проверяем, совпадают ли основные типы
+                    val baseTypes1 = type1.filterNull().types
+                    val baseTypes2 = type2.filterNull().types
+
+                    // Сравнение наборов типов
+                    return baseTypes1 == baseTypes2
+                }
+
+                private fun findReferenceInPsiTree(targetReference: PhpNamedElement, element: PsiElement): Boolean {
+                    var child = element.firstChild
+
+                    while (child != null) {
+                        when (child) {
+                            is PhpClass -> {
+                                if (child.isEquivalentTo(targetReference)) {
+                                    return true
+                                }
+
+                                if (child.isInterface) {
+                                    child.methods.forEach { method ->
+                                        if (areTypesEquivalentIgnoringNullable(method.type, targetReference.type)) {
+                                            return true
+                                        }
+
+                                        method.parameters.forEach { param ->
+                                            if (areTypesEquivalentIgnoringNullable(param.type, targetReference.type)) {
+                                                return true
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    val implInterfaces = child.implementedInterfaces
+                                    implInterfaces.forEach { t ->
+                                        if (t.isEquivalentTo(targetReference)) {
+                                            return true
+                                        }
+                                    }
+                                }
+                            }
+
+                            is MethodReferenceImpl -> {
+                                val value = child.resolve() ?: return false
+                                if (value.isEquivalentTo(targetReference)) {
+                                    return true
+                                }
+                                if (value is Method) {
+                                    if (areTypesEquivalentIgnoringNullable(value.type, targetReference.type)) {
+                                        val potentialInterface = value.context as PhpClass
+                                        if (potentialInterface.isInterface) {
+                                            return false
+                                        }
+                                        if (value.context == targetReference.context) {
+                                            return true
+                                        }
+                                    }
+
+                                    value.parameters.forEach { param ->
+                                        if (areTypesEquivalentIgnoringNullable(param.type, targetReference.type)) {
+                                            return true
+                                        }
+                                    }
+                                }
+                            }
+
+                            is FunctionReferenceImpl -> {
+                                val value = child.resolve() ?: return false
+                                if (value.isEquivalentTo(targetReference)) {
+                                    return true
+                                }
+                                if (value is Function) {
+                                    value.parameters.forEach { param ->
+                                        if (areTypesEquivalentIgnoringNullable(param.type, targetReference.type)) {
+                                            return true
+                                        }
+                                    }
+                                }
+                            }
+
+                            is VariableImpl -> {
+                                val value = child.resolve() ?: return false
+                                if (value is Variable) {
+                                    if (areTypesEquivalentIgnoringNullable(value.type, targetReference.type)) {
+                                        return true
+                                    }
+                                }
+                            }
+                        }
+                        // Рекурсивный обход дочерних элементов
+                        if (findReferenceInPsiTree(targetReference, child)) return true
+                        child = child.nextSibling
+                    }
+
+                    return false
+                }
+
                 private fun addReferenceModuleIfNeeded(reference: PhpNamedElement): Boolean {
                     if (reference is Variable) {
                         // Глобальные переменные не могут содержаться в некотором модуле,
@@ -386,13 +503,35 @@ class ModuliteDependenciesCollector(val project: Project) {
 
                     val modulite = containingFile.containingModulite(project, modulites)
                     if (modulite != null) {
-                        addSymbol(modulite.symbolName())
+                        if (reference.context?.containingModulite() == dir.containingModulite(project)) {
+                            addSymbol(modulite.symbolName())
+                            return collapseModuleSymbols
+                        }
+
+                        if (dir.containingModulite(project) != modulite) {
+                            val psiCurrentFile = file.psiFile<PhpFile>(project)
+                            if (hasReferenceInPsiTree(reference, psiCurrentFile)) {
+                                addSymbol(modulite.symbolName())
+                                return collapseModuleSymbols
+                            }
+                            addSymbol(modulite.symbolName())
+                        }
                         return collapseModuleSymbols
                     }
 
                     val composerPackage = containingFile.containingComposerPackage(project, composerPackages)
                     if (composerPackage != null) {
-                        addSymbol(composerPackage.symbolName())
+                        if (reference is MethodImpl) {
+                            val methodOwner = currentClassMethodOwner//
+                            val methodSignature = methodOwner.fqn?.let { SymbolName(it + "::${reference.name}()") }
+
+                            if (methodSignature != null) {
+                                addSymbol(methodSignature)
+                            }
+                        } else {
+                            addSymbol(composerPackage.symbolName())
+                            return collapseModuleSymbols
+                        }
                         return collapseModuleSymbols
                     }
 
